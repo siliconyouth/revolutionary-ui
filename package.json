@@ -34,7 +34,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/siliconyouth/revolutionary-ui-factory-system"
+    "url": "https://github.com/siliconyouth/revolutionary-ui"
   },
   "funding": {
     "type": "individual",
@@ -42,7 +42,7 @@
   },
   "homepage": "https://revolutionary-ui.com",
   "bugs": {
-    "url": "https://github.com/siliconyouth/revolutionary-ui-factory-system/issues"
+    "url": "https://github.com/siliconyouth/revolutionary-ui/issues"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
