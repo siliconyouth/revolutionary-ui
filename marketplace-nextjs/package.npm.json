@@ -1,0 +1,60 @@
+{
+  "name": "@revolutionary-ui/factory",
+  "version": "2.1.0",
+  "description": "Revolutionary UI Factory - Generate UI components with 60-95% less code",
+  "keywords": [
+    "ui",
+    "components",
+    "factory",
+    "code-generation",
+    "react",
+    "vue",
+    "angular",
+    "developer-tools",
+    "ai-powered",
+    "automation"
+  ],
+  "author": "Revolutionary UI Factory Team",
+  "license": "MIT",
+  "homepage": "https://revolutionary-ui.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/revolutionary-ui/factory.git"
+  },
+  "bugs": {
+    "url": "https://github.com/revolutionary-ui/factory/issues"
+  },
+  "main": "dist/lib/factory/index.js",
+  "types": "dist/lib/factory/index.d.ts",
+  "bin": {
+    "revolutionary-ui": "./dist/bin/revolutionary-ui.js"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "postinstall": "node dist/lib/factory/postinstall.js || exit 0",
+    "prepare": "npm run build",
+    "build": "tsc --project tsconfig.cli.json",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^14.0.0",
+    "inquirer": "^12.9.0",
+    "ora": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

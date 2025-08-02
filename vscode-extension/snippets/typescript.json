@@ -1,0 +1,121 @@
+{
+  "Revolutionary UI Data Table": {
+    "prefix": ["rfdt", "revolutionary-data-table"],
+    "body": [
+      "// Revolutionary UI Factory - Data Table",
+      "// ~70% code reduction compared to traditional implementation",
+      "",
+      "import { ReactFactory } from '@vladimirdukelic/revolutionary-ui-factory/react';",
+      "",
+      "const factory = new ReactFactory();",
+      "",
+      "export const ${1:MyDataTable} = factory.createDataTable({",
+      "    columns: [",
+      "        { header: '${2:Name}', accessorKey: '${3:name}' },",
+      "        { header: '${4:Email}', accessorKey: '${5:email}' },",
+      "        { header: '${6:Status}', accessorKey: '${7:status}' },",
+      "        { header: 'Actions', accessorKey: 'actions' }",
+      "    ],",
+      "    features: {",
+      "        sorting: true,",
+      "        filtering: true,",
+      "        pagination: true,",
+      "        selection: true,",
+      "        export: true",
+      "    },",
+      "    styling: {",
+      "        striped: true,",
+      "        hover: true,",
+      "        bordered: false",
+      "    }",
+      "});",
+      "",
+      "// Usage: <${1:MyDataTable} data={yourData} />"
+    ],
+    "description": "Create a Revolutionary UI Factory data table component"
+  },
+  
+  "Revolutionary UI Form": {
+    "prefix": ["rff", "revolutionary-form"],
+    "body": [
+      "// Revolutionary UI Factory - Form",
+      "// ~80% code reduction compared to traditional implementation",
+      "",
+      "import { z } from 'zod';",
+      "import { ReactFactory } from '@vladimirdukelic/revolutionary-ui-factory/react';",
+      "",
+      "const factory = new ReactFactory();",
+      "",
+      "export const ${1:MyForm} = factory.createForm({",
+      "    fields: [",
+      "        {",
+      "            name: '${2:name}',",
+      "            label: '${3:Name}',",
+      "            type: 'text',",
+      "            placeholder: 'Enter your name',",
+      "            validation: z.string().min(1, 'Name is required')",
+      "        },",
+      "        {",
+      "            name: '${4:email}',",
+      "            label: '${5:Email}',",
+      "            type: 'email',",
+      "            placeholder: 'Enter your email',",
+      "            validation: z.string().email('Invalid email address')",
+      "        },",
+      "        {",
+      "            name: '${6:password}',",
+      "            label: '${7:Password}',",
+      "            type: 'password',",
+      "            placeholder: 'Enter your password',",
+      "            validation: z.string().min(8, 'Password must be at least 8 characters')",
+      "        }",
+      "    ],",
+      "    onSubmit: async (data) => {",
+      "        console.log('Form submitted:', data);",
+      "        ${8:// Handle form submission}",
+      "    },",
+      "    options: {",
+      "        layout: 'vertical',",
+      "        submitText: 'Submit',",
+      "        resetButton: true,",
+      "        showValidation: true",
+      "    }",
+      "});",
+      "",
+      "// Usage: <${1:MyForm} />"
+    ],
+    "description": "Create a Revolutionary UI Factory form component"
+  },
+
+  "Revolutionary Factory Import": {
+    "prefix": ["rfi", "revolutionary-import"],
+    "body": [
+      "import { ReactFactory } from '@vladimirdukelic/revolutionary-ui-factory/react';",
+      "",
+      "const factory = new ReactFactory();"
+    ],
+    "description": "Import Revolutionary UI Factory for React"
+  },
+
+  "Revolutionary Table Column": {
+    "prefix": ["rfc", "revolutionary-column"],
+    "body": [
+      "{ header: '${1:Column Name}', accessorKey: '${2:columnKey}'${3:, sortable: true}${4:, width: '150px'} }"
+    ],
+    "description": "Add a column to Revolutionary UI data table"
+  },
+
+  "Revolutionary Form Field": {
+    "prefix": ["rffield", "revolutionary-field"],
+    "body": [
+      "{",
+      "    name: '${1:fieldName}',",
+      "    label: '${2:Field Label}',",
+      "    type: '${3|text,email,password,number,tel,date,textarea,select|}',",
+      "    placeholder: '${4:Enter value}',",
+      "    validation: z.string()${5:.min(1, 'Required')}",
+      "}"
+    ],
+    "description": "Add a field to Revolutionary UI form"
+  }
+}

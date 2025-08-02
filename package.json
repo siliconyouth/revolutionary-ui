@@ -1,0 +1,142 @@
+{
+  "name": "revolutionary-ui",
+  "version": "3.0.0",
+  "description": "Revolutionary UI v3.0 - AI-Powered Interactive CLI with 10+ AI providers, website inspiration analyzer, and advanced code generation",
+  "keywords": [
+    "ui",
+    "factory",
+    "components",
+    "react",
+    "vue",
+    "angular",
+    "ai",
+    "gpt-4",
+    "claude",
+    "anthropic",
+    "openai",
+    "gemini",
+    "ollama",
+    "website-analyzer",
+    "mcp",
+    "interactive-cli",
+    "code-generation",
+    "declarative",
+    "framework-agnostic",
+    "revolutionary",
+    "code-reduction",
+    "productivity"
+  ],
+  "author": {
+    "name": "Vladimir Dukelic",
+    "email": "vladimir@dukelic.com",
+    "url": "https://github.com/siliconyouth"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/siliconyouth/revolutionary-ui-factory-system"
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://revolutionary-ui.com/sponsor"
+  },
+  "homepage": "https://revolutionary-ui.com",
+  "bugs": {
+    "url": "https://github.com/siliconyouth/revolutionary-ui-factory-system/issues"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/frameworks/react/ReactFactory.js",
+      "require": "./dist/frameworks/react/ReactFactory.js",
+      "types": "./dist/frameworks/react/ReactFactory.d.ts"
+    },
+    "./cli": "./bin/cli.js"
+  },
+  "bin": {
+    "create-factory": "./bin/cli.js",
+    "revolutionary-ui": "./dist/bin/revolutionary-ui.js"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "npm run build:lib && npm run build:cli && npm run build:visual-builder",
+    "build:lib": "tsc -p tsconfig.build.json",
+    "build:cli": "node build-cli.js",
+    "build:visual-builder": "tsc -p tsconfig.build.visual-builder.json",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean",
+    "prepublishOnly": "npm run build",
+    "postinstall": "node dist/lib/factory/postinstall.js || exit 0",
+    "test": "node tests/run-tests.js",
+    "lint": "echo 'Linting not configured yet'",
+    "cli": "tsx src/lib/factory/cli.ts",
+    "cli:analyze": "tsx src/lib/factory/cli.ts analyze",
+    "cli:setup": "tsx src/lib/factory/cli.ts setup"
+  },
+  "peerDependencies": {
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.57.0",
+    "@google/generative-ai": "^0.24.1",
+    "chalk": "^5.4.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "commander": "^14.0.0",
+    "inquirer": "^12.9.0",
+    "openai": "^4.52.7",
+    "ora": "^8.2.0",
+    "uuid": "^11.0.6",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.5",
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@types/node": "^24.1.0",
+    "@types/react": "^19.1.9",
+    "@types/uuid": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "@vitest/ui": "^3.2.4",
+    "commander": "^14.0.0",
+    "eslint": "^9.32.0",
+    "jsdom": "^26.1.0",
+    "rollup": "^4.46.2",
+    "rollup-plugin-dts": "^6.2.1",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.6",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

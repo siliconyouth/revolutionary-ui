@@ -1,0 +1,151 @@
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model (simplified for this example - in production, integrate with your auth system)
+model User {
+  id              String                  @id @default(cuid())
+  email           String                  @unique
+  name            String?
+  image           String?
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+  
+  // Relations
+  components      MarketplaceComponent[]
+  reviews         ComponentReview[]
+  purchases       ComponentPurchase[]
+  favorites       ComponentFavorite[]
+  downloads       ComponentDownload[]
+}
+
+// Marketplace Component model
+model MarketplaceComponent {
+  id              String                  @id @default(cuid())
+  name            String
+  description     String
+  category        String
+  tags            String[]
+  version         String
+  downloads       Int                     @default(0)
+  rating          Float                   @default(0)
+  price           Float                   @default(0)
+  premium         Boolean                 @default(false)
+  framework       String[]
+  styling         String[]
+  responsive      Boolean                 @default(true)
+  accessibility   Boolean                 @default(true)
+  thumbnail       String?
+  preview         String?
+  componentData   Json                    // The actual component structure
+  dependencies    String[]                @default([])
+  license         String                  @default("MIT")
+  documentation   String?
+  demoUrl         String?
+  published       Boolean                 @default(true)
+  featured        Boolean                 @default(false)
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+  
+  // Relations
+  author          User                    @relation(fields: [authorId], references: [id])
+  authorId        String
+  reviews         ComponentReview[]
+  versions        ComponentVersion[]
+  purchases       ComponentPurchase[]
+  favorites       ComponentFavorite[]
+  downloadRecords ComponentDownload[]
+  
+  @@index([category])
+  @@index([authorId])
+  @@index([published, rating, downloads])
+}
+
+// Component Review model
+model ComponentReview {
+  id              String                  @id @default(cuid())
+  rating          Int
+  comment         String
+  helpful         Int                     @default(0)
+  createdAt       DateTime                @default(now())
+  
+  // Relations
+  component       MarketplaceComponent    @relation(fields: [componentId], references: [id])
+  componentId     String
+  user            User                    @relation(fields: [userId], references: [id])
+  userId          String
+  
+  @@unique([userId, componentId])
+  @@index([componentId])
+}
+
+// Component Version History
+model ComponentVersion {
+  id              String                  @id @default(cuid())
+  version         String
+  changelog       String
+  componentData   Json
+  createdAt       DateTime                @default(now())
+  
+  // Relations
+  component       MarketplaceComponent    @relation(fields: [componentId], references: [id])
+  componentId     String
+  
+  @@index([componentId])
+}
+
+// Component Purchase (for premium components)
+model ComponentPurchase {
+  id              String                  @id @default(cuid())
+  amount          Float
+  currency        String                  @default("USD")
+  createdAt       DateTime                @default(now())
+  
+  // Relations
+  component       MarketplaceComponent    @relation(fields: [componentId], references: [id])
+  componentId     String
+  user            User                    @relation(fields: [userId], references: [id])
+  userId          String
+  
+  @@unique([userId, componentId])
+  @@index([userId])
+  @@index([componentId])
+}
+
+// Component Favorites
+model ComponentFavorite {
+  id              String                  @id @default(cuid())
+  createdAt       DateTime                @default(now())
+  
+  // Relations
+  component       MarketplaceComponent    @relation(fields: [componentId], references: [id])
+  componentId     String
+  user            User                    @relation(fields: [userId], references: [id])
+  userId          String
+  
+  @@unique([userId, componentId])
+  @@index([userId])
+}
+
+// Component Downloads (for tracking)
+model ComponentDownload {
+  id              String                  @id @default(cuid())
+  createdAt       DateTime                @default(now())
+  
+  // Relations
+  component       MarketplaceComponent    @relation(fields: [componentId], references: [id])
+  componentId     String
+  user            User                    @relation(fields: [userId], references: [id])
+  userId          String
+  
+  @@index([componentId])
+  @@index([createdAt])
+}

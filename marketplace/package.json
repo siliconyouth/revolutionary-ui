@@ -1,0 +1,28 @@
+{
+  "name": "revolutionary-ui-marketplace",
+  "version": "1.0.0",
+  "description": "Component marketplace for Revolutionary UI",
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 8080",
+    "serve": "npx serve -s . -p 8080",
+    "build": "echo 'No build required for static site'",
+    "deploy": "npx surge . revolutionary-ui-marketplace.surge.sh"
+  },
+  "keywords": [
+    "ui",
+    "components",
+    "marketplace",
+    "factory",
+    "revolutionary"
+  ],
+  "author": {
+    "name": "Vladimir Dukelic",
+    "email": "vladimir@dukelic.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.0",
+    "surge": "^0.23.1"
+  }
+}

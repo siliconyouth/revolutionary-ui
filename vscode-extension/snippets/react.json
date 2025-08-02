@@ -1,0 +1,194 @@
+{
+  "Revolutionary UI v2 Setup": {
+    "prefix": ["rfsetup", "revolutionary-setup"],
+    "body": [
+      "import { setup } from '@vladimirdukelic/revolutionary-ui-factory';",
+      "",
+      "// Auto-detects your framework and style system",
+      "const ui = setup();",
+      "",
+      "// Or specify explicitly",
+      "// const ui = setup('${1|react,vue,angular,svelte|}', '${2|tailwind,css-in-js,css-modules|}');"
+    ],
+    "description": "Setup Revolutionary UI Factory v2.0"
+  },
+
+  "Revolutionary UI Dashboard": {
+    "prefix": ["rfdb", "revolutionary-dashboard"],
+    "body": [
+      "// Revolutionary UI Factory v2.0 - Dashboard",
+      "// 96% code reduction (1000 → 40 lines)",
+      "",
+      "const ${1:MyDashboard} = ui.createDashboard({",
+      "    widgets: [",
+      "        { id: 'stats', type: 'stats', config: { ",
+      "            value: ${2:totalUsers}, label: '${3:Total Users}', trend: 'up', change: ${4:12.5} ",
+      "        }},",
+      "        { id: 'chart', type: 'chart', config: { ",
+      "            type: '${5|line,bar,pie,area|}', data: ${6:chartData}, height: '300px' ",
+      "        }},",
+      "        { id: 'table', type: 'dataTable', config: { ",
+      "            data: ${7:tableData}, columns: ${8:columns} ",
+      "        }},",
+      "        { id: 'activity', type: 'timeline', config: { ",
+      "            items: ${9:activityLog} ",
+      "        }}",
+      "    ],",
+      "    layout: '${10|grid,list,custom|}',",
+      "    refreshInterval: ${11:30000}",
+      "});"
+    ],
+    "description": "Create a Revolutionary UI Dashboard (96% reduction)"
+  },
+
+  "Revolutionary UI Kanban": {
+    "prefix": ["rfkb", "revolutionary-kanban"],
+    "body": [
+      "// Revolutionary UI Factory v2.0 - Kanban Board",
+      "// 95% code reduction (600 → 30 lines)",
+      "",
+      "const ${1:MyKanban} = ui.createKanban({",
+      "    columns: [",
+      "        { id: 'todo', title: 'To Do', items: ${2:todoItems} },",
+      "        { id: 'progress', title: 'In Progress', items: ${3:progressItems} },",
+      "        { id: 'review', title: 'Review', items: ${4:reviewItems} },",
+      "        { id: 'done', title: 'Done', items: ${5:doneItems} }",
+      "    ],",
+      "    onDragEnd: (result) => ${6:handleDragEnd(result)},",
+      "    cardRenderer: (item) => ${7:<TaskCard {...item} />}",
+      "});"
+    ],
+    "description": "Create a Revolutionary UI Kanban Board (95% reduction)"
+  },
+
+  "Revolutionary UI Calendar": {
+    "prefix": ["rfcal", "revolutionary-calendar"],
+    "body": [
+      "// Revolutionary UI Factory v2.0 - Calendar",
+      "// 96% code reduction (800 → 35 lines)",
+      "",
+      "const ${1:MyCalendar} = ui.createCalendar({",
+      "    events: ${2:events},",
+      "    view: '${3|month,week,day,year|}',",
+      "    onDateClick: (date) => ${4:handleDateClick(date)},",
+      "    onEventClick: (event) => ${5:handleEventClick(event)},",
+      "    features: {",
+      "        drag: ${6:true},",
+      "        resize: ${7:true},",
+      "        weekends: ${8:true}",
+      "    }",
+      "});"
+    ],
+    "description": "Create a Revolutionary UI Calendar (96% reduction)"
+  },
+
+  "Revolutionary UI Data Table": {
+    "prefix": ["rfdt", "revolutionary-data-table"],
+    "body": [
+      "// Revolutionary UI Factory v2.0 - Data Table",
+      "// 94% code reduction (500 → 30 lines)",
+      "",
+      "const ${1:MyTable} = ui.createDataTable({",
+      "    columns: [",
+      "        { id: '${2:id}', header: '${3:ID}', accessorKey: '${2:id}' },",
+      "        { id: '${4:name}', header: '${5:Name}', accessorKey: '${4:name}' },",
+      "        { id: '${6:status}', header: '${7:Status}', accessorKey: '${6:status}' }",
+      "    ],",
+      "    data: ${8:data},",
+      "    sortable: ${9:true},",
+      "    searchable: ${10:true},",
+      "    pagination: ${11:true},",
+      "    selectable: ${12:true},",
+      "    onRowSelect: (selected) => ${13:console.log(selected)}",
+      "});"
+    ],
+    "description": "Create a Revolutionary UI Data Table (94% reduction)"
+  },
+
+  "Revolutionary UI Form": {
+    "prefix": ["rff", "revolutionary-form"],
+    "body": [
+      "// Revolutionary UI Factory v2.0 - Form",
+      "// 94% code reduction (400 → 24 lines)",
+      "",
+      "import { z } from 'zod';",
+      "",
+      "const schema = z.object({",
+      "    ${1:name}: z.string().min(1, '${2:Name is required}'),",
+      "    ${3:email}: z.string().email('${4:Invalid email}'),",
+      "    ${5:message}: z.string().min(10, '${6:Message must be at least 10 characters}')",
+      "});",
+      "",
+      "const ${7:MyForm} = ui.createForm({",
+      "    schema,",
+      "    fields: [",
+      "        { name: '${1:name}', label: '${8:Name}', type: 'text', placeholder: '${9:Enter your name}' },",
+      "        { name: '${3:email}', label: '${10:Email}', type: 'email', placeholder: '${11:Enter your email}' },",
+      "        { name: '${5:message}', label: '${12:Message}', type: 'textarea', rows: 4 }",
+      "    ],",
+      "    onSubmit: async (data) => {",
+      "        ${13:console.log('Form submitted:', data);}",
+      "    }",
+      "});"
+    ],
+    "description": "Create a Revolutionary UI Form (94% reduction)"
+  },
+
+  "Revolutionary UI Command Palette": {
+    "prefix": ["rfcp", "revolutionary-command"],
+    "body": [
+      "// Revolutionary UI Factory v2.0 - Command Palette",
+      "// 95% code reduction (500 → 25 lines)",
+      "",
+      "const ${1:MyCommandPalette} = ui.createCommandPalette({",
+      "    commands: [",
+      "        { id: 'new-file', label: 'New File', shortcut: 'Cmd+N', action: ${2:createNewFile} },",
+      "        { id: 'search', label: 'Search', shortcut: 'Cmd+F', action: ${3:openSearch} },",
+      "        { id: 'settings', label: 'Settings', shortcut: 'Cmd+,', action: ${4:openSettings} }",
+      "    ],",
+      "    placeholder: '${5:Type a command or search...}',",
+      "    hotkey: '${6:cmd+k}'",
+      "});"
+    ],
+    "description": "Create a Revolutionary UI Command Palette (95% reduction)"
+  },
+
+  "Revolutionary UI Chart": {
+    "prefix": ["rfchart", "revolutionary-chart"],
+    "body": [
+      "// Revolutionary UI Factory v2.0 - Chart",
+      "// 93% code reduction (450 → 30 lines)",
+      "",
+      "const ${1:MyChart} = ui.createChart({",
+      "    type: '${2|line,bar,pie,area,scatter,radar,doughnut|}',",
+      "    data: {",
+      "        labels: ${3:labels},",
+      "        datasets: [{",
+      "            label: '${4:Dataset}',",
+      "            data: ${5:data},",
+      "            backgroundColor: '${6:#0969da}',",
+      "            borderColor: '${7:#0969da}'",
+      "        }]",
+      "    },",
+      "    options: {",
+      "        responsive: ${8:true},",
+      "        maintainAspectRatio: ${9:false}",
+      "    }",
+      "});"
+    ],
+    "description": "Create a Revolutionary UI Chart (93% reduction)"
+  },
+
+  "Revolutionary UI Component": {
+    "prefix": ["rfc", "revolutionary-component"],
+    "body": [
+      "// Revolutionary UI Factory v2.0",
+      "// Component: ${1:ComponentType}",
+      "",
+      "const ${2:MyComponent} = ui.create${1:ComponentType}({",
+      "    ${3:// Configuration}",
+      "});"
+    ],
+    "description": "Create any Revolutionary UI component"
+  }
+}

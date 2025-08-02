@@ -1,0 +1,22 @@
+{
+  "name": "revolutionary-ui-vue-example",
+  "version": "1.0.0",
+  "description": "Vue 3 example for Revolutionary UI",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vladimirdukelic/revolutionary-ui": "^2.0.2",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/tsconfig": "^0.7.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7",
+    "vue-tsc": "^2.2.0"
+  }
+}

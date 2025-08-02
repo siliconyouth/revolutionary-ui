@@ -1,0 +1,232 @@
+{
+  "name": "revolutionary-ui",
+  "displayName": "Revolutionary UI",
+  "description": "VSCode extension for Revolutionary UI - Generate ANY UI component for ANY framework with 60-95% code reduction",
+  "version": "2.0.0",
+  "publisher": "vladimirdukelic",
+  "author": {
+    "name": "Vladimir Dukelic",
+    "email": "vladimir@dukelic.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/siliconyouth/revolutionary-ui-factory-system"
+  },
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#0969da",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Formatters",
+    "Other"
+  ],
+  "keywords": [
+    "ui",
+    "factory",
+    "components",
+    "react",
+    "vue",
+    "angular",
+    "svelte",
+    "universal",
+    "code-reduction",
+    "productivity",
+    "revolutionary",
+    "150-components",
+    "any-framework"
+  ],
+  "activationEvents": [
+    "onCommand:revolutionaryUI.createComponent",
+    "onCommand:revolutionaryUI.createDataTable",
+    "onCommand:revolutionaryUI.createForm",
+    "onCommand:revolutionaryUI.createDashboard",
+    "onCommand:revolutionaryUI.createKanban",
+    "onCommand:revolutionaryUI.createCalendar",
+    "onCommand:revolutionaryUI.createChart",
+    "onCommand:revolutionaryUI.createCommandPalette",
+    "onCommand:revolutionaryUI.analyzeCodeReduction",
+    "onCommand:revolutionaryUI.convertToFactory",
+    "onCommand:revolutionaryUI.showMetrics",
+    "onCommand:revolutionaryUI.showComponentCatalog",
+    "onLanguage:javascript",
+    "onLanguage:typescript",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescriptreact",
+    "onLanguage:vue",
+    "onLanguage:svelte"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "revolutionaryUI.createComponent",
+        "title": "Revolutionary UI: Create Component (Universal)",
+        "category": "Revolutionary UI"
+      },
+      {
+        "command": "revolutionaryUI.createDataTable",
+        "title": "Revolutionary UI: Create Data Table",
+        "category": "Components"
+      },
+      {
+        "command": "revolutionaryUI.createForm",
+        "title": "Revolutionary UI: Create Form",
+        "category": "Components"
+      },
+      {
+        "command": "revolutionaryUI.createDashboard",
+        "title": "Revolutionary UI: Create Dashboard",
+        "category": "Components"
+      },
+      {
+        "command": "revolutionaryUI.createKanban",
+        "title": "Revolutionary UI: Create Kanban Board",
+        "category": "Components"
+      },
+      {
+        "command": "revolutionaryUI.createCalendar",
+        "title": "Revolutionary UI: Create Calendar",
+        "category": "Components"
+      },
+      {
+        "command": "revolutionaryUI.createChart",
+        "title": "Revolutionary UI: Create Chart",
+        "category": "Components"
+      },
+      {
+        "command": "revolutionaryUI.createCommandPalette",
+        "title": "Revolutionary UI: Create Command Palette",
+        "category": "Components"
+      },
+      {
+        "command": "revolutionaryUI.analyzeCodeReduction",
+        "title": "Revolutionary UI: Analyze Code Reduction",
+        "category": "Analysis"
+      },
+      {
+        "command": "revolutionaryUI.convertToFactory",
+        "title": "Revolutionary UI: Convert to Factory Pattern",
+        "category": "Refactoring"
+      },
+      {
+        "command": "revolutionaryUI.showMetrics",
+        "title": "Revolutionary UI: Show Metrics",
+        "category": "Analysis"
+      },
+      {
+        "command": "revolutionaryUI.showComponentCatalog",
+        "title": "Revolutionary UI: Show Component Catalog (150+ Types)",
+        "category": "Documentation"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "javascript",
+        "path": "./snippets/javascript.json"
+      },
+      {
+        "language": "typescript",
+        "path": "./snippets/typescript.json"
+      },
+      {
+        "language": "javascriptreact",
+        "path": "./snippets/react.json"
+      },
+      {
+        "language": "typescriptreact",
+        "path": "./snippets/react.json"
+      }
+    ],
+    "configuration": {
+      "title": "Revolutionary UI",
+      "properties": {
+        "revolutionaryUI.framework": {
+          "type": "string",
+          "default": "auto-detect",
+          "enum": ["auto-detect", "react", "vue", "angular", "svelte", "solid", "preact", "alpine", "lit", "qwik", "astro", "custom"],
+          "description": "Default framework for factory generation (auto-detect will detect your current project's framework)"
+        },
+        "revolutionaryUI.styleSystem": {
+          "type": "string",
+          "default": "auto-detect",
+          "enum": ["auto-detect", "tailwind", "css-in-js", "css-modules", "vanilla-css", "styled-components", "emotion", "custom"],
+          "description": "Default style system for component generation"
+        },
+        "revolutionaryUI.componentCategories": {
+          "type": "array",
+          "default": ["all"],
+          "description": "Component categories to show in quick pick menu",
+          "items": {
+            "type": "string",
+            "enum": ["all", "data-visualization", "forms-inputs", "navigation", "feedback", "layout", "media", "e-commerce", "productivity", "real-time", "communication", "gaming", "developer-tools", "accessibility", "mobile", "enterprise"]
+          }
+        },
+        "revolutionaryUI.showMetricsOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show code reduction metrics when saving files"
+        },
+        "revolutionaryUI.enableIntelliSense": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable IntelliSense for factory configurations"
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "revolutionaryUI.createDataTable",
+        "key": "ctrl+shift+d",
+        "mac": "cmd+shift+d"
+      },
+      {
+        "command": "revolutionaryUI.createForm",
+        "key": "ctrl+shift+f",
+        "mac": "cmd+shift+f"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "revolutionaryUI.convertToFactory",
+          "when": "editorHasSelection",
+          "group": "revolutionaryUI"
+        },
+        {
+          "command": "revolutionaryUI.analyzeCodeReduction",
+          "when": "resourceExtname == .tsx || resourceExtname == .jsx",
+          "group": "revolutionaryUI"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "typescript": "^4.9.3",
+    "vsce": "^2.15.0"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "version": "2.1.0",
+  "setupDate": "2025-08-01T12:41:18.620Z",
+  "installedPackages": [
+    "react-hook-form",
+    "prettier"
+  ],
+  "aiRecommendations": 5
+}

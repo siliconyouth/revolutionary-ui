@@ -1,0 +1,47 @@
+# Development and test files
+tests/
+*.test.js
+*.test.ts
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Source control
+.git/
+.gitignore
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build artifacts
+*.tgz
+
+# Documentation source files (keep compiled docs)
+docs/
+
+# Development scripts
+scripts/
+
+# CI/CD
+.github/
+.travis.yml
+.circleci/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Development dependencies
+node_modules/
+
+# Example applications (keep examples folder)
+examples-dev/
+
+# Temporary files
+tmp/
+temp/

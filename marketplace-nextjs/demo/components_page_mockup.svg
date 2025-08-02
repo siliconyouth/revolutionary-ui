@@ -1,0 +1,82 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#F9FAFB"/>
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A855F7" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+    <style>
+      .title { font-family: sans-serif; font-size: 24px; font-weight: bold; fill: #111827; }
+      .subtitle { font-family: sans-serif; font-size: 14px; fill: #6B7280; }
+      .sidebar-title { font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #374151; }
+      .sidebar-item { font-family: sans-serif; font-size: 13px; fill: #4B5563; }
+      .card-title { font-family: sans-serif; font-size: 16px; font-weight: bold; fill: #1F2937; }
+      .card-desc { font-family: sans-serif; font-size: 12px; fill: #6B7280; }
+      .tag { font-family: sans-serif; font-size: 10px; font-weight: bold; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#F9FAFB"/>
+
+  <!-- Header -->
+  <text x="50" y="60" class="title">Explore Components</text>
+  <text x="50" y="85" class="subtitle">Browse our library of 150+ production-ready components.</text>
+
+  <!-- Sidebar -->
+  <rect x="50" y="120" width="200" height="430" rx="12" fill="white" stroke="#E5E7EB" stroke-width="1"/>
+  
+  <!-- Sidebar Content -->
+  <text x="70" y="150" class="sidebar-title">Filters</text>
+  
+  <!-- Search Bar -->
+  <rect x="70" y="170" width="160" height="35" rx="8" fill="#F3F4F6"/>
+  <text x="80" y="193" class="sidebar-item" fill="#9CA3AF">Search...</text>
+  
+  <!-- Categories -->
+  <text x="70" y="235" class="sidebar-title">Categories</text>
+  <rect x="70" y="255" width="160" height="25" rx="6" fill="#F3F4F6"/>
+  <text x="80" y="272" class="sidebar-item">Data Display</text>
+  <text x="80" y="302" class="sidebar-item">Forms</text>
+  <text x="80" y="322" class="sidebar-item">Navigation</text>
+  <text x="80" y="342" class="sidebar-item">Overlays</text>
+
+  <!-- Frameworks -->
+  <text x="70" y="382" class="sidebar-title">Frameworks</text>
+  <circle cx="85" cy="410" r="10" fill="#61DAFB"/>
+  <text x="105" y="415" class="sidebar-item">React</text>
+  <circle cx="85" cy="440" r="10" fill="#4FC08D"/>
+  <text x="105" y="445" class="sidebar-item">Vue</text>
+  <circle cx="85" cy="470" r="10" fill="#DD0031"/>
+  <text x="105" y="475" class="sidebar-item">Angular</text>
+
+  <!-- Main Content Area -->
+  <g id="component-grid">
+    <!-- Card 1 (Detailed) -->
+    <rect x="280" y="120" width="240" height="200" rx="12" fill="white" stroke="url(#grad1)" stroke-width="2"/>
+    <rect x="370" y="135" width="80" height="60" rx="8" fill="#F3F4F6"/>
+    <text x="385" y="175" font-size="30">📊</text>
+    <text x="295" y="220" class="card-title">Dashboard</text>
+    <text x="295" y="240" class="card-desc">A comprehensive overview...</text>
+    <rect x="295" y="260" width="80" height="20" rx="10" fill="#D1FAE5"/>
+    <text x="305" y="274" class="tag" fill="#065F46">96% Reduction</text>
+    <rect x="385" y="260" width="60" height="20" rx="10" fill="#E0E7FF"/>
+    <text x="395" y="274" class="tag" fill="#3730A3">Layout</text>
+    <circle cx="305" cy="295" r="6" fill="#61DAFB"/>
+    <circle cx="325" cy="295" r="6" fill="#4FC08D"/>
+    <circle cx="345" cy="295" r="6" fill="#DD0031"/>
+
+    <!-- Other Cards (Simplified) -->
+    <rect x="540" y="120" width="240" height="200" rx="12" fill="white" stroke="#E5E7EB" stroke-width="1"/>
+    <rect x="280" y="340" width="240" height="200" rx="12" fill="white" stroke="#E5E7EB" stroke-width="1"/>
+    <rect x="540" y="340" width="240" height="200" rx="12" fill="white" stroke="#E5E7EB" stroke-width="1"/>
+  </g>
+
+  <!-- Pagination -->
+  <text x="500" y="570" class="sidebar-item">‹ Prev</text>
+  <text x="560" y="570" class="sidebar-item">1</text>
+  <text x="580" y="570" class="sidebar-item">2</text>
+  <text x="600" y="570" class="sidebar-item">3</text>
+  <text x="620" y="570" class="sidebar-item">Next ›</text>
+
+</svg>
