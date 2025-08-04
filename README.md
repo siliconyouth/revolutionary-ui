@@ -1,63 +1,59 @@
-# Revolutionary UI v3.0 - AI-Powered Interactive CLI
+ # Revolutionary UI v3.1 – Production-Ready Marketplace with Stripe Integration
 
-[![npm version](https://badge.fury.io/js/@vladimirdukelic%2Frevolutionary-ui-factory.svg)](https://www.npmjs.com/package/@vladimirdukelic/revolutionary-ui-factory)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
-[![Components](https://img.shields.io/badge/Components-150%2B-brightgreen)](https://github.com/siliconyouth/revolutionary-ui-factory-system)
-[![Frameworks](https://img.shields.io/badge/Frameworks-10%2B-blue)](https://github.com/siliconyouth/revolutionary-ui-factory-system)
-[![Website](https://img.shields.io/badge/Website-revolutionary--ui.com-ff69b4)](https://revolutionary-ui.com)
+ [![npm v](https://img.shields.io/npm/v/@vladimirdukelic/revolutionary-ui-factory.svg)](https://www.npmjs.com/package/@vladimirdukelic/revolutionary-ui-factory)
+ [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+ [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](https://www.typescriptlang.org/)
 
-> Generate ANY UI component for ANY framework with 60-95% code reduction! 🚀
+ > Generate ANY UI component for ANY framework with **60–95% code reduction**, **AI‑powered intelligence**, and access to a **catalog of 10,000+ components** across **50+ frameworks**.
 
-🌐 **Visit our website & interactive hub**: [https://revolutionary-ui.com](https://revolutionary-ui.com)
+ ## Overview
 
-## 🎯 What is Revolutionary UI Factory?
+ Revolutionary UI v3.1 delivers a production-ready marketplace with complete Stripe integration, enhanced security, and comprehensive deployment tooling alongside a web‑based interactive hub, an AI‑powered CLI, a core component package, and a VSCode extension to supercharge your UI development.
 
-Revolutionary UI Factory is a complete ecosystem designed to revolutionize UI development. It combines a powerful npm package, an intelligent CLI, a VSCode extension, and a full-featured web-based development hub to help you build high-quality UI components with 60-95% less code.
+ - **Interactive Web Hub**: Browse components, use the visual builder, AI playground, and project analyzer at [revolutionary-ui.com](https://revolutionary-ui.com).
+ - **AI‑Powered CLI**: `revolutionary-ui` with GPT‑4o Code Preview, streaming responses, and multi‑provider support.
+ - **Core NPM Package**: `@vladimirdukelic/revolutionary-ui-factory` featuring 150+ component types and 10+ framework adapters.
+ - **VSCode Extension**: Snippets, real‑time metrics, and IntelliSense enhancements.
+ - **Component Catalog**: Comprehensive database of 10,000+ UI components from popular libraries with quality metrics.
+ - **Framework Intelligence**: Tracks 50+ frameworks with feature matrices and compatibility data.
 
-### 🌟 Key Highlights
+ ## Quick Start
 
-- **150+ Component Types**: From basic buttons to complex dashboards, kanban boards, and charts.
-- **10+ Frameworks**: React, Vue, Angular, Svelte, Solid, and more.
-- **Interactive Web Hub**: Visually build components, analyze repositories, and manage your account on our website.
-- **🎨 Visual Component Builder**: NEW! Drag-and-drop interface for building components visually with real-time preview.
-- **Intelligent CLI**: Automates project setup, provides AI-powered analysis, and generates components.
-- **VSCode Extension**: Supercharge your workflow with snippets and real-time metrics.
-- **Pluggable Architecture**: Works with any style system (Tailwind, CSS-in-JS, etc.) and is fully extensible.
+ ### 1. Web Playground
+ Visit [revolutionary-ui.com/playground](https://revolutionary-ui.com/playground), select a component & framework, customize in real‑time, and copy the code.
 
-## 🚀 The Ecosystem
+ ### 2. Install the Package
+ ```bash
+ npm install @vladimirdukelic/revolutionary-ui-factory
+ ```
 
-### 1. The Website & Development Hub ([revolutionary-ui.com](https://revolutionary-ui.com))
+ ### 3. Use the AI CLI
+ ```bash
+ revolutionary-ui login               # authenticate for premium features
+ revolutionary-ui analyze             # analyze your project
+ revolutionary-ui generate --ai "Create a pricing table with toggle"
+ ```
 
-Our website is the central hub for the entire ecosystem. It's not just for documentation; it's a powerful, interactive tool:
+ ### 4. VSCode Extension
+ Install **Revolutionary UI Factory** from the VSCode Marketplace for factory snippets (`rfdt`, `rff`, etc.), code reduction metrics, and IntelliSense.
 
-- **Component Browser**: Explore all 150+ components with live examples.
-- **Interactive Playground**: Visually configure components, edit their properties in real-time, and instantly get production-ready code for any framework.
-- **Visual Component Builder**: NEW! Drag-and-drop interface for building components visually:
-  - Real-time preview with device modes (Desktop, Tablet, Mobile)
-  - Property panels for easy customization
-  - Export to factory configuration or framework-specific code
-  - Pre-built templates for common layouts
-  - Undo/redo support with full history
-- **AI Playground**: Describe the component you need in plain English and let our AI generate it for you.
-- **Project Analyzer**: Paste a link to a public GitHub repository and get detailed analysis and recommendations for improvement.
-- **Dashboard**: Manage your account, subscription, team members, and view detailed analytics on your component usage.
+ ## Documentation & Links
 
-### 2. The Core NPM Package (`@vladimirdukelic/revolutionary-ui-factory`)
+ - **Getting Started**: [docs/getting-started/README.md](docs/getting-started/README.md)
+ - **AI Integration**: [docs/AI_INTEGRATION.md](docs/AI_INTEGRATION.md)
+ - **Context Engineering**: [docs/CONTEXT_ENGINEERING.md](docs/CONTEXT_ENGINEERING.md)
+ - **CLI Reference**: [CLI_DOCUMENTATION.md](CLI_DOCUMENTATION.md)
+ - **UI Catalog**: [docs/UI-CATALOG-SUMMARY.md](docs/UI-CATALOG-SUMMARY.md)
+ - **Framework Guide**: [docs/FRAMEWORKS-CATALOG-SUMMARY.md](docs/FRAMEWORKS-CATALOG-SUMMARY.md)
+ - **React Components**: [docs/REACT-CATEGORIZATION-ANALYSIS.md](docs/REACT-CATEGORIZATION-ANALYSIS.md)
 
-The heart of the system. A lightweight, powerful package that you install in your project to enable component generation.
+ ## Contributing
 
-```bash
-npm install @vladimirdukelic/revolutionary-ui-factory
-```
+ Contributions are welcome! See [CONTRIBUTING.md] for guidelines.
 
-### 3. The Intelligent CLI (`revolutionary-ui`)
+ ## License
 
-Bundled with the npm package, our CLI is a powerful tool for local development:
-
-- **Automatic Setup**: On install, it analyzes your project and provides tailored recommendations.
-- **Local Generation**: Scaffold components directly from your terminal.
-- **Premium Features**: Log in to your account to access premium features like the AI generator, marketplace, and team management right from the command line.
+ Licensed under MIT. See [LICENSE](LICENSE) for details.
 
 ```bash
 # Login to your account
@@ -98,6 +94,15 @@ Revolutionary UI Factory offers a robust free tier, with premium plans for profe
 - 🔧 **Code Analysis**: AI-powered performance, accessibility, and security checks
 - 🌐 **Framework Transformation**: Convert components between React, Vue, Angular, and more
 - 👥 **Team Collaboration**: Share components, configurations, and manage access.
+- 📚 **Component Library & Catalog**: Access 10,000+ cataloged components:
+  - **Smart Categorization**: Hierarchical categories with multi-dimensional tagging
+  - **Quality Scoring**: GitHub stars, npm downloads, performance metrics
+  - **Advanced Search**: Filter by framework, features, paradigm, ecosystem
+  - **React Intelligence**: Deep integration with awesome-react-components
+  - **Framework Matrix**: 50+ frameworks with feature compatibility tracking
+  - **Performance Metrics**: Bundle sizes, render times, memory usage
+  - **Relationship Mapping**: Alternatives, dependencies, extensions
+  - **Export/Import**: Share component collections across projects
 - ☁️ **Cloud Sync**: Sync your components and settings across devices.
 - 📊 **Advanced Analytics**: Get deep insights into your component usage and code savings.
 - 🔒 **Private Registry**: For enterprise teams to host their own secure component libraries.

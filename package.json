@@ -1,7 +1,7 @@
 {
   "name": "revolutionary-ui",
-  "version": "3.0.0",
-  "description": "Revolutionary UI v3.0 - AI-Powered Interactive CLI with 10+ AI providers, website inspiration analyzer, and advanced code generation",
+  "version": "3.1.0",
+  "description": "Revolutionary UI v3.1 - Production-Ready Marketplace with Stripe Integration, Enhanced AI CLI, and 60-95% Code Reduction",
   "keywords": [
     "ui",
     "factory",
@@ -62,7 +62,11 @@
   },
   "bin": {
     "create-factory": "./bin/cli.js",
-    "revolutionary-ui": "./dist/bin/revolutionary-ui.js"
+    "revolutionary-ui": "./dist/cli/index.js",
+    "rui": "./dist/cli/rui-cli.js",
+    "rui-wizard": "./dist/cli/revolutionary-cli.js",
+    "create-revolutionary-app": "./dist/cli/create-app.js",
+    "rui-simple": "./dist/cli/simple-wizard.js"
   },
   "files": [
     "dist",
@@ -83,7 +87,24 @@
     "lint": "echo 'Linting not configured yet'",
     "cli": "tsx src/lib/factory/cli.ts",
     "cli:analyze": "tsx src/lib/factory/cli.ts analyze",
-    "cli:setup": "tsx src/lib/factory/cli.ts setup"
+    "cli:setup": "tsx src/lib/factory/cli.ts setup",
+    "test:ai": "tsx src/cli/test-ai-providers.ts",
+    "test:firecrawl": "tsx test-firecrawl-api.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report",
+    "library": "tsx src/component-library/cli/ComponentLibraryCLI.ts",
+    "library:search": "tsx src/component-library/cli/ComponentLibraryCLI.ts search",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:push": "prisma db push",
+    "prisma:studio": "prisma studio",
+    "prisma:seed": "tsx prisma/seed.ts",
+    "seed:billing-test": "node -r dotenv/config scripts/test-billing-page.js dotenv_config_path=.env.local",
+    "db:setup": "npm run prisma:generate && npm run prisma:push",
+    "db:reset": "prisma migrate reset"
   },
   "peerDependencies": {
     "react": ">=19.0.0",
@@ -100,18 +121,34 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.57.0",
     "@google/generative-ai": "^0.24.1",
+    "@mistralai/mistralai": "^0.4.0",
+    "@prisma/client": "^6.13.0",
+    "@supabase/supabase-js": "^2.53.0",
+    "@types/glob": "^8.1.0",
+    "algoliasearch": "^5.35.0",
+    "axios": "^1.7.2",
     "chalk": "^5.4.1",
     "class-variance-authority": "^0.7.1",
+    "cli-table3": "^0.6.5",
     "clsx": "^2.1.1",
     "commander": "^14.0.0",
+    "dotenv": "^16.6.1",
+    "glob": "^11.0.3",
     "inquirer": "^12.9.0",
+    "jsonwebtoken": "^9.0.2",
     "openai": "^4.52.7",
     "ora": "^8.2.0",
+    "pg": "^8.16.3",
+    "postgres": "^3.4.7",
+    "puppeteer": "^23.0.0",
+    "semver": "^7.6.0",
+    "stripe": "^18.4.0",
     "uuid": "^11.0.6",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.5",
+    "@playwright/test": "^1.54.2",
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.4",
@@ -125,6 +162,7 @@
     "commander": "^14.0.0",
     "eslint": "^9.32.0",
     "jsdom": "^26.1.0",
+    "prisma": "^6.13.0",
     "rollup": "^4.46.2",
     "rollup-plugin-dts": "^6.2.1",
     "tsx": "^4.20.3",
@@ -138,5 +176,8 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }

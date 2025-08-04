@@ -316,7 +316,7 @@ function generateCode(componentType: string, config: any, framework: string): st
   
   switch (framework) {
     case 'react':
-      return `import { setup } from '@vladimirdukelic/revolutionary-ui-factory'
+      return `import { setup } from 'revolutionary-ui'
 
 const ui = setup()
 
@@ -332,7 +332,7 @@ export function My${componentName}() {
 </template>
 
 <script setup>
-import { setup } from '@vladimirdukelic/revolutionary-ui-factory'
+import { setup } from 'revolutionary-ui'
 
 const ui = setup({ framework: 'vue' })
 const ${componentName} = ui.create${componentName}(${configString})

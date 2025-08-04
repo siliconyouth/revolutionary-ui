@@ -62,16 +62,16 @@ export default function PlaygroundPage() {
     let code = '';
     switch (framework) {
       case 'react':
-        code = `import { setup } from '@vladimirdukelic/revolutionary-ui-factory';\n\nconst ui = setup();\n\nexport const ${componentName} = () => {\n  return ui.create${componentName}({\n${configString}\n  });\n};`;
+        code = `import { setup } from 'revolutionary-ui';\n\nconst ui = setup();\n\nexport const ${componentName} = () => {\n  return ui.create${componentName}({\n${configString}\n  });\n};`;
         break;
       case 'vue':
-        code = `<template>\n  <component :is="generatedComponent" />\n</template>\n\n<script setup>\nimport { shallowRef } from 'vue';\nimport { setup } from '@vladimirdukelic/revolutionary-ui-factory';\n\nconst ui = setup({ framework: 'vue' });\n\nconst generatedComponent = shallowRef(ui.create${componentName}({\n${configString}\n}));\n</script>`;
+        code = `<template>\n  <component :is="generatedComponent" />\n</template>\n\n<script setup>\nimport { shallowRef } from 'vue';\nimport { setup } from 'revolutionary-ui';\n\nconst ui = setup({ framework: 'vue' });\n\nconst generatedComponent = shallowRef(ui.create${componentName}({\n${configString}\n}));\n</script>`;
         break;
       case 'angular':
-        code = `import { Component } from '@angular/core';\nimport { setup } from '@vladimirdukelic/revolutionary-ui-factory';\n\n@Component({\n  selector: 'app-${component.id}',\n  template: '<div id="container"></div>',\n})\nexport class ${componentName}Component {\n  ngAfterViewInit() {\n    const ui = setup({ framework: 'angular' });\n    const container = document.getElementById('container');\n    if (container) {\n      ui.create${componentName}({\n${configString}\n      }, container);\n    }\n  }\n}`;
+        code = `import { Component } from '@angular/core';\nimport { setup } from 'revolutionary-ui';\n\n@Component({\n  selector: 'app-${component.id}',\n  template: '<div id="container"></div>',\n})\nexport class ${componentName}Component {\n  ngAfterViewInit() {\n    const ui = setup({ framework: 'angular' });\n    const container = document.getElementById('container');\n    if (container) {\n      ui.create${componentName}({\n${configString}\n      }, container);\n    }\n  }\n}`;
         break;
       case 'svelte':
-        code = `<script>\n  import { onMount } from 'svelte';\n  import { setup } from '@vladimirdukelic/revolutionary-ui-factory';\n\n  let container;\n  onMount(() => {\n    const ui = setup({ framework: 'svelte' });\n    ui.create${componentName}({\n${configString}\n    }, container);\n  });\n</script>\n\n<div bind:this={container}></div>`;
+        code = `<script>\n  import { onMount } from 'svelte';\n  import { setup } from 'revolutionary-ui';\n\n  let container;\n  onMount(() => {\n    const ui = setup({ framework: 'svelte' });\n    ui.create${componentName}({\n${configString}\n    }, container);\n  });\n</script>\n\n<div bind:this={container}></div>`;
         break;
       default:
         code = 'Select a framework to see the code.';

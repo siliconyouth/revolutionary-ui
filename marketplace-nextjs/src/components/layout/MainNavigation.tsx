@@ -1,13 +1,17 @@
 'use client';
 
+import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { setup } from '@vladimirdukelic/revolutionary-ui-factory';
-
-// Initialize the factory. In a real app, this might be done in a provider.
-const ui = setup({ framework: 'react' });
 
 export function MainNavigation() {
-  const { user } = useAuth();
+  let user = null;
+  try {
+    const auth = useAuth();
+    user = auth.user;
+  } catch (e) {
+    // Handle case where AuthContext is not available
+    console.warn('AuthContext not available in MainNavigation');
+  }
 
   const navItems = [
     { label: 'Components', href: '/components' },
@@ -18,31 +22,60 @@ export function MainNavigation() {
     { label: 'Docs', href: '/docs/getting-started' }
   ];
 
-  const rightContent = user
-    ? { type: 'button', label: 'Dashboard', href: '/dashboard' }
-    : { type: 'button', label: 'Sign In', href: '/auth/signin' };
-
-  // Generate the Navbar using the Revolutionary UI Factory
-  const Navbar = ui.createNavbar({
-    logo: {
-      type: 'image',
-      src: '/logo.svg', // Assuming a logo file exists
-      alt: 'Revolutionary UI Factory Logo',
-      href: '/',
-    },
-    navItems: navItems,
-    rightContent: [
-        rightContent,
-        {
-            type: 'icon',
-            icon: 'github', // Assuming the factory can resolve this to a GitHub icon
-            href: 'https://github.com/siliconyouth/revolutionary-ui-factory-system',
-            ariaLabel: 'GitHub Repository'
-        }
-    ],
-    isSticky: true,
-    withGlassmorphism: true,
-  });
-
-  return <Navbar />;
+  return (
+    <nav className="bg-white shadow-md sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex">
+            <div className="flex-shrink-0 flex items-center">
+              <Link href="/" className="text-xl font-bold text-gray-800">
+                Revolutionary UI Factory
+              </Link>
+            </div>
+            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
+            {user ? (
+              <Link
+                href="/dashboard"
+                className="bg-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-700"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/auth/signin"
+                className="bg-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-purple-700"
+              >
+                Sign In
+              </Link>
+            )}
+            <a
+              href="https://github.com/siliconyouth/revolutionary-ui-factory-system"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-gray-700"
+              aria-label="GitHub Repository"
+            >
+              <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
 }
+
+export default MainNavigation;

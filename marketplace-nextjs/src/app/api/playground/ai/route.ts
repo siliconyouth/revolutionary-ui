@@ -12,7 +12,7 @@ class SimpleComponentGenerator {
         const configString = JSON.stringify(config, null, 2);
 
         if (framework === 'react') {
-            return `import { setup } from '@vladimirdukelic/revolutionary-ui-factory';\n\nconst ui = setup();\n\nexport const ${componentName} = () => {\n  return ui.create${componentName}(${configString});\n};`;
+            return `import { setup } from 'revolutionary-ui';\n\nconst ui = setup();\n\nexport const ${componentName} = () => {\n  return ui.create${componentName}(${configString});\n};`;
         }
         return `// Code for ${componentName} in ${framework}`;
     }

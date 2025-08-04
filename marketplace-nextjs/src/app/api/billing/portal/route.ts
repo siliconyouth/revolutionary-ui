@@ -1,41 +1,25 @@
-import { NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import Stripe from 'stripe'
 
-export async function POST(req: Request) {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2024-12-18.acacia'
+})
+
+export async function POST(req: NextRequest) {
   try {
-    const { customerId } = await req.json()
-
-    if (!customerId) {
-      return NextResponse.json(
-        { error: 'Missing customer ID' },
-        { status: 400 }
-      )
-    }
-
-    // Verify user owns this customer ID
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
     
     if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { data: subscription } = await supabase
-      .from('user_subscriptions')
-      .select('stripe_customer_id')
-      .eq('user_id', user.id)
-      .eq('stripe_customer_id', customerId)
-      .single()
+    const body = await req.json()
+    const { customerId } = body
 
-    if (!subscription) {
-      return NextResponse.json(
-        { error: 'Customer not found' },
-        { status: 404 }
-      )
+    if (!customerId) {
+      return NextResponse.json({ error: 'Customer ID required' }, { status: 400 })
     }
 
     // Create portal session

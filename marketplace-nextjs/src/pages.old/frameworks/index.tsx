@@ -124,7 +124,7 @@ export default function FrameworksPage() {
         content: ui.createCodeBlock({
           language: 'bash',
           code: `# Install Revolutionary UI Factory
-npm install @vladimirdukelic/revolutionary-ui-factory
+npm install revolutionary-ui
 
 # Install framework-specific dependencies
 npm install ${selectedFramework === 'react' ? 'react react-dom' : 
@@ -263,7 +263,7 @@ npm install ${selectedFramework === 'react' ? 'react react-dom' :
 
 function getFrameworkExample(frameworkId: string): string {
   const examples: Record<string, string> = {
-    react: `import { setup } from '@vladimirdukelic/revolutionary-ui-factory'
+    react: `import { setup } from 'revolutionary-ui'
 
 // Initialize for React
 const ui = setup('react', 'tailwind')
@@ -285,7 +285,7 @@ export default function App() {
 </template>
 
 <script setup>
-import { setup } from '@vladimirdukelic/revolutionary-ui-factory'
+import { setup } from 'revolutionary-ui'
 
 const ui = setup('vue', 'tailwind')
 const Dashboard = ui.createDashboard({ framework: 'vue' })
@@ -297,7 +297,7 @@ const widgets = [
 </script>`,
 
     angular: `import { Component } from '@angular/core'
-import { setup } from '@vladimirdukelic/revolutionary-ui-factory'
+import { setup } from 'revolutionary-ui'
 
 @Component({
   selector: 'app-root',
@@ -318,7 +318,7 @@ export class AppComponent {
 }`,
 
     svelte: `<script>
-import { setup } from '@vladimirdukelic/revolutionary-ui-factory'
+import { setup } from 'revolutionary-ui'
 
 const ui = setup('svelte', 'tailwind')
 const Dashboard = ui.createDashboard({ framework: 'svelte' })
@@ -331,7 +331,7 @@ const widgets = [
 
 <Dashboard {widgets} />`,
 
-    solid: `import { setup } from '@vladimirdukelic/revolutionary-ui-factory'
+    solid: `import { setup } from 'revolutionary-ui'
 
 const ui = setup('solid', 'tailwind')
 

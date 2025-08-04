@@ -1,105 +1,19 @@
-'use client';
-
-import { setup } from '@vladimirdukelic/revolutionary-ui-factory';
-import { components } from '@/data/components-v2';
-import Link from 'next/link';
-
-// Initialize the factory for React
-const ui = setup({ framework: 'react' });
-
 export default function HomePage() {
-  // --- Define configurations for our factory components ---
-
-  const heroConfig = {
-    title: "Build UI Like Never Before",
-    subtitle: "An ecosystem for generating production-ready components with simple configurations. Drastically reduce boilerplate and ship faster.",
-    mainAction: { label: 'Explore Components', href: '/components' },
-    secondaryAction: { label: 'Try AI Playground', href: '/playground/ai', variant: 'outline' },
-    withAnimation: true,
-    gradientAccent: 'from-purple-500 to-blue-500',
-  };
-
-  const componentGridConfig = {
-    items: components.slice(0, 6).map(c => ui.createCard({
-      title: c.name,
-      description: c.description,
-      href: `/components/${c.id}`,
-      icon: c.icon,
-      tags: [`${c.reduction}% Less Code`],
-      isGlassmorphism: true,
-    })),
-    columns: 3,
-  };
-
-  const featuresConfig = {
-    title: "A New Paradigm for UI Development",
-    subtitle: "The Revolutionary UI Factory is more than a library; it's a complete development ecosystem.",
-    features: [
-      {
-        icon: 'zap',
-        title: 'Generate, Don\'t Write',
-        description: 'Describe your component with a configuration object and let the factory handle the complex implementation details.'
-      },
-      {
-        icon: 'layers',
-        title: 'Framework Agnostic',
-        description: 'Write your configuration once and generate components for React, Vue, Angular, and more.'
-      },
-      {
-        icon: 'cpu',
-        title: 'AI-Powered',
-        description: 'Use natural language to generate components, analyze repositories, and get intelligent recommendations.'
-      }
-    ],
-  };
-
-  const ctaConfig = {
-    title: "Ready to Revolutionize Your Workflow?",
-    subtitle: "Start building with the Revolutionary UI Factory today and experience the future of UI development.",
-    mainAction: { label: 'Get Started for Free', href: '/auth/signup' },
-  };
-
-  const footerConfig = {
-    logo: { src: '/logo.svg', alt: 'Logo', href: '/' },
-    productLinks: [
-      { label: 'Components', href: '/components' },
-      { label: 'Playground', href: '/playground' },
-      { label: 'AI Playground', href: '/playground/ai' },
-    ],
-    companyLinks: [
-      { label: 'About', href: '/about' },
-      { label: 'Contact', href: '/contact' },
-    ],
-    socialLinks: [
-      { platform: 'github', href: 'https://github.com/siliconyouth/revolutionary-ui-factory-system' },
-    ],
-    copyrightMessage: `© ${new Date().getFullYear()} Revolutionary UI Factory. All rights reserved.`,
-  };
-
-  // --- Generate components using the factory ---
-  const Hero = ui.createHero(heroConfig);
-  const ComponentGrid = ui.createGrid(componentGridConfig);
-  const FeatureSection = ui.createFeatureSection(featuresConfig);
-  const CallToAction = ui.createCallToAction(ctaConfig);
-  const Footer = ui.createFooter(footerConfig);
-
   return (
-    <div>
-      <Hero />
+    <div className="p-8">
+      <h1 className="text-3xl font-bold mb-4">Revolutionary UI - Home</h1>
+      <p className="mb-4">Welcome to Revolutionary UI Factory System</p>
       
-      <section className="py-20 container mx-auto text-center">
-        <h2 className="text-3xl font-bold mb-12">Featured Components</h2>
-        <ComponentGrid />
-        <div className="mt-12">
-            <Link href="/components" passHref>
-                {ui.createButton({ label: 'Explore All Components', variant: 'outline' })}
-            </Link>
-        </div>
-      </section>
-
-      <FeatureSection />
-      <CallToAction />
-      <Footer />
+      <div className="space-y-2">
+        <h2 className="text-xl font-semibold">Test Pages:</h2>
+        <ul className="list-disc pl-6">
+          <li><a href="/test" className="text-blue-600 hover:underline">Environment Test</a></li>
+          <li><a href="/test-simple" className="text-blue-600 hover:underline">Simple Test</a></li>
+          <li><a href="/test/billing" className="text-blue-600 hover:underline">Billing API Test</a></li>
+          <li><a href="/dashboard/billing" className="text-blue-600 hover:underline">Dashboard Billing</a></li>
+          <li><a href="/pricing" className="text-blue-600 hover:underline">Pricing</a></li>
+        </ul>
+      </div>
     </div>
-  );
+  )
 }

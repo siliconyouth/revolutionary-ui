@@ -1,4 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function POST(request: NextRequest) {
+  return NextResponse.json(
+    { error: 'AI test endpoint temporarily disabled for production build' },
+    { status: 503 }
+  );
+}
+
+/* Original implementation commented out for production build
 import { 
   OpenAIProvider, 
   AnthropicProvider, 
@@ -101,3 +110,4 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+*/

@@ -131,7 +131,7 @@ export default function MigrationGuidePage() {
 npm uninstall revolutionary-ui-factory
 
 # New
-npm install @vladimirdukelic/revolutionary-ui-factory`,
+npm install revolutionary-ui`,
                   features: { copy: true }
                 })
               },
@@ -143,7 +143,7 @@ npm install @vladimirdukelic/revolutionary-ui-factory`,
 import { createDataTable, createForm } from 'revolutionary-ui-factory';
 
 // New (v2.0)
-import { setup } from '@vladimirdukelic/revolutionary-ui-factory';
+import { setup } from 'revolutionary-ui';
 const ui = setup();
 const table = ui.createDataTable(config);`,
                   features: { copy: true }
@@ -200,10 +200,10 @@ const table = ui.createDataTable(config);`,
             ],
             data: [
               { step: 1, action: 'Remove old package', command: 'npm uninstall revolutionary-ui-factory' },
-              { step: 2, action: 'Install new package', command: 'npm install @vladimirdukelic/revolutionary-ui-factory' },
+              { step: 2, action: 'Install new package', command: 'npm install revolutionary-ui' },
               { step: 3, action: 'Update React', command: 'npm install react@^19.0.0 react-dom@^19.0.0' },
               { step: 4, action: 'Update TypeScript', command: 'npm install -D typescript@^5.0.0' },
-              { step: 5, action: 'Update imports', command: "Replace 'revolutionary-ui-factory' with '@vladimirdukelic/revolutionary-ui-factory'" },
+              { step: 5, action: 'Update imports', command: "Replace 'revolutionary-ui-factory' with 'revolutionary-ui'" },
               { step: 6, action: 'Update component creation', command: 'const ui = setup(); ui.createDataTable(...)' }
             ]
           })
@@ -331,7 +331,7 @@ const table = ui.createDataTable(config);`,
       }),
       ui.createCodeBlock({
         language: 'javascript',
-        code: `import { enableV1Compatibility } from '@vladimirdukelic/revolutionary-ui-factory';
+        code: `import { enableV1Compatibility } from 'revolutionary-ui';
 
 // Enable v1 API compatibility
 enableV1Compatibility();

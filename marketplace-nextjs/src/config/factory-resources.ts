@@ -140,6 +140,54 @@ export const PACKAGE_CATEGORIES = {
   }
 }
 
+// Component Registry for Playground
+export const componentRegistry = [
+  {
+    id: 'form',
+    name: 'Form Component',
+    factory: 'FormFactory',
+    description: 'Dynamic form with validation',
+    configOptions: {
+      fields: [],
+      validation: {},
+      styling: 'tailwind'
+    }
+  },
+  {
+    id: 'table',
+    name: 'Table Component',
+    factory: 'TableFactory',
+    description: 'Data table with sorting and filtering',
+    configOptions: {
+      columns: [],
+      data: [],
+      features: ['sort', 'filter', 'pagination']
+    }
+  },
+  {
+    id: 'dashboard',
+    name: 'Dashboard',
+    factory: 'DashboardFactory',
+    description: 'Admin dashboard layout',
+    configOptions: {
+      layout: 'grid',
+      widgets: [],
+      theme: 'light'
+    }
+  },
+  {
+    id: 'chart',
+    name: 'Chart Component',
+    factory: 'ChartFactory',
+    description: 'Data visualization charts',
+    configOptions: {
+      type: 'bar',
+      data: [],
+      options: {}
+    }
+  }
+];
+
 // Export all configurations
 export {
   FRAMEWORK_CONFIGS,

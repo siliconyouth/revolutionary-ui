@@ -4,6 +4,260 @@ All notable changes to the Revolutionary UI Factory System will be documented in
 
 🌐 **Website**: [https://revolutionary-ui.com](https://revolutionary-ui.com) | 📦 **npm**: [@vladimirdukelic/revolutionary-ui-factory](https://www.npmjs.com/package/@vladimirdukelic/revolutionary-ui-factory)
 
+## [3.1.0] - 2025-08-04
+
+### 🎉 Major Release: Production-Ready Marketplace
+
+This release marks a significant milestone with the Revolutionary UI Marketplace now fully production-ready, featuring complete Stripe integration, enhanced security, and comprehensive deployment tooling.
+
+#### ✨ New Features
+
+##### 🛍️ Production-Ready Marketplace
+- **Complete Stripe Integration**: Full payment processing with subscriptions, webhooks, and billing management
+- **Tiered Pricing System**: Free, Pro ($19.99/mo), Company ($49.99/mo), and Beta/Early Bird (lifetime unlimited)
+- **Feature Access Control**: Middleware-based feature flags and usage tracking
+- **Subscription Management**: Customer portal integration for self-service subscription management
+- **Production Build**: Optimized Next.js 15 build with all dependencies resolved
+
+##### 🚀 Deployment Infrastructure
+- **Deployment Checklist**: Automated verification script for production readiness
+- **Multi-Platform Support**: Ready for Vercel, Netlify, or custom VPS deployment
+- **Environment Management**: Centralized configuration from root `.env.local`
+- **Security Hardening**: Proper .gitignore patterns and environment variable protection
+
+##### 🧩 UI Components
+- **New shadcn/ui Components**: Added badge, textarea, checkbox, slider, tabs, alert, table, and avatar
+- **Component Preview System**: CodeEditor and ComponentPreview for live component testing
+- **Navigation Component**: Responsive navigation with active state management
+
+#### 🔧 Technical Improvements
+
+##### 🏗️ Architecture
+- **Prisma ORM Integration**: Robust database layer with migrations and seeding
+- **Auth System**: NextAuth.js configuration for secure authentication
+- **API Routes**: RESTful endpoints for billing, subscriptions, and component management
+- **Middleware**: Feature access validation and usage tracking
+
+##### 📦 Build System
+- **Production Build**: Successfully compiles with zero errors
+- **Dependency Management**: All missing dependencies resolved
+- **TypeScript**: Full type safety with proper configurations
+- **Module Resolution**: Fixed all import/export issues
+
+#### 🐛 Bug Fixes
+- Fixed AuthProvider context issues across all pages
+- Resolved Prisma client singleton pattern for production
+- Fixed Visual Builder page syntax errors
+- Corrected admin submissions page component structure
+- Fixed AI and transpiler API route imports
+- Resolved all missing UI component imports
+- Fixed environment variable loading in production
+
+#### 📚 Documentation Updates
+- **DEPLOYMENT-CHECKLIST.md**: Comprehensive deployment guide
+- **QUICK-DEPLOY-GUIDE.md**: Step-by-step deployment instructions
+- **.env.sample**: Production environment template
+- **README Updates**: Current features and capabilities
+- **CLAUDE.md**: Updated with v3.1.0 instructions
+
+#### 🔄 Breaking Changes
+- Environment variables now centrally managed from root `.env.local`
+- Visual Builder temporarily disabled for production stability
+- AI generation routes require proper API keys
+
+#### 🚧 Known Issues
+- Visual Builder UI pending redesign for v3.2.0
+- Some AI providers require additional configuration
+
+#### 🎯 What's Next (v3.2.0)
+- Visual Builder UI complete rewrite
+- Enhanced AI model support
+- Plugin system architecture
+- Mobile app development
+- Enterprise features (SSO, RBAC)
+
+---
+
+## [3.2.1] - 2025-08-04
+
+### 🔧 Infrastructure Updates & Complete Database Schema
+
+#### Added
+- **Supabase Integration**: Complete database setup with Supabase
+  - Automated configuration scripts (`update-from-supabase-cli.js`)
+  - Interactive connection testing (`test-connection.js`)
+  - Database diagnostics tool (`diagnose-supabase.js`)
+  - Prisma runner with proper env loading (`run-prisma.js`)
+  - Database reset and seed script (`reset-and-seed.js`)
+- **TypeScript Configuration**: Root `tsconfig.json` for better IDE support
+- **Comprehensive Database Schema**:
+  - **User & Authentication**: Complete user management with roles (USER, CREATOR, MODERATOR, ADMIN)
+  - **Component Library**: Resources, categories, tags, previews with full marketplace support
+  - **AI Provider System**: Multi-provider AI configuration with models and usage tracking
+  - **Team Collaboration**: Teams, projects, members with role-based permissions
+  - **Private Registry**: NPM-compatible package registry with access tokens
+  - **Analytics & Monitoring**: Component analytics, performance metrics, activity logs
+  - **Notifications**: Multi-channel notification system
+  - **Feature Flags**: Dynamic feature rollout with targeting
+  - **System Configuration**: Centralized configuration management
+
+#### Updated
+- **Prisma**: Updated to latest version 6.13.0
+- **Package Scripts**: Updated marketplace-nextjs Prisma scripts to use centralized runner
+- **Database URLs**: Fixed connection strings to use Supabase pooler URLs
+- **Seed Script**: Comprehensive data seeding including AI providers, teams, and sample resources
+
+#### Fixed
+- Database connection issues with proper pooler URL configuration
+- Environment variable loading for Prisma commands
+- Test connection script to properly validate Supabase API endpoints
+- Prisma schema validation errors with proper relation mapping
+
+#### Documentation
+- Added `SUPABASE_SETUP_COMPLETE.md` with detailed setup instructions
+- Updated `QUICK_SETUP.md` with latest configuration steps
+- Created `PRISMA_SCHEMA_COMPLETE.md` documenting all database models
+
+## [3.2.0] - 2025-08-03
+
+### 🔄 Framework Transpilation System
+
+#### Added
+- **Framework Transpilation Engine**: Convert components between frameworks
+  - Support for React, Vue, Angular, Svelte, Solid, Preact, and Lit
+  - Bidirectional conversion for major frameworks
+  - AST-based transformation for accuracy
+  - Preservation of component functionality and patterns
+- **Intelligent Code Transformation**:
+  - State management conversion (hooks ↔️ refs ↔️ properties)
+  - Event handler mapping (onClick ↔️ @click ↔️ (click))
+  - Lifecycle method translation
+  - Template syntax transformation (JSX ↔️ templates)
+  - Two-way binding conversion
+  - Conditional and list rendering patterns
+- **Framework-Specific Transpilers**:
+  - `ReactToVueTranspiler` - React to Vue (Options & Composition API)
+  - `VueToReactTranspiler` - Vue to React (Class & Function components)
+  - `ReactToAngularTranspiler` - React to Angular components
+  - `ReactToSvelteTranspiler` - React to Svelte components
+  - Additional transpilers for other framework pairs
+- **Web Interface**: Interactive transpilation playground
+  - Live code editor with syntax highlighting
+  - Framework selection with visual indicators
+  - Sample component library
+  - Real-time transpilation
+  - Code export and download options
+  - Warning and error display
+- **API Endpoints**:
+  - `/api/transpiler/transpile` - POST endpoint for transpilation
+  - Support for TypeScript and formatting options
+  - Transpilation path discovery
+
+#### Technical Implementation
+- Babel-based AST parsing and transformation
+- Framework feature detection and mapping
+- Pattern recognition for common UI patterns
+- Code formatting with Prettier
+- Type preservation for TypeScript projects
+
+## [3.1.0] - 2025-08-03
+
+### 🎯 Visual Component Preview System
+
+#### Added
+- **Visual Component Preview System**: Interactive previews for UI components
+  - Live component rendering in isolated iframes
+  - Support for multiple frameworks (React, Vue, Angular, Svelte)
+  - Responsive preview modes (Desktop, Tablet, Mobile)
+  - Interactive playgrounds with visual prop controls
+  - Code editor with syntax highlighting
+  - Export to CodeSandbox, StackBlitz, and CodePen
+  - Preview variations showcase
+  - Analytics tracking for views, interactions, and copies
+- **Database Schema Extensions**: New tables for preview system
+  - `component_previews` - Store preview configurations
+  - `preview_variations` - Multiple component states
+  - `playground_templates` - Interactive playground configs
+  - `preview_providers` - External sandbox providers
+  - `preview_analytics` - Usage tracking
+- **React Components**: Complete preview UI implementation
+  - `ComponentPreview` - Main preview component
+  - `PreviewIframe` - Secure iframe wrapper
+  - `PreviewControls` - Interactive playground controls
+  - `CodeBlock` - Syntax highlighted code display
+  - `CodeEditor` - Live code editing with CodeMirror
+- **API Endpoints**: RESTful API for preview management
+  - `/api/preview` - CRUD operations for previews
+  - `/api/preview/analytics` - Analytics tracking
+  - `/api/catalog` - Enhanced catalog browsing
+- **Catalog Integration**: 
+  - New catalog browsing page with preview indicators
+  - Individual component preview pages
+  - Filter by preview availability
+  - Preview count badges
+
+#### Technical Details
+- TypeScript types for complete type safety
+- Performance optimized with lazy loading
+- Security hardened iframe sandboxing
+- Analytics hooks for usage tracking
+- Responsive design for all screen sizes
+
+## [3.0.0] - 2025-08-03
+
+### ✨ Major Release: AI-Powered Interactive CLI, Website Overhaul & UI Component Catalog
+
+#### Added
+- **AI-Powered Interactive CLI**: GPT-4o Code Preview and multi-provider support
+- **Website Hub Redesign**: Component browser, visual builder, AI playground, and project analyzer at revolutionary-ui.com
+- **Universal Architecture**: 150+ component types and 10+ framework adapters
+- **Visual Component Builder**: Drag-and-drop interface with real-time preview and export
+- **Enhanced AI Integration**: Multi-provider, streaming, context-aware suggestions, and framework transformation
+- **VSCode Extension**: New snippets, metrics, and IntelliSense improvements
+- **UI Component Catalog Database**: Comprehensive catalog of 10,000+ UI components
+  - PostgreSQL database with 20+ tables for components, frameworks, and metrics
+  - Hierarchical categorization with multi-dimensional tagging
+  - Full-text search using PostgreSQL tsvector
+  - Quality scoring based on GitHub stars, npm downloads, and performance
+  - React-specific intelligence from awesome-react-components
+  - Framework compatibility tracking across 50+ frameworks
+- **Framework Intelligence System**: Comprehensive framework tracking
+  - Cataloged 50+ frameworks from Vercel documentation
+  - Feature matrix tracking (SSR, SSG, ISR, TypeScript, etc.)
+  - Framework relationships and ecosystem mapping
+  - Deployment platform compatibility
+  - Vercel-specific optimizations and metadata
+- **AI Training Datasets**: Fine-tuning datasets for UI generation
+  - 9 JSONL dataset files covering all major component types
+  - 21st.dev-style component generation patterns
+  - Analysis of 9 major UI libraries (shadcn/ui, Material UI, Ant Design, etc.)
+  - Ready for Claude Opus 4 and Sonnet 4 fine-tuning
+
+#### Technical Infrastructure
+- **Database Schema**: Comprehensive PostgreSQL + Prisma ORM setup
+  - 15+ core tables for resources, categories, frameworks, and tags
+  - React-specific tables for component features and ecosystem compatibility
+  - Framework feature matrix and relationship tracking
+  - Historical metrics and trend analysis support
+- **Import Scripts**: Automated data ingestion
+  - `import-awesome-react-components.ts` for React ecosystem
+  - `catalog-data-import.ts` for general component data
+  - Support for batch imports from curated lists
+- **TypeScript Types**: Complete type definitions
+  - `ui-catalog.ts` with comprehensive interfaces
+  - `react-catalog.ts` for React-specific features
+  - `frameworks-catalog.ts` for framework metadata
+
+#### Documentation
+- **UI Catalog Documentation**: Complete guide to the catalog system
+  - `UI-CATALOG-SUMMARY.md` - Overview and usage
+  - `UI-CATALOG-CATEGORIZATION.md` - Categorization strategy
+  - `REACT-CATEGORIZATION-ANALYSIS.md` - React ecosystem analysis
+  - `FRAMEWORKS-CATALOG-SUMMARY.md` - Framework intelligence guide
+- **System Prompts & Context Engineering**
+  - `AI_UI_GENERATION_GUIDE.md` - Claude fine-tuning methodology
+  - Enhanced CLAUDE.md and CLAUDE_CONTEXT.md with catalog information
+
 ## [2.4.0] - 2025-08-01
 
 ### 🛍️ Component Library Marketplace Integration

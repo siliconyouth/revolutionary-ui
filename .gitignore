@@ -42,3 +42,13 @@ marketplace-nextjs/node_modules_backup_old/
 
 # Logs
 logs/
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/e2e-results/
+screenshots/
+
+# Revolutionary UI
+.revolutionary-ui.config.json

@@ -2,7 +2,7 @@
 
 This context file provides comprehensive information for Claude Code to work effectively with the Revolutionary UI Factory System. It follows best practices for context engineering and is designed to maximize Claude's understanding and capabilities.
 
-Last Updated: August 1, 2025 | Version: 2.1.0
+Last Updated: August 3, 2025 | Version: 3.0.0
 
 ## Table of Contents
 1. [Project Identity](#project-identity)
@@ -15,6 +15,8 @@ Last Updated: August 1, 2025 | Version: 2.1.0
 8. [Performance Considerations](#performance-considerations)
 9. [Testing Strategy](#testing-strategy)
 10. [Deployment Process](#deployment-process)
+11. [UI Component Catalog](#ui-component-catalog)
+12. [AI Training Datasets](#ai-training-datasets)
 
 ## Project Identity
 
@@ -442,6 +444,125 @@ factory.on('afterGenerate', (result) => {
 })
 ```
 
+## UI Component Catalog
+
+### Database Schema Overview
+
+The UI Component Catalog uses a comprehensive PostgreSQL database with 20+ tables:
+
+#### Core Tables
+- `resources` - Main catalog of UI components/libraries
+- `categories` - Hierarchical categorization system
+- `resource_types` - Component, Library, Framework, Tool classifications
+- `paradigms` - Programming approaches (Functional, Class-Based, etc.)
+- `tags` - Flexible tagging system
+- `frameworks` - 50+ frameworks tracked with features
+
+#### React-Specific Tables
+- `react_component_features` - Hooks, styling, architecture patterns
+- `react_ecosystem_compatibility` - Next.js, Gatsby, Remix support
+- `component_dependencies` - Package dependency tracking
+- `performance_metrics` - Bundle size, render performance
+
+#### Framework Tables
+- `framework_categories` - Full-stack, Frontend, SSG, Backend, etc.
+- `framework_features` - SSR, SSG, ISR, TypeScript support
+- `vercel_framework_metadata` - Vercel-specific optimizations
+
+### Catalog Usage
+
+```typescript
+// Search for React components
+const components = await searchComponents({
+  framework: 'react',
+  category: 'charts',
+  features: {
+    typescript: true,
+    ssr: true,
+    bundleSize: { max: 50 } // KB
+  }
+})
+
+// Get framework recommendations
+const frameworks = await recommendFrameworks({
+  projectType: 'webapp',
+  requirements: {
+    ssr: true,
+    typescript: true,
+    ecosystem: 'react'
+  }
+})
+```
+
+### Import Scripts
+
+```bash
+# Import React components from awesome-react-components
+ts-node scripts/import-awesome-react-components.ts
+
+# Update catalog metrics
+ts-node scripts/catalog-data-import.ts
+```
+
+## AI Training Datasets
+
+### Dataset Structure
+
+JSON Lines format with system prompts and examples:
+
+```jsonl
+{
+  "system": "You are an expert UI developer...",
+  "messages": [
+    {"role": "user", "content": "Create a pricing table..."},
+    {"role": "assistant", "content": "I'll create...```tsx..."}
+  ]
+}
+```
+
+### Available Datasets
+
+1. **Pricing Components** (`ui-generation-pricing-components.jsonl`)
+   - 6 comprehensive examples
+   - Startup, SaaS, Enterprise patterns
+
+2. **Form Components** (`ui-generation-form-components.jsonl`)
+   - Contact forms, multi-step, dynamic builders
+
+3. **Dashboard Components** (`ui-generation-dashboard-components.jsonl`)
+   - Analytics, project management, financial
+
+4. **Table/Data Display** (`ui-generation-table-components.jsonl`)
+   - Data tables, kanban boards, grids
+
+5. **Navigation** (`ui-generation-navigation-components.jsonl`)
+   - Navbars, sidebars, breadcrumbs
+
+6. **Modals/Dialogs** (`ui-generation-modal-components.jsonl`)
+   - Modal systems, command palettes, sheets
+
+7. **Cards** (`ui-generation-card-components.jsonl`)
+   - Product cards, glassmorphism, 3D effects
+
+8. **Notifications** (`ui-generation-notification-components.jsonl`)
+   - Toasts, notification centers, snackbars
+
+9. **Hero/Landing** (`ui-generation-hero-landing-components.jsonl`)
+   - Hero sections, feature grids, CTAs
+
+### UI Library Analysis
+
+Comprehensive analysis of major UI libraries in `/analysis/`:
+- shadcn/ui - Compound components, dark mode
+- Material UI - Design system principles
+- Ant Design - Enterprise patterns
+- Tailwind UI - Premium components
+- Chakra UI v3 - Open compound architecture
+- Radix UI - Unstyled primitives
+- v0.dev - AI generation patterns
+- Vercel AI SDK - Generative UI
+- Framer - No-code patterns
+
 ## Debugging Tips
 
 ### Enable Debug Mode
@@ -547,3 +668,24 @@ npx revolutionary-ui setup  # Initial setup
 - Support: vladimir@dukelic.com
 
 Remember: Context is king. The more context Claude has, the better the assistance.
+
+## Recent Architectural Decisions
+
+### UI Component Catalog (August 2025)
+- Chose PostgreSQL + Prisma for type-safe database access
+- Implemented hierarchical categorization with unlimited depth
+- Multi-dimensional classification (type, category, paradigm, tags)
+- Full-text search using PostgreSQL tsvector
+- Historical metrics tracking for trend analysis
+
+### Framework Intelligence (August 2025)
+- Cataloged 50+ frameworks from Vercel documentation
+- Created feature matrix tracking (SSR, SSG, ISR, etc.)
+- Framework relationship mapping (based_on, works_with)
+- Deployment platform compatibility tracking
+
+### AI Training Strategy (August 2025)
+- JSONL format for fine-tuning datasets
+- 21st.dev-style component generation focus
+- Comprehensive examples across 9 component categories
+- Pattern extraction from top UI libraries

@@ -1,53 +1,25 @@
-# Revolutionary UI Factory Documentation
+ # Revolutionary UI Factory Documentation
 
-Welcome to the Revolutionary UI Factory documentation! This guide will help you get started with generating UI components with 60-95% less code.
+ Welcome to the official documentation for Revolutionary UI v3.0, the AI‑powered UI component system.
 
-## 📚 Documentation Structure
+ ## Documentation Overview
 
-### 🚀 [Getting Started](./getting-started/README.md)
-- [Installation](./getting-started/installation.md)
-- [Quick Start](./getting-started/quick-start.md)
-- [Framework Setup](./getting-started/framework-setup.md)
-- [First Component](./getting-started/first-component.md)
+ - 🚀 [Getting Started](./getting-started/README.md)
+ - 🤖 [CLI Reference](./cli/README.md)
+ - 🔧 [API Reference](./api/README.md)
+ - 🎨 [Components Catalog](./components/README.md)
+ - 🧠 [Context Engineering](./CONTEXT_ENGINEERING.md)
+ - 📚 [AI Integration Guide](../docs/AI_INTEGRATION.md)
+ - 🐞 [Troubleshooting](./TROUBLESHOOTING.md)
+ - 🤝 [Contributing](./contributing/README.md)
 
-### 🤖 [CLI Reference](./cli/README.md)
-- [Installation & Setup](./cli/installation.md)
-- [Commands](./cli/commands.md)
-- [AI Analysis](./cli/ai-analysis.md)
-- [Package Management](./cli/package-management.md)
-- [Configuration](./cli/configuration.md)
+ ## Quick Links
 
-### 🔧 [API Reference](./api/README.md)
-- [Core API](./api/core.md)
-- [Factory API](./api/factory.md)
-- [Component Types](./api/component-types.md)
-- [Framework Adapters](./api/framework-adapters.md)
-- [Style Adapters](./api/style-adapters.md)
-
-### 🎨 [Components](./components/README.md)
-- [Component Catalog](./components/catalog.md)
-- [Data Display](./components/data-display.md)
-- [Forms & Inputs](./components/forms.md)
-- [Layout Components](./components/layout.md)
-- [Navigation](./components/navigation.md)
-- [Advanced Components](./components/advanced.md)
-
-### 🤝 [Contributing](./contributing/README.md)
-- [Development Setup](./contributing/setup.md)
-- [Adding Components](./contributing/components.md)
-- [Adding Frameworks](./contributing/frameworks.md)
-- [Testing](./contributing/testing.md)
-- [Pull Requests](./contributing/pull-requests.md)
-
-### 🧠 [Context Engineering](./CONTEXT_ENGINEERING.md)
-- Best practices for AI-assisted development
-- CLAUDE.md and CLAUDE_CONTEXT.md guidelines
-- Context optimization techniques
-- Multi-agent workflows
-- Token efficiency strategies
-
-## 🎯 Quick Links
-
+ - **Interactive Hub:** https://revolutionary-ui.com/playground
+ - **Visual Builder:** https://revolutionary-ui.com/visual-builder
+ - **Changelog:** ../CHANGELOG.md
+ - **GitHub:** https://github.com/siliconyouth/revolutionary-ui-factory-system
+ - **NPM Package:** https://npmjs.com/package/@vladimirdukelic/revolutionary-ui-factory
 - **NPM Package**: [@vladimirdukelic/revolutionary-ui](https://www.npmjs.com/package/@vladimirdukelic/revolutionary-ui)
 - **GitHub**: [siliconyouth/revolutionary-ui-factory-system](https://github.com/siliconyouth/revolutionary-ui-factory-system)
 - **Website**: [revolutionary-ui.com](https://revolutionary-ui.com)

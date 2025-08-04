@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { setup } from '@vladimirdukelic/revolutionary-ui-factory';
+import { setup } from 'revolutionary-ui';
 import { components, categories, frameworks } from '@/data/components-v2';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';

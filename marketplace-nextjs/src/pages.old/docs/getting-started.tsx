@@ -129,7 +129,7 @@ export default function GettingStartedPage() {
                 label: 'npm',
                 content: ui.createCodeBlock({
                   language: 'bash',
-                  code: 'npm install @vladimirdukelic/revolutionary-ui-factory',
+                  code: 'npm install revolutionary-ui',
                   features: { copy: true }
                 })
               },
@@ -137,7 +137,7 @@ export default function GettingStartedPage() {
                 label: 'yarn',
                 content: ui.createCodeBlock({
                   language: 'bash',
-                  code: 'yarn add @vladimirdukelic/revolutionary-ui-factory',
+                  code: 'yarn add revolutionary-ui',
                   features: { copy: true }
                 })
               },
@@ -145,7 +145,7 @@ export default function GettingStartedPage() {
                 label: 'pnpm',
                 content: ui.createCodeBlock({
                   language: 'bash',
-                  code: 'pnpm add @vladimirdukelic/revolutionary-ui-factory',
+                  code: 'pnpm add revolutionary-ui',
                   features: { copy: true }
                 })
               }
@@ -179,7 +179,7 @@ export default function GettingStartedPage() {
           }),
           ui.createCodeBlock({
             language: 'javascript',
-            code: `import { setup } from '@vladimirdukelic/revolutionary-ui-factory'
+            code: `import { setup } from 'revolutionary-ui'
 
 // Auto-detects your framework and style system
 const ui = setup()
@@ -251,7 +251,7 @@ const UserTable = ui.createDataTable({
                 title: 'React Example',
                 content: ui.createCodeBlock({
                   language: 'jsx',
-                  code: `import { setup } from '@vladimirdukelic/revolutionary-ui-factory'
+                  code: `import { setup } from 'revolutionary-ui'
 
 const ui = setup('react', 'tailwind')
 
@@ -278,7 +278,7 @@ export default function App() {
 </template>
 
 <script setup>
-import { setup } from '@vladimirdukelic/revolutionary-ui-factory'
+import { setup } from 'revolutionary-ui'
 
 const ui = setup('vue', 'tailwind')
 const Dashboard = ui.createDashboard({ framework: 'vue' })
@@ -295,7 +295,7 @@ const widgets = [
                 title: 'Next.js Example',
                 content: ui.createCodeBlock({
                   language: 'jsx',
-                  code: `import { setup } from '@vladimirdukelic/revolutionary-ui-factory'
+                  code: `import { setup } from 'revolutionary-ui'
 
 const ui = setup('react', 'tailwind')
 

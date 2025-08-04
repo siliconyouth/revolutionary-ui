@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { SUBSCRIPTION_PLANS } from '@/lib/stripe/plans'
 import { FiCheck, FiX } from 'react-icons/fi'
 import { loadStripe } from '@stripe/stripe-js'
-import Navigation from '@/components/Navigation'
+import Navigation from '@/components/SimpleNavigation'
 import Link from 'next/link'
 
 export default function PricingPage() {

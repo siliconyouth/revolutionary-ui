@@ -158,14 +158,14 @@ export default function ComponentPage({ component }: ComponentPageProps) {
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2">1. Install the package</h3>
                     <pre className="bg-gray-100 rounded p-3 text-sm">
-                      <code>npm install @vladimirdukelic/revolutionary-ui-factory</code>
+                      <code>npm install revolutionary-ui</code>
                     </pre>
                   </div>
                   
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2">2. Import and setup</h3>
                     <pre className="bg-gray-100 rounded p-3 text-sm">
-                      <code>{`import { setup } from '@vladimirdukelic/revolutionary-ui-factory';
+                      <code>{`import { setup } from 'revolutionary-ui';
 const ui = setup();`}</code>
                     </pre>
                   </div>

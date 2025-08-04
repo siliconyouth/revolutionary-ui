@@ -1,7 +1,12 @@
 import type { Metadata } from 'next'
-import { GeistSans } from 'geist/font/sans';
+import '@/styles/globals.css'
 
-// ... (metadata remains the same)
+export const metadata: Metadata = {
+  title: 'Revolutionary UI - Test',
+  description: 'Testing the app',
+}
+
+import { ClientProviders } from '@/components/providers/ClientProviders'
 
 export default function RootLayout({
   children,
@@ -9,15 +14,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={GeistSans.className}>
-        <AuthProvider>
-          <MainNavigation />
-          <main className="pt-20">
+    <html lang="en">
+      <body>
+        <ClientProviders>
+          <main>
             {children}
           </main>
-        </AuthProvider>
-        <Analytics />
+        </ClientProviders>
       </body>
     </html>
   )

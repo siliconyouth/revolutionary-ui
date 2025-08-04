@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 The Revolutionary UI Factory System is a groundbreaking approach to UI component generation that achieves 60-95% code reduction through intelligent factory patterns and AI-powered generation.
 
-**Current Version**: 2.4.0 (as of August 1, 2025)
+**Current Version**: 3.1.0 (as of August 4, 2025)
 
 ## Core Principles
 
@@ -72,6 +72,14 @@ The Revolutionary UI Factory System is a groundbreaking approach to UI component
 - Scoped packages
 - Download statistics
 
+### 📚 UI Component Catalog
+- **Comprehensive Database**: 50+ frameworks, 10K+ components cataloged
+- **Intelligent Classification**: Hierarchical categories with multi-dimensional tagging
+- **Framework Intelligence**: Tracks compatibility across React, Vue, Angular, Svelte, etc.
+- **Quality Metrics**: GitHub stars, npm downloads, performance scores
+- **React Ecosystem**: Deep integration with awesome-react-components curation
+- **Vercel Framework Matrix**: Complete framework feature tracking
+
 ## Development Workflow
 
 **MANDATORY:** After any changes:
@@ -102,15 +110,37 @@ revolutionary-ui/
 │   │   └── chart/
 │   ├── ai/                 # AI integration
 │   │   ├── providers/
-│   │   └── generators/
+│   │   ├── generators/
+│   │   └── ui-generation-engine.ts
 │   ├── lib/                # Utilities and helpers
 │   │   └── factory/        # CLI and tools
 │   ├── patterns/           # Design patterns
-│   └── frameworks/         # Framework adapters
+│   ├── frameworks/         # Framework adapters
+│   └── types/              # TypeScript definitions
+│       ├── ui-catalog.ts   # Component catalog types
+│       ├── react-catalog.ts # React-specific types
+│       └── frameworks-catalog.ts # Framework types
 ├── marketplace-nextjs/     # Web marketplace
+├── prisma/                 # Database schemas
+│   ├── schema.prisma       # Main schema
+│   ├── schema-ui-catalog.prisma # UI catalog schema
+│   └── schema-react-enhancements.prisma
+├── scripts/                # Automation scripts
+│   ├── catalog-data-import.ts
+│   └── import-awesome-react-components.ts
+├── datasets/               # AI training datasets
+│   ├── ui-generation-*.jsonl
+│   └── ...
+├── analysis/               # UI library analysis
+│   ├── shadcn-ui-components.md
+│   ├── material-ui-patterns.md
+│   └── ...
 ├── templates/              # Component templates
 ├── examples/               # Usage examples
 └── docs/                   # Documentation
+    ├── UI-CATALOG-*.md     # Catalog documentation
+    ├── REACT-CATEGORIZATION-ANALYSIS.md
+    └── FRAMEWORKS-CATALOG-SUMMARY.md
 ```
 
 ## Key Commands
@@ -216,12 +246,21 @@ npm run publish:major    # Publish major version
 
 ## Future Roadmap
 
-- [ ] Visual component builder
-- [ ] More framework support
-- [ ] Enhanced AI models
+- [x] Visual component builder (v2.3.0)
+- [x] More framework support (v3.0.0 - 50+ frameworks)
+- [x] Enhanced AI models (v3.0.0 - GPT-4o, Claude 3)
+- [x] UI Component Catalog (v3.0.0)
+- [x] AI Fine-tuning Datasets (v3.0.0)
+- [x] Visual component preview in catalog (v3.1.0)
+- [x] Framework transpilation (v3.2.0) 
+- [x] Production-Ready Marketplace with Stripe (v3.1.0)
 - [ ] Plugin system
 - [ ] Mobile app
 - [ ] Enterprise features
+- [ ] Community component submissions
+- [ ] Design system integration (Figma, Sketch)
+- [ ] Performance analytics dashboard
+- [ ] Cloud components (SSR, edge deployment)
 
 ## Contributing
 

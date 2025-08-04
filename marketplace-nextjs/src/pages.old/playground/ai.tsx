@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 // TODO: Import from the actual package when AI module is exported
-// import { AIComponentGenerator } from '@vladimirdukelic/revolutionary-ui-factory/ai'
+// import { AIComponentGenerator } from 'revolutionary-ui/ai'
 
 // For now, create a mock implementation
 class AIComponentGenerator {
@@ -46,7 +46,7 @@ class AIComponentGenerator {
     const componentName = componentType.charAt(0).toUpperCase() + componentType.slice(1)
     
     if (framework === 'react') {
-      return `import { setup } from '@vladimirdukelic/revolutionary-ui-factory/v2'
+      return `import { setup } from 'revolutionary-ui/v2'
 
 const ui = setup()
 

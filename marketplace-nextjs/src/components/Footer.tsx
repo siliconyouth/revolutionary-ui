@@ -53,7 +53,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://www.npmjs.com/package/@vladimirdukelic/revolutionary-ui-factory"
+                href="https://www.npmjs.com/package/revolutionary-ui"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"

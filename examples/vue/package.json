@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vladimirdukelic/revolutionary-ui": "^2.0.2",
+    "revolutionary-ui": "file:../..",
     "vue": "^3.5.13"
   },
   "devDependencies": {

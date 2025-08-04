@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 // TODO: Import from the actual package when available
-// import { setup } from '@vladimirdukelic/revolutionary-ui-factory/v2'
+// import { setup } from 'revolutionary-ui/v2'
 
 // Mock setup function for now
 const setup = (options?: any) => ({
@@ -87,7 +87,7 @@ export default function PlaygroundPage() {
   // Generate React code
   const generateReactCode = (componentType: string, config: any) => {
     return `import React from 'react'
-import { setup } from '@vladimirdukelic/revolutionary-ui-factory/v2'
+import { setup } from 'revolutionary-ui/v2'
 
 export function My${componentType.charAt(0).toUpperCase() + componentType.slice(1)}() {
   const ui = setup()
@@ -108,7 +108,7 @@ export function My${componentType.charAt(0).toUpperCase() + componentType.slice(
 
 <script setup lang="ts">
 import { defineComponent } from 'vue'
-import { setup } from '@vladimirdukelic/revolutionary-ui-factory/v2'
+import { setup } from 'revolutionary-ui/v2'
 
 const ui = setup({ framework: 'vue' })
 
@@ -125,7 +125,7 @@ const ${componentType.charAt(0).toUpperCase() + componentType.slice(1)} = define
   // Generate Angular code
   const generateAngularCode = (componentType: string, config: any) => {
     return `import { Component, OnInit } from '@angular/core'
-import { setup } from '@vladimirdukelic/revolutionary-ui-factory/v2'
+import { setup } from 'revolutionary-ui/v2'
 
 @Component({
   selector: 'app-${componentType}',
@@ -148,7 +148,7 @@ export class ${componentType.charAt(0).toUpperCase() + componentType.slice(1)}Co
   const generateSvelteCode = (componentType: string, config: any) => {
     return `<script>
   import { onMount } from 'svelte'
-  import { setup } from '@vladimirdukelic/revolutionary-ui-factory/v2'
+  import { setup } from 'revolutionary-ui/v2'
   
   let container
   const ui = setup({ framework: 'svelte' })

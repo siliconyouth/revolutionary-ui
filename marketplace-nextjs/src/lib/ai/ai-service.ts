@@ -98,7 +98,7 @@ Return a JSON response with this structure:
 }
 
 The code should use the Revolutionary UI Factory like:
-import { setup } from '@vladimirdukelic/revolutionary-ui-factory'
+import { setup } from 'revolutionary-ui'
 const ui = setup()
 const MyComponent = ui.createComponentType(config)`
   }
