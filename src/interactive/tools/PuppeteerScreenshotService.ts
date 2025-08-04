@@ -390,11 +390,11 @@ export class PuppeteerScreenshotService {
       const darkFilename = `dark-${uuidv4()}.${this.config.format}`;
       const darkPath = join(this.config.outputDir!, darkFilename);
       
-      const darkBuffer = await page.screenshot({
+      const darkBuffer = (await page.screenshot({
         path: darkPath,
         fullPage: this.config.fullPage,
-        type: this.config.format as any
-      });
+        type: this.config.format as 'png' | 'jpeg' | 'webp'
+      })) as Buffer;
 
       results.dark = {
         success: true,

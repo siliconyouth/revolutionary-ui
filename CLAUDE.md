@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 The Revolutionary UI Factory System is a groundbreaking approach to UI component generation that achieves 60-95% code reduction through intelligent factory patterns and AI-powered generation.
 
-**Current Version**: 3.1.0 (as of August 4, 2025)
+**Current Version**: 3.2.0 (as of August 4, 2025)
 
 ## Core Principles
 

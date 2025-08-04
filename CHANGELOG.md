@@ -90,6 +90,46 @@ This release focuses on eliminating deprecated APIs, updating to the latest pack
 - **Modern APIs**: No deprecated method warnings
 - **Package Compatibility**: Works with latest ecosystem packages
 
+### 🔄 Framework Transpilation System
+
+#### Added
+- **Framework Transpilation Engine**: Convert components between frameworks
+  - Support for React, Vue, Angular, Svelte, Solid, Preact, and Lit
+  - Bidirectional conversion for major frameworks
+  - AST-based transformation for accuracy
+  - Preservation of component functionality and patterns
+- **Intelligent Code Transformation**:
+  - State management conversion (hooks ↔️ refs ↔️ properties)
+  - Event handler mapping (onClick ↔️ @click ↔️ (click))
+  - Lifecycle method translation
+  - Template syntax transformation (JSX ↔️ templates)
+  - Two-way binding conversion
+  - Conditional and list rendering patterns
+- **Framework-Specific Transpilers**:
+  - `ReactToVueTranspiler` - React to Vue (Options & Composition API)
+  - `VueToReactTranspiler` - Vue to React (Class & Function components)
+  - `ReactToAngularTranspiler` - React to Angular components
+  - `ReactToSvelteTranspiler` - React to Svelte components
+  - Additional transpilers for other framework pairs
+- **Web Interface**: Interactive transpilation playground
+  - Live code editor with syntax highlighting
+  - Framework selection with visual indicators
+  - Sample component library
+  - Real-time transpilation
+  - Code export and download options
+  - Warning and error display
+- **API Endpoints**:
+  - `/api/transpiler/transpile` - POST endpoint for transpilation
+  - Support for TypeScript and formatting options
+  - Transpilation path discovery
+
+#### Technical Implementation
+- Babel-based AST parsing and transformation
+- Framework feature detection and mapping
+- Pattern recognition for common UI patterns
+- Code formatting with Prettier
+- Type preservation for TypeScript projects
+
 ## [3.1.0] - 2025-08-04
 
 ### 🎉 Major Release: Production-Ready Marketplace
@@ -204,49 +244,6 @@ This release marks a significant milestone with the Revolutionary UI Marketplace
 - Updated `QUICK_SETUP.md` with latest configuration steps
 - Created `PRISMA_SCHEMA_COMPLETE.md` documenting all database models
 
-## [3.2.0] - 2025-08-03
-
-### 🔄 Framework Transpilation System
-
-#### Added
-- **Framework Transpilation Engine**: Convert components between frameworks
-  - Support for React, Vue, Angular, Svelte, Solid, Preact, and Lit
-  - Bidirectional conversion for major frameworks
-  - AST-based transformation for accuracy
-  - Preservation of component functionality and patterns
-- **Intelligent Code Transformation**:
-  - State management conversion (hooks ↔️ refs ↔️ properties)
-  - Event handler mapping (onClick ↔️ @click ↔️ (click))
-  - Lifecycle method translation
-  - Template syntax transformation (JSX ↔️ templates)
-  - Two-way binding conversion
-  - Conditional and list rendering patterns
-- **Framework-Specific Transpilers**:
-  - `ReactToVueTranspiler` - React to Vue (Options & Composition API)
-  - `VueToReactTranspiler` - Vue to React (Class & Function components)
-  - `ReactToAngularTranspiler` - React to Angular components
-  - `ReactToSvelteTranspiler` - React to Svelte components
-  - Additional transpilers for other framework pairs
-- **Web Interface**: Interactive transpilation playground
-  - Live code editor with syntax highlighting
-  - Framework selection with visual indicators
-  - Sample component library
-  - Real-time transpilation
-  - Code export and download options
-  - Warning and error display
-- **API Endpoints**:
-  - `/api/transpiler/transpile` - POST endpoint for transpilation
-  - Support for TypeScript and formatting options
-  - Transpilation path discovery
-
-#### Technical Implementation
-- Babel-based AST parsing and transformation
-- Framework feature detection and mapping
-- Pattern recognition for common UI patterns
-- Code formatting with Prettier
-- Type preservation for TypeScript projects
-
-## [3.1.0] - 2025-08-03
 
 ### 🎯 Visual Component Preview System
 
