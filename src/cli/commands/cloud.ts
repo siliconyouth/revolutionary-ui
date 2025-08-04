@@ -27,3 +27,15 @@ cloudCommand
   .action(async () => {
     console.log(chalk.yellow('Backup functionality coming soon!'))
   })
+
+// Export class wrapper for compatibility
+export class CloudCommand {
+  async execute(command: string, options: any): Promise<void> {
+    const subCommand = cloudCommand.commands.find(cmd => cmd.name() === command)
+    if (subCommand) {
+      await subCommand.parseAsync(['', '', ...Object.entries(options).flatMap(([k, v]) => [`--${k}`, String(v)])])
+    } else {
+      await cloudCommand.parseAsync(['', '', command])
+    }
+  }
+}

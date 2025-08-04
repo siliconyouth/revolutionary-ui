@@ -5,6 +5,7 @@
 
 import * as fs from 'fs/promises'
 import * as path from 'path'
+import { execSync } from 'child_process'
 import { AuthManager } from './auth-manager'
 import { ComponentGenerator } from './component-generator'
 import chalk from 'chalk'
@@ -138,7 +139,6 @@ export class MarketplaceClient {
     // Install dependencies if needed
     if (component.dependencies && component.dependencies.length > 0) {
       console.log(chalk.cyan('\n📦 Installing dependencies...'))
-      const { execSync } = require('child_process')
       
       try {
         execSync(`npm install ${component.dependencies.join(' ')}`, { 

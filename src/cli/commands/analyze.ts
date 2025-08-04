@@ -16,10 +16,10 @@ export const analyzeCommand = new Command('analyze')
       spinner.succeed('Project analysis complete!')
       
       console.log(chalk.cyan('\n📊 Project Analysis\n'))
-      console.log(`Name: ${analysis.summary.name}`)
-      console.log(`Framework: ${analysis.summary.framework}`)
-      console.log(`Language: ${analysis.summary.language}`)
-      console.log(`Package Manager: ${analysis.summary.packageManager}`)
+      console.log(`Name: ${analysis.name}`)
+      console.log(`Framework: ${analysis.framework}`)
+      console.log(`Language: ${analysis.language}`)
+      console.log(`Package Manager: ${analysis.packageManager}`)
       
       if (options.output) {
         // Save to file
@@ -30,3 +30,10 @@ export const analyzeCommand = new Command('analyze')
       spinner.fail(`Analysis failed: ${error.message}`)
     }
   })
+
+// Export class wrapper for compatibility
+export class AnalyzeCommand {
+  async execute(options: any): Promise<void> {
+    await analyzeCommand.parseAsync(['', '', ...Object.entries(options).flatMap(([k, v]) => [`--${k}`, String(v)])])
+  }
+}

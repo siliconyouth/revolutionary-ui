@@ -17,8 +17,8 @@ export interface AIGenerationOptions {
 }
 
 export type AIModel = 
-  | 'gpt-4' | 'gpt-3.5-turbo' | 'claude-3-opus' | 'claude-3-sonnet'
-  | 'gemini-pro' | 'custom'
+  | 'gpt-4o' | 'gpt-4o-mini' | 'claude-3-5-sonnet' | 'claude-3-opus'
+  | 'gemini-1.5-pro' | 'custom'
 
 interface ParsedComponent {
   type: ComponentType
@@ -294,8 +294,8 @@ export class AIComponentGenerator {
     
     if (!response) {
       return {
-        available: ['gpt-3.5-turbo'],
-        default: 'gpt-3.5-turbo'
+        available: ['gpt-4o-mini'],
+        default: 'gpt-4o-mini'
       }
     }
     

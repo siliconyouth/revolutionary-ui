@@ -70,7 +70,7 @@ export class ConfigManager {
     const configFile = global ? this.globalConfigFile : this.configFile
     
     // Load existing config
-    let config: CLIConfig = {}
+    let config: CLIConfig = { version: '3.2.0' }
     try {
       const content = await fs.readFile(configFile, 'utf-8')
       config = JSON.parse(content)
@@ -96,7 +96,7 @@ export class ConfigManager {
     const configFile = global ? this.globalConfigFile : this.configFile
     
     // Load existing config
-    let config: any = {}
+    let config: any = { version: '3.2.0' }
     try {
       const content = await fs.readFile(configFile, 'utf-8')
       config = JSON.parse(content)
@@ -287,4 +287,30 @@ export class ConfigManager {
       return false
     }
   }
+}
+
+// Export singleton instance
+export const configManager = ConfigManager.getInstance()
+
+// Helper functions for session config
+export async function loadSessionConfig(): Promise<any> {
+  const sessionPath = path.join(process.cwd(), '.revolutionary-ui.json')
+  try {
+    const content = await fs.readFile(sessionPath, 'utf-8')
+    return JSON.parse(content)
+  } catch {
+    // Return default session config
+    return {
+      sessionId: `session-${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      preferences: {},
+      aiProvider: 'openai',
+      features: []
+    }
+  }
+}
+
+export async function saveSessionConfig(config: any): Promise<void> {
+  const sessionPath = path.join(process.cwd(), '.revolutionary-ui.json')
+  await fs.writeFile(sessionPath, JSON.stringify(config, null, 2), 'utf-8')
 }

@@ -798,7 +798,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({ plan, onSelect }) => {
       <div className="text-center mb-8">
         <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
         <div className="flex items-baseline justify-center gap-1">
-          <span className="text-5xl font-bold text-gray-900">${data.plan.price}</span>
+          <span className="text-5xl font-bold text-gray-900">${plan.price}</span>
           <span className="text-gray-500">/{plan.period}</span>
         </div>
       </div>

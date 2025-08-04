@@ -25,7 +25,7 @@ const isCI = process.env.CI === 'true' ||
 // Check if this is being run as part of the package's own install
 const isOwnInstall = process.cwd().includes('revolutionary-ui-marketplace')
 
-async function runPostInstall() {
+async function runPostInstall(): Promise<void> {
   // Skip in CI environments or when installing the package itself
   if (isCI || isOwnInstall) {
     return

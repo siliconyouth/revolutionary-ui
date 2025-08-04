@@ -1,4 +1,4 @@
-import puppeteer, { Browser, Page, PuppeteerLaunchOptions, ScreenshotOptions } from 'puppeteer';
+import puppeteer, { Browser, Page, LaunchOptions, ScreenshotOptions } from 'puppeteer';
 import chalk from 'chalk';
 import ora from 'ora';
 import { mkdirSync, existsSync } from 'fs';
@@ -91,8 +91,8 @@ export class PuppeteerScreenshotService {
     const spinner = ora('Launching browser...').start();
     
     try {
-      const options: PuppeteerLaunchOptions = {
-        headless: 'new',
+      const options: LaunchOptions = {
+        headless: true,
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
@@ -139,7 +139,7 @@ export class PuppeteerScreenshotService {
 
       // Wait for content to load
       if (config.waitFor) {
-        await page.waitForTimeout(config.waitFor);
+        await page.waitForFunction(() => true, { timeout: config.waitFor });
       }
 
       // Handle full-page screenshots with scrolling
@@ -376,7 +376,7 @@ export class PuppeteerScreenshotService {
       if (options?.themeToggleSelector) {
         try {
           await page.click(options.themeToggleSelector);
-          await page.waitForTimeout(1000);
+          await page.waitForFunction(() => true, { timeout: 1000 });
         } catch {}
       } else {
         // Try common dark mode methods

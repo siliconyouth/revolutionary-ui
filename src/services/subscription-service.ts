@@ -14,7 +14,7 @@ import { TIER_FEATURES, tierHelpers } from '../../config/tier-features';
 
 const prisma = new PrismaClient();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-11-20.acacia'
+  apiVersion: '2025-07-30.basil'
 });
 
 export class SubscriptionService {

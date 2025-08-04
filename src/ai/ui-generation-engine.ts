@@ -142,11 +142,6 @@ export class UIGenerationEngine {
     
     await aiProvider.generateComponentStream(
       contextualPrompt,
-      {
-        ...request.context,
-        componentType,
-        framework: request.context.project?.framework || 'React'
-      },
       async (chunk) => {
         fullContent += chunk.content;
         

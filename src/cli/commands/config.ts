@@ -63,3 +63,10 @@ export const configCommand = new Command('config')
         break
     }
   })
+
+// Export class wrapper for compatibility
+export class ConfigCommand {
+  async execute(options: any = {}): Promise<void> {
+    await configCommand.parseAsync(['', ''])
+  }
+}

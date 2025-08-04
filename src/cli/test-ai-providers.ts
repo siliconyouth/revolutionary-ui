@@ -366,7 +366,7 @@ class AIProviderTester {
     console.log(chalk.cyan('\n💵 Example monthly costs (1M input + 500k output tokens):\n'));
     
     const examples = [
-      { provider: 'openai', model: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo' },
+      { provider: 'openai', model: 'gpt-4o-mini', name: 'GPT-4o Mini' },
       { provider: 'anthropic', model: 'claude-3-haiku-20240307', name: 'Claude 3 Haiku' },
       { provider: 'google', model: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash' },
       { provider: 'openai', model: 'gpt-4-turbo-preview', name: 'GPT-4 Turbo' },

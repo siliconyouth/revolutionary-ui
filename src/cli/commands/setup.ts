@@ -36,3 +36,10 @@ export const setupCommand = new Command('setup')
       spinner.fail(`Setup failed: ${error.message}`)
     }
   })
+
+// Export class wrapper for compatibility
+export class SetupCommand {
+  async execute(options: any = {}): Promise<void> {
+    await setupCommand.parseAsync(['', ''])
+  }
+}

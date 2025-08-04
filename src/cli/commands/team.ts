@@ -37,3 +37,15 @@ teamCommand
     const manager = new TeamManager(config)
     await manager.execute('invite', {})
   })
+
+// Export class wrapper for compatibility
+export class TeamCommand {
+  async execute(command: string, options: any): Promise<void> {
+    const subCommand = teamCommand.commands.find(cmd => cmd.name() === command)
+    if (subCommand) {
+      await subCommand.parseAsync(['', '', ...Object.entries(options).flatMap(([k, v]) => [`--${k}`, String(v)])])
+    } else {
+      await teamCommand.parseAsync(['', '', command])
+    }
+  }
+}

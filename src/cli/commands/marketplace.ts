@@ -36,3 +36,15 @@ marketplaceCommand
     const manager = new MarketplaceManager(config)
     await manager.execute('purchases', {})
   })
+
+// Export class wrapper for compatibility
+export class MarketplaceCommand {
+  async execute(command: string, options: any): Promise<void> {
+    const subCommand = marketplaceCommand.commands.find(cmd => cmd.name() === command)
+    if (subCommand) {
+      await subCommand.parseAsync(['', '', ...Object.entries(options).flatMap(([k, v]) => [`--${k}`, String(v)])])
+    } else {
+      await marketplaceCommand.parseAsync(['', '', command])
+    }
+  }
+}

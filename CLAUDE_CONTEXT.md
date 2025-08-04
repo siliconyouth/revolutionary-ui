@@ -689,3 +689,56 @@ Remember: Context is king. The more context Claude has, the better the assistanc
 - 21st.dev-style component generation focus
 - Comprehensive examples across 9 component categories
 - Pattern extraction from top UI libraries
+
+## Recent Updates (v3.2.0)
+
+### Package Updates and Deprecation Fixes
+- **Critical Updates**:
+  - Puppeteer: Updated from v23 to v24, fixed deprecated APIs
+  - OpenAI SDK: Migrated from v4 to v5 with new patterns
+  - Mistral AI: Updated to v1.7.5 from v0.4.0
+  - Environment Management: Migrated to @dotenvx/dotenvx
+
+### API Migration Patterns
+```typescript
+// Old (Deprecated)
+import { PuppeteerLaunchOptions } from 'puppeteer'
+await page.waitForTimeout(1000)
+
+// New (Current)
+import { LaunchOptions } from 'puppeteer'
+await page.waitForFunction(() => true, { timeout: 1000 })
+```
+
+### AI Model Updates
+```typescript
+// Updated model references
+const models = {
+  openai: 'gpt-4o',        // was: gpt-4
+  openaiMini: 'gpt-4o-mini', // was: gpt-3.5-turbo
+  anthropic: 'claude-3-5-sonnet', // was: claude-3-sonnet
+  google: 'gemini-1.5-pro'  // was: gemini-pro
+}
+```
+
+### TypeScript Best Practices
+- Always add explicit return types to functions
+- Replace `any` with proper types or type assertions
+- Use ES module imports instead of require() in TS files
+- Ensure proper parameter ordering in method calls
+
+### Environment Management
+- Centralized .env.local at project root
+- All scripts use: `dotenvx run -f .env.local -- <command>`
+- Required environment variables: 16 (validated by check-env.js)
+
+### UI Component Architecture
+- Created shadcn/ui component stubs for missing modules
+- All components use React.forwardRef pattern
+- Proper TypeScript interfaces for all props
+
+### Database Schema Updates
+- Added FeatureUsage model for tracking feature usage
+- Updated User model with featureUsages relation
+- Schema validation with `npm run prisma:generate`
+

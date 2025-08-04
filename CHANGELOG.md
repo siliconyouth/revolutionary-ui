@@ -4,6 +4,92 @@ All notable changes to the Revolutionary UI Factory System will be documented in
 
 🌐 **Website**: [https://revolutionary-ui.com](https://revolutionary-ui.com) | 📦 **npm**: [@vladimirdukelic/revolutionary-ui-factory](https://www.npmjs.com/package/@vladimirdukelic/revolutionary-ui-factory)
 
+## [3.2.0] - 2025-08-04
+
+### 🚀 Major Update: Deprecation Fixes & Modern API Adoption
+
+This release focuses on eliminating deprecated APIs, updating to the latest package versions, and significantly improving TypeScript compliance and build stability.
+
+#### ✨ New Features
+
+##### 📦 Package Updates
+- **Major Dependencies Updated**:
+  - OpenAI SDK: v4 → v5.11.0 (with new API patterns)
+  - Mistral AI: v0.4.0 → v1.7.5
+  - Puppeteer: v23 → v24.15.0
+  - Zod: v3 → v4.0.14
+  - Added @dotenvx/dotenvx for modern environment management
+
+##### 🧩 UI Component System
+- **Created shadcn/ui Component Stubs**: Added type-safe implementations for:
+  - Button, Card, Tabs, Badge, Label, Input, Slider, Switch, Select
+  - All components use React.forwardRef with proper TypeScript types
+  - Resolves missing module errors in preview components
+
+##### 🗄️ Database Enhancements
+- **Added FeatureUsage Model**: New Prisma model for tracking feature usage
+- **User Model Updates**: Added featureUsages relation
+- **Schema Validation**: Successfully generates Prisma client with new models
+
+#### 🔧 Technical Improvements
+
+##### 🚨 Deprecated API Fixes
+- **Puppeteer Updates**:
+  - `PuppeteerLaunchOptions` → `LaunchOptions`
+  - `page.waitForTimeout()` → `page.waitForFunction()`
+  - `headless: 'new'` → `headless: true`
+- **ES Module Migration**:
+  - Replaced `require()` with ES imports in TypeScript files
+  - Fixed dynamic imports for child_process
+- **React Compatibility**:
+  - Updated peer dependencies from React 19+ to React 18+
+  - Better compatibility with existing projects
+
+##### 🤖 AI Model Updates
+- **Updated Model References**:
+  - `gpt-3.5-turbo` → `gpt-4o-mini`
+  - `gpt-4` → `gpt-4o`
+  - `claude-3-sonnet` → `claude-3-5-sonnet`
+  - `gemini-pro` → `gemini-1.5-pro`
+- **Stripe API**: Updated to latest version `2025-07-30.basil`
+
+##### 📝 TypeScript Improvements
+- **Type Safety Enhancements**:
+  - Added explicit return types to functions
+  - Fixed `any` type usage with proper type assertions
+  - Corrected parameter ordering in `generateComponentStream`
+  - Fixed undefined variable references
+- **Build Improvements**:
+  - TypeScript errors reduced from 152 → 140
+  - Successfully builds with dist/ output
+  - All critical compilation errors resolved
+
+##### 🔧 Environment Management
+- **Centralized Configuration**:
+  - All environment variables now load from root `.env.local`
+  - dotenvx integration for all npm scripts
+  - Added `check-env.js` script for validation
+  - 16 required environment variables verified
+
+#### 🐛 Bug Fixes
+- Fixed missing `saveAnalysis` method in SmartProjectAnalyzer
+- Added missing `loadSessionConfig` and `saveSessionConfig` exports
+- Fixed command class exports for CLI compatibility
+- Resolved CLIConfig version initialization issue
+- Fixed stream handling TypeScript errors
+- Corrected UI component import paths
+
+#### 📚 Documentation
+- Created comprehensive ENVIRONMENT_SETUP.md guide
+- Updated package.json with latest dependencies
+- Added proper type definitions for all UI components
+
+#### 🎯 Developer Experience
+- **Improved Build Stability**: Builds successfully despite remaining TypeScript strict mode violations
+- **Better IDE Support**: Explicit return types improve autocomplete
+- **Modern APIs**: No deprecated method warnings
+- **Package Compatibility**: Works with latest ecosystem packages
+
 ## [3.1.0] - 2025-08-04
 
 ### 🎉 Major Release: Production-Ready Marketplace

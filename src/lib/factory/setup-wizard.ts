@@ -3,7 +3,7 @@
  * Guides users through package selection and configuration
  */
 
-const inquirer = require('inquirer')
+import inquirer from 'inquirer'
 import chalk from 'chalk'
 import ora from 'ora'
 import { ProjectAnalysis } from './project-detector'

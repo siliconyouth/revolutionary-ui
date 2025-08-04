@@ -734,4 +734,18 @@ export class SmartProjectAnalyzer {
       return false
     }
   }
+
+  async saveAnalysis(analysis: SmartProjectAnalysis, outputPath: string): Promise<void> {
+    const fs = await import('fs/promises')
+    const path = await import('path')
+    
+    const outputDir = path.dirname(outputPath)
+    await fs.mkdir(outputDir, { recursive: true })
+    
+    await fs.writeFile(
+      outputPath,
+      JSON.stringify(analysis, null, 2),
+      'utf-8'
+    )
+  }
 }

@@ -63,8 +63,8 @@ export class CatalogManager {
         
         this.catalogStats = {
           totalComponents: catalog.components?.length || 10432,
-          frameworks: [...new Set(catalog.components?.map((c: any) => c.framework) || ['React', 'Vue', 'Angular', 'Svelte'])],
-          categories: [...new Set(catalog.components?.map((c: any) => c.category) || ['Forms', 'Tables', 'Navigation'])],
+          frameworks: [...new Set(catalog.components?.map((c: any) => c.framework) || ['React', 'Vue', 'Angular', 'Svelte'])] as string[],
+          categories: [...new Set(catalog.components?.map((c: any) => c.category) || ['Forms', 'Tables', 'Navigation'])] as string[],
           topComponents: catalog.components?.slice(0, 10) || []
         }
         

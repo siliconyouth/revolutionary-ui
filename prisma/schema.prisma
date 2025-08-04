@@ -69,6 +69,7 @@ model User {
   // Subscription
   subscription  Subscription?
   usageRecords  UsageRecord[]
+  featureUsages FeatureUsage[]
   invoices      Invoice[]
 
   createdAt DateTime @default(now())
@@ -1423,5 +1424,22 @@ model Feature {
   
   @@index([slug])
   @@index([category])
+}
+
+// =====================================================
+// FEATURE USAGE TRACKING
+// =====================================================
+
+model FeatureUsage {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  feature        String   // Feature flag name
+  usedAt         DateTime @default(now())
+  metadata       Json?    // Additional context about the usage
+  
+  @@index([userId, feature])
+  @@index([feature, usedAt])
 }
 

@@ -15,15 +15,15 @@ import { homedir } from 'os'
 
 // Import command modules
 import { AuthCommands } from './commands/auth'
-import { AnalyzeCommand } from './commands/analyze'
+import { analyzeCommand } from './commands/analyze'
 import { GenerateCommand } from './commands/generate'
 import { CatalogCommand } from './commands/catalog'
-import { MarketplaceCommand } from './commands/marketplace'
+import { marketplaceCommand } from './commands/marketplace'
 import { MonitorCommand } from './commands/monitor'
-import { SetupCommand } from './commands/setup'
-import { ConfigCommand } from './commands/config'
-import { TeamCommand } from './commands/team'
-import { CloudCommand } from './commands/cloud'
+import { setupCommand } from './commands/setup'
+import { configCommand } from './commands/config'
+import { teamCommand } from './commands/team'
+import { cloudCommand } from './commands/cloud'
 
 // Import utilities
 import { AuthManager } from './utils/auth-manager'
