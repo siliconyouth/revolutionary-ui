@@ -1,0 +1,22 @@
+{
+  "byCategory": {
+    "layout": [
+      "903cb0ec-d265-40ad-9c60-8636fb5ea09d"
+    ]
+  },
+  "byFramework": {
+    "react": [
+      "903cb0ec-d265-40ad-9c60-8636fb5ea09d"
+    ]
+  },
+  "byType": {
+    "hero": [
+      "903cb0ec-d265-40ad-9c60-8636fb5ea09d"
+    ]
+  },
+  "byTag": {
+    "react": [
+      "903cb0ec-d265-40ad-9c60-8636fb5ea09d"
+    ]
+  }
+}

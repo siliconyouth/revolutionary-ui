@@ -1,0 +1,146 @@
+{
+  "903cb0ec-d265-40ad-9c60-8636fb5ea09d": {
+    "id": "903cb0ec-d265-40ad-9c60-8636fb5ea09d",
+    "name": "testherosection",
+    "displayName": "TestHeroSection",
+    "description": "A react TestHeroSection component. Built with css styling.",
+    "version": "1.0.0",
+    "createdAt": "2025-08-02T08:35:54.977Z",
+    "updatedAt": "2025-08-02T08:35:54.977Z",
+    "usageCount": 0,
+    "source": {
+      "type": "scraped",
+      "url": "https://example.com/hero-section",
+      "extractionMethod": "both",
+      "extractedAt": "2025-08-02T08:35:54.977Z"
+    },
+    "category": "layout",
+    "type": "hero",
+    "tags": [
+      "react"
+    ],
+    "keywords": [
+      "test",
+      "hero",
+      "section",
+      "title",
+      "subtitle",
+      "ctatext",
+      "onctaclick",
+      "component",
+      "element",
+      "widget",
+      "module"
+    ],
+    "frameworks": [
+      {
+        "name": "react",
+        "version": "*",
+        "verified": true,
+        "path": "/Users/vladimir/projects/revolutionary-ui/component-library/components/903cb0ec-d265-40ad-9c60-8636fb5ea09d/import React from 'react';\nimport './HeroSection.css';\n\ninterface HeroSectionProps {\n  title: string;\n  subtitle?: string;\n  ctaText?: string;\n  onCtaClick?: () => void;\n}\n\nexport const TestHeroSection: React.FC<HeroSectionProps> = ({\n  title,\n  subtitle,\n  ctaText = 'Get Started',\n  onCtaClick\n}) => {\n  return (\n    <section className=\"hero-section\">\n      <div className=\"hero-content\">\n        <h1 className=\"hero-title\">{title}</h1>\n        {subtitle && <p className=\"hero-subtitle\">{subtitle}</p>}\n        <button className=\"hero-cta\" onClick={onCtaClick}>\n          {ctaText}\n        </button>\n      </div>\n    </section>\n  );\n};"
+      }
+    ],
+    "styling": [
+      {
+        "type": "css",
+        "path": "/Users/vladimir/projects/revolutionary-ui/component-library/components/903cb0ec-d265-40ad-9c60-8636fb5ea09d/styles.css"
+      }
+    ],
+    "dependencies": [
+      {
+        "name": "react",
+        "version": ">=16.8.0",
+        "required": true
+      },
+      {
+        "name": "react-dom",
+        "version": ">=16.8.0",
+        "required": true
+      }
+    ],
+    "compatibility": {
+      "browsers": [
+        {
+          "name": "Chrome",
+          "minVersion": "90"
+        },
+        {
+          "name": "Firefox",
+          "minVersion": "88"
+        },
+        {
+          "name": "Safari",
+          "minVersion": "14"
+        },
+        {
+          "name": "Edge",
+          "minVersion": "90"
+        }
+      ],
+      "responsive": false,
+      "accessibility": {
+        "score": 50,
+        "wcagLevel": "None",
+        "ariaCompliant": false,
+        "keyboardNavigable": false,
+        "screenReaderTested": false,
+        "issues": [
+          "Not analyzed"
+        ]
+      },
+      "performance": {
+        "bundleSize": 1346,
+        "gzipSize": 404,
+        "renderTime": 50
+      }
+    },
+    "files": {
+      "main": "index.tsx",
+      "documentation": "README.md",
+      "styles": [
+        "styles.css"
+      ],
+      "tests": [
+        "TestHeroSection.test.tsx"
+      ]
+    },
+    "assets": {
+      "screenshots": [
+        {
+          "path": "/Users/vladimir/projects/revolutionary-ui/component-library/components/903cb0ec-d265-40ad-9c60-8636fb5ea09d/preview.png",
+          "type": "component",
+          "description": "Preview of TestHeroSection"
+        }
+      ]
+    },
+    "examples": [
+      {
+        "title": "Basic Usage",
+        "code": "import { TestHeroSection } from '@/components/TestHeroSection';\n\nfunction App() {\n  return <TestHeroSection />;\n}",
+        "language": "jsx"
+      },
+      {
+        "title": "With Props",
+        "code": "import { TestHeroSection } from '@/components/TestHeroSection';\n\nfunction App() {\n  return (\n    <TestHeroSection\n      title=\"value\"\n      subtitle=\"value\"\n      ctaText=\"value\"\n    />\n  );\n}",
+        "language": "jsx"
+      }
+    ],
+    "useCases": [
+      "Landing page hero section",
+      "Marketing page header",
+      "Product showcase"
+    ],
+    "relatedComponents": [],
+    "quality": {
+      "score": 76,
+      "codeQuality": 85,
+      "documentation": 80,
+      "testing": 90,
+      "accessibility": 50,
+      "performance": 70
+    },
+    "popularity": 0,
+    "featured": false,
+    "searchableText": "testherosection a react testherosection component. built with css styling. layout hero react test hero section title subtitle ctatext onctaclick component element widget module landing page hero section marketing page header product showcase react"
+  }
+}

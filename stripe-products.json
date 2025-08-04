@@ -1,0 +1,120 @@
+{
+  "created": "2025-08-04T02:06:08.134Z",
+  "mode": "live",
+  "products": [
+    {
+      "id": "prod_SnpRJye4PAo6aj",
+      "name": "Beta Tester",
+      "metadata": {
+        "features": "[\"Access to all core features\",\"Early access to new features\",\"Direct feedback channel\",\"Beta tester badge\",\"Community recognition\"]",
+        "order": "1",
+        "tier": "beta"
+      }
+    },
+    {
+      "id": "prod_SnpRkyi976PwBK",
+      "name": "Early Bird Access",
+      "metadata": {
+        "features": "[\"All Beta features\",\"Priority support\",\"Early bird pricing locked in\",\"100 AI generations/month\",\"Access to component marketplace\"]",
+        "order": "2",
+        "tier": "early_bird"
+      }
+    },
+    {
+      "id": "prod_SnpRsC1AkhAmoo",
+      "name": "Personal",
+      "metadata": {
+        "features": "[\"All Early Bird features\",\"Unlimited AI generations\",\"Private components\",\"Advanced analytics\",\"Export to any framework\",\"Email support\"]",
+        "order": "3",
+        "popular": "true",
+        "tier": "personal"
+      }
+    },
+    {
+      "id": "prod_SnpRayhhrJXwal",
+      "name": "Company",
+      "metadata": {
+        "features": "[\"All Personal features\",\"Up to 10 team members\",\"Team collaboration\",\"Shared component library\",\"Priority support\",\"Custom component requests\",\"SSO authentication\"]",
+        "order": "4",
+        "team_size": "10",
+        "tier": "company"
+      }
+    },
+    {
+      "id": "prod_SnpRRxcjgMskQP",
+      "name": "Enterprise",
+      "metadata": {
+        "features": "[\"All Company features\",\"Unlimited team members\",\"Dedicated support\",\"Custom AI model training\",\"On-premise deployment option\",\"SLA guarantee\",\"Advanced security features\",\"Custom integrations\",\"White-label options\"]",
+        "order": "5",
+        "team_size": "unlimited",
+        "tier": "enterprise"
+      }
+    }
+  ],
+  "prices": [
+    {
+      "id": "price_1RsDmqAlB5kkCVbopkhO7iJA",
+      "tier": "early_bird",
+      "type": "monthly",
+      "amount": 999,
+      "currency": "usd",
+      "interval": "month"
+    },
+    {
+      "id": "price_1RsDmrAlB5kkCVboAKioGcII",
+      "tier": "early_bird",
+      "type": "yearly",
+      "amount": 8391,
+      "currency": "usd",
+      "interval": "year"
+    },
+    {
+      "id": "price_1RsDmrAlB5kkCVbocB8ajh8K",
+      "tier": "personal",
+      "type": "monthly",
+      "amount": 1999,
+      "currency": "usd",
+      "interval": "month"
+    },
+    {
+      "id": "price_1RsDmsAlB5kkCVboQaVQuE3u",
+      "tier": "personal",
+      "type": "yearly",
+      "amount": 16791,
+      "currency": "usd",
+      "interval": "year"
+    },
+    {
+      "id": "price_1RsEAyAlB5kkCVbooqG92Ifp",
+      "tier": "company",
+      "type": "monthly",
+      "amount": 4999,
+      "currency": "usd",
+      "interval": "month"
+    },
+    {
+      "id": "price_1RsEAzAlB5kkCVbooZI9f5bx",
+      "tier": "company",
+      "type": "yearly",
+      "amount": 41991,
+      "currency": "usd",
+      "interval": "year"
+    },
+    {
+      "id": "price_1RsDmtAlB5kkCVbot6QZ9mXT",
+      "tier": "enterprise",
+      "type": "monthly",
+      "amount": 9999,
+      "currency": "usd",
+      "interval": "month"
+    },
+    {
+      "id": "price_1RsDmuAlB5kkCVbohnFzbOcO",
+      "tier": "enterprise",
+      "type": "yearly",
+      "amount": 83991,
+      "currency": "usd",
+      "interval": "year"
+    }
+  ]
+}

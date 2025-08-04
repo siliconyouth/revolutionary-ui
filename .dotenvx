@@ -1,0 +1,6 @@
+{
+  "path": ".env.local",
+  "override": false,
+  "debug": false,
+  "expand": true
+}

@@ -1,0 +1,191 @@
+%%{init: {'theme':'dark', 'themeVariables': { 'primaryTextColor': '#fff', 'primaryColor': '#6366f1', 'primaryBorderColor': '#4f46e5', 'lineColor': '#4f46e5', 'background': '#111827', 'mainBkg': '#1f2937', 'tertiaryColor': '#374151'}}}%%
+
+erDiagram
+    %% Core Tables
+    RESOURCES {
+        uuid id PK
+        string name
+        string slug UK
+        string description
+        text longDescription
+        uuid resourceTypeId FK
+        uuid categoryId FK
+        uuid paradigmId FK
+        string githubUrl
+        string npmPackage
+        string websiteUrl
+        int githubStars
+        int npmDownloads
+        float popularityScore
+        boolean isTypescript
+        boolean isMaintained
+        boolean isFeatured
+        timestamp createdAt
+        timestamp updatedAt
+    }
+
+    CATEGORIES {
+        uuid id PK
+        string name UK
+        string slug UK
+        string description
+        string icon
+        int sortOrder
+        uuid parentId FK
+        timestamp createdAt
+        timestamp updatedAt
+    }
+
+    RESOURCE_TYPES {
+        uuid id PK
+        string name UK
+        string slug UK
+        string description
+        timestamp createdAt
+    }
+
+    PARADIGMS {
+        uuid id PK
+        string name UK
+        string description
+        timestamp createdAt
+    }
+
+    TAGS {
+        uuid id PK
+        string name UK
+        string slug UK
+        string category
+        timestamp createdAt
+    }
+
+    FRAMEWORKS {
+        uuid id PK
+        string name UK
+        string slug UK
+        string version
+        string icon
+        string websiteUrl
+        timestamp createdAt
+    }
+
+    %% Specialized Tables
+    DESIGN_SYSTEMS {
+        uuid id PK
+        uuid resourceId FK UK
+        string designLanguage
+        string company
+        boolean themingSupport
+        boolean darkModeSupport
+        boolean rtlSupport
+        string accessibilityLevel
+        int componentCount
+        timestamp createdAt
+    }
+
+    COMPONENTS {
+        uuid id PK
+        uuid parentResourceId FK
+        string name
+        string componentType
+        string description
+        json propsSchema
+        text codeExample
+        string previewUrl
+        timestamp createdAt
+    }
+
+    TOOLS {
+        uuid id PK
+        uuid resourceId FK UK
+        string toolType
+        array supportedFeatures
+        string configurationComplexity
+        timestamp createdAt
+    }
+
+    %% Junction Tables
+    RESOURCE_TAGS {
+        uuid resourceId FK
+        uuid tagId FK
+    }
+
+    RESOURCE_FRAMEWORKS {
+        uuid resourceId FK
+        uuid frameworkId FK
+        string compatibilityLevel
+        string minVersion
+        text notes
+    }
+
+    USE_CASES {
+        uuid id PK
+        string title
+        string description
+        string category
+        timestamp createdAt
+    }
+
+    RESOURCE_USE_CASES {
+        uuid resourceId FK
+        uuid useCaseId FK
+        int relevanceScore
+        text notes
+    }
+
+    RESOURCE_METRICS {
+        uuid id PK
+        uuid resourceId FK
+        date metricDate
+        int githubStars
+        int npmWeeklyDownloads
+        int communitySizeEstimate
+        timestamp createdAt
+    }
+
+    RESOURCE_RELATIONSHIPS {
+        uuid id PK
+        uuid sourceResourceId FK
+        uuid targetResourceId FK
+        string relationshipType
+        text notes
+        timestamp createdAt
+    }
+
+    LEARNING_RESOURCES {
+        uuid id PK
+        string title
+        string url
+        string resourceType
+        string difficultyLevel
+        int durationMinutes
+        uuid relatedResourceId FK
+        timestamp createdAt
+    }
+
+    %% Relationships
+    RESOURCES ||--o{ RESOURCE_TAGS : "has"
+    TAGS ||--o{ RESOURCE_TAGS : "tagged in"
+    
+    RESOURCES ||--|| RESOURCE_TYPES : "is type of"
+    RESOURCES ||--|| CATEGORIES : "belongs to"
+    RESOURCES ||--o| PARADIGMS : "follows"
+    
+    CATEGORIES ||--o{ CATEGORIES : "has children"
+    
+    RESOURCES ||--o{ RESOURCE_FRAMEWORKS : "supports"
+    FRAMEWORKS ||--o{ RESOURCE_FRAMEWORKS : "supported by"
+    
+    RESOURCES ||--o| DESIGN_SYSTEMS : "has design system"
+    RESOURCES ||--o{ COMPONENTS : "contains"
+    RESOURCES ||--o| TOOLS : "has tool info"
+    
+    RESOURCES ||--o{ RESOURCE_USE_CASES : "used for"
+    USE_CASES ||--o{ RESOURCE_USE_CASES : "implemented by"
+    
+    RESOURCES ||--o{ RESOURCE_METRICS : "tracked by"
+    
+    RESOURCES ||--o{ RESOURCE_RELATIONSHIPS : "source of"
+    RESOURCES ||--o{ RESOURCE_RELATIONSHIPS : "target of"
+    
+    RESOURCES ||--o{ LEARNING_RESOURCES : "explained by"

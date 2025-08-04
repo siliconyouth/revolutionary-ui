@@ -1,0 +1,31 @@
+import type { Metadata } from 'next'
+import { GeistSans } from 'geist/font/sans'
+import { AuthProvider } from '@/contexts/AuthContext'
+import { MainNavigation } from '@/components/layout/MainNavigation'
+import { Analytics } from '@vercel/analytics/react'
+import '@/styles/globals.css'
+
+export const metadata: Metadata = {
+  title: 'Revolutionary UI - AI-Powered Component Factory System',
+  description: 'Generate UI components with 60-95% less code using AI-powered factories',
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en" className="dark">
+      <body className={GeistSans.className}>
+        <AuthProvider>
+          <MainNavigation />
+          <main className="pt-20">
+            {children}
+          </main>
+        </AuthProvider>
+        <Analytics />
+      </body>
+    </html>
+  )
+}

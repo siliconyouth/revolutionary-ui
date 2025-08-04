@@ -2,7 +2,7 @@ import OpenAI from 'openai'
 import Anthropic from '@anthropic-ai/sdk'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import Groq from 'groq-sdk'
-import { MistralClient } from '@mistralai/mistralai'
+import { Mistral } from '@mistralai/mistralai'
 import { CustomAIService } from './custom-ai-service'
 
 export interface AIGenerationOptions {
@@ -42,7 +42,7 @@ export class AIService {
   private anthropic?: Anthropic
   private google?: GoogleGenerativeAI
   private groq?: Groq
-  private mistral?: MistralClient
+  private mistral?: Mistral
 
   async generateComponent(options: AIGenerationOptions): Promise<AIGenerationResult> {
     const systemPrompt = this.buildSystemPrompt(options.framework)
@@ -272,10 +272,10 @@ Generate a UI component based on this description. Focus on creating a clean, mo
     userPrompt: string
   ): Promise<AIGenerationResult> {
     if (!this.mistral) {
-      this.mistral = new MistralClient(options.apiKey)
+      this.mistral = new Mistral({ apiKey: options.apiKey })
     }
 
-    const response = await this.mistral.chat({
+    const response = await this.mistral.chat.complete({
       model: options.model,
       messages: [
         { role: 'system', content: systemPrompt },

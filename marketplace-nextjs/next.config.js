@@ -1,9 +1,19 @@
 /** @type {import('next').NextConfig} */
 const path = require('path');
-const dotenv = require('dotenv');
+const { config } = require('@dotenvx/dotenvx');
 
 // Load environment variables from the root .env.local file
-dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
+const envPath = path.resolve(__dirname, '../.env.local');
+if (require('fs').existsSync(envPath)) {
+  config({ 
+    path: envPath, 
+    override: false,
+    debug: false 
+  });
+  console.log('✅ Loaded environment from root .env.local');
+} else {
+  console.warn('⚠️  Root .env.local not found, using shell environment variables');
+}
 
 const nextConfig = {
   experimental: {

@@ -1,0 +1,1427 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL_PRISMA")
+  directUrl = env("DIRECT_URL")
+}
+
+// =====================================================
+// USER & AUTHENTICATION
+// =====================================================
+
+model User {
+  id    String   @id @default(cuid())
+  email String   @unique
+  name  String?
+  image String?
+  role  UserRole @default(USER)
+
+  // OAuth accounts
+  accounts Account[]
+  sessions Session[]
+
+  // User activity
+  resources Resource[] @relation("AuthorResources")
+  favorites Favorite[]
+  downloads Download[]
+  purchases Purchase[]
+  reviews   Review[]
+
+  // Marketplace
+  publishedResources Resource[] @relation("PublisherResources")
+  earnings           Earning[]
+  payouts            Payout[]
+
+  // Submissions
+  submissions         ComponentSubmission[]
+  reviewedSubmissions ComponentSubmission[]       @relation("ReviewerSubmissions")
+  submissionComments  SubmissionComment[]
+  reviewChecklists    SubmissionReviewChecklist[]
+  submissionVersions  SubmissionVersion[]
+  featuredSubmissions FeaturedSubmission[]
+
+  // Team & Collaboration
+  teamMemberships    TeamMember[]
+  teamInvitations    TeamInvitation[]
+  projects           Project[]
+  teamResourcesAdded TeamResource[]
+
+  // Private Registry
+  privatePackages PrivatePackage[]
+  packageVersions PackageVersion[]
+  packageTokens   PackageAccessToken[]
+
+  // AI & Analytics
+  aiConfigs          UserAIConfig[]
+  aiUsage            AIUsage[]
+  componentAnalytics ComponentAnalytics[]
+
+  // System
+  notifications Notification[]
+  activityLogs  ActivityLog[]
+  
+  // Subscription
+  subscription  Subscription?
+  usageRecords  UsageRecord[]
+  invoices      Invoice[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum UserRole {
+  USER
+  CREATOR
+  MODERATOR
+  ADMIN
+}
+
+// NextAuth models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// =====================================================
+// CATALOG & RESOURCES
+// =====================================================
+
+model Category {
+  id            String     @id @default(cuid())
+  name          String     @unique
+  slug          String     @unique
+  description   String?
+  icon          String?
+  parentId      String?
+  parent        Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  subCategories Category[] @relation("SubCategories")
+
+  resources   Resource[]
+  submissions ComponentSubmission[]
+
+  sortOrder Int     @default(0)
+  isActive  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([slug])
+  @@map("categories")
+}
+
+model ResourceType {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  slug        String  @unique
+  description String?
+
+  resources   Resource[]
+  submissions ComponentSubmission[]
+
+  createdAt DateTime @default(now())
+
+  @@map("resource_types")
+}
+
+model Resource {
+  id              String  @id @default(cuid())
+  name            String
+  slug            String  @unique
+  description     String
+  longDescription String?
+
+  // Categorization
+  categoryId     String
+  category       Category     @relation(fields: [categoryId], references: [id])
+  resourceTypeId String
+  resourceType   ResourceType @relation(fields: [resourceTypeId], references: [id])
+  tags           Tag[]        @relation("ResourceTags")
+
+  // Author/Publisher
+  authorId    String
+  author      User    @relation("AuthorResources", fields: [authorId], references: [id])
+  publisherId String?
+  publisher   User?   @relation("PublisherResources", fields: [publisherId], references: [id])
+
+  // Source & Links
+  githubUrl        String?
+  npmPackage       String?
+  demoUrl          String?
+  documentationUrl String?
+
+  // Technical Details
+  license          String   @default("MIT")
+  frameworks       String[]
+  dependencies     Json?
+  peerDependencies Json?
+  devDependencies  Json?
+
+  // Code & Documentation
+  sourceCode    String? @db.Text
+  documentation String? @db.Text
+
+  // Features
+  hasTypescript    Boolean @default(false)
+  hasTests         Boolean @default(false)
+  isResponsive     Boolean @default(true)
+  isAccessible     Boolean @default(false)
+  supportsDarkMode Boolean @default(false)
+  supportsRtl      Boolean @default(false)
+
+  // Metrics
+  bundleSizeKb    Int?
+  weeklyDownloads Int  @default(0)
+  githubStars     Int  @default(0)
+
+  // Quality Scores
+  codeQualityScore   Int?
+  documentationScore Int?
+  designScore        Int?
+
+  // Marketplace
+  price     Float   @default(0)
+  currency  String  @default("USD")
+  isFree    Boolean @default(true)
+  isPremium Boolean @default(false)
+
+  // Status
+  isPublished Boolean   @default(false)
+  isFeatured  Boolean   @default(false)
+  publishedAt DateTime?
+
+  // Relations
+  previews  Preview[]
+  favorites Favorite[]
+  downloads Download[]
+  purchases Purchase[]
+  reviews   Review[]
+
+  // Analytics
+  views Int @default(0)
+
+  // From submissions
+  fromSubmission ComponentSubmission?
+
+  // Featured
+  featuredSubmissions FeaturedSubmission[]
+
+  // Team & Analytics
+  teamResources TeamResource[]
+  analytics     ComponentAnalytics[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([slug])
+  @@index([categoryId])
+  @@index([authorId])
+  @@index([isPublished, isFeatured])
+  @@map("resources")
+}
+
+model Tag {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  slug      String     @unique
+  resources Resource[] @relation("ResourceTags")
+
+  createdAt DateTime @default(now())
+
+  @@map("tags")
+}
+
+// =====================================================
+// PREVIEWS & EXAMPLES
+// =====================================================
+
+model Preview {
+  id         String   @id @default(cuid())
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  previewType PreviewType
+  previewUrl  String?
+  sandboxUrl  String?
+
+  // Code examples
+  exampleCode         String @db.Text
+  exampleFramework    String
+  exampleDependencies Json?
+
+  // Configuration
+  previewHeight  Int     @default(400)
+  previewWidth   String  @default("100%")
+  isInteractive  Boolean @default(true)
+  isResponsive   Boolean @default(true)
+  supportsThemes Boolean @default(false)
+  supportsRtl    Boolean @default(false)
+
+  // Analytics
+  views Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([resourceId])
+  @@map("previews")
+}
+
+enum PreviewType {
+  LIVE
+  STATIC
+  SANDBOX
+  IFRAME
+}
+
+// =====================================================
+// USER INTERACTIONS
+// =====================================================
+
+model Favorite {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, resourceId])
+  @@index([userId])
+  @@index([resourceId])
+  @@map("favorites")
+}
+
+model Download {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  version   String?
+  ipAddress String?
+  userAgent String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([resourceId])
+  @@index([createdAt])
+  @@map("downloads")
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  rating  Int // 1-5
+  title   String?
+  comment String?
+
+  isVerified Boolean @default(false) // Verified purchase
+  isHelpful  Int     @default(0) // Helpful votes
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, resourceId])
+  @@index([resourceId])
+  @@map("reviews")
+}
+
+// =====================================================
+// MARKETPLACE & PAYMENTS
+// =====================================================
+
+model Purchase {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id])
+
+  amount   Float
+  currency String @default("USD")
+
+  stripePaymentId String?        @unique
+  status          PurchaseStatus @default(PENDING)
+
+  licenseKey String?   @unique
+  expiresAt  DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, resourceId])
+  @@index([userId])
+  @@index([resourceId])
+  @@map("purchases")
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model Earning {
+  id         String @id @default(cuid())
+  userId     String
+  user       User   @relation(fields: [userId], references: [id])
+  purchaseId String @unique
+
+  amount      Float // After platform fee
+  currency    String @default("USD")
+  platformFee Float // Platform's cut
+
+  status EarningStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("earnings")
+}
+
+enum EarningStatus {
+  PENDING
+  AVAILABLE
+  PAID
+}
+
+model Payout {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  amount   Float
+  currency String @default("USD")
+
+  method      PayoutMethod
+  destination String // Bank account, PayPal email, etc.
+
+  status      PayoutStatus @default(PENDING)
+  processedAt DateTime?
+
+  stripePayoutId String? @unique
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("payouts")
+}
+
+enum PayoutMethod {
+  BANK_TRANSFER
+  PAYPAL
+  STRIPE
+}
+
+enum PayoutStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+// =====================================================
+// COMMUNITY SUBMISSIONS (from previous schema)
+// =====================================================
+
+model ComponentSubmission {
+  id String @id @default(cuid())
+
+  // Submitter information
+  userId          String
+  user            User    @relation(fields: [userId], references: [id])
+  submitterName   String  @db.VarChar(100)
+  submitterEmail  String  @db.VarChar(255)
+  submitterGithub String? @db.VarChar(100)
+
+  // Component information
+  name            String  @db.VarChar(200)
+  slug            String? @unique @db.VarChar(200)
+  description     String  @db.Text
+  longDescription String? @db.Text
+
+  // Component details
+  categoryId     String
+  category       Category     @relation(fields: [categoryId], references: [id])
+  resourceTypeId String
+  resourceType   ResourceType @relation(fields: [resourceTypeId], references: [id])
+  frameworks     String[]
+
+  // Code and documentation
+  sourceCode    String  @db.Text
+  documentation String? @db.Text
+  demoUrl       String? @db.VarChar(500)
+  githubUrl     String? @db.VarChar(500)
+  npmPackage    String? @db.VarChar(200)
+
+  // Technical details
+  dependencies      Json?
+  peerDependencies  Json?
+  devDependencies   Json?
+  bundleSizeKb      Int?
+  minReactVersion   String? @db.VarChar(20)
+  minVueVersion     String? @db.VarChar(20)
+  minAngularVersion String? @db.VarChar(20)
+
+  // Features
+  hasTypescript    Boolean @default(false)
+  hasTests         Boolean @default(false)
+  hasDocumentation Boolean @default(true)
+  hasPreview       Boolean @default(false)
+  isResponsive     Boolean @default(true)
+  isAccessible     Boolean @default(false)
+  supportsDarkMode Boolean @default(false)
+  supportsRtl      Boolean @default(false)
+
+  // License and legal
+  license        String  @default("MIT") @db.VarChar(50)
+  acceptsTerms   Boolean @default(false)
+  copyrightOwner String? @db.VarChar(200)
+
+  // Submission status
+  status            SubmissionStatus @default(DRAFT)
+  submissionDate    DateTime?
+  reviewStartedAt   DateTime?
+  reviewCompletedAt DateTime?
+  publishedAt       DateTime?
+
+  // Review details
+  reviewerId      String?
+  reviewer        User?    @relation("ReviewerSubmissions", fields: [reviewerId], references: [id])
+  reviewNotes     String?  @db.Text
+  rejectionReason String?  @db.Text
+  requiredChanges String[]
+
+  // Quality scores (0-100)
+  codeQualityScore   Int?
+  documentationScore Int?
+  designScore        Int?
+
+  // Publishing details
+  publishedResourceId String?   @unique
+  publishedResource   Resource? @relation(fields: [publishedResourceId], references: [id])
+  version             String    @default("1.0.0") @db.VarChar(20)
+
+  // Relations
+  previews    SubmissionPreview[]
+  attachments SubmissionAttachment[]
+  checklist   SubmissionReviewChecklist?
+  comments    SubmissionComment[]
+  versions    SubmissionVersion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([categoryId])
+  @@index([submissionDate])
+  @@index([reviewerId])
+  @@map("component_submissions")
+}
+
+enum SubmissionStatus {
+  DRAFT
+  SUBMITTED
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  PUBLISHED
+  ARCHIVED
+}
+
+model SubmissionPreview {
+  id           String              @id @default(cuid())
+  submissionId String
+  submission   ComponentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  // Preview configuration
+  previewType         String  @db.VarChar(50) // 'live', 'static', 'sandbox'
+  previewCode         String  @db.Text
+  previewDependencies Json?
+  sandboxUrl          String? @db.VarChar(500)
+  screenshotUrl       String? @db.VarChar(500)
+
+  // Framework-specific examples
+  framework    String @db.VarChar(50)
+  exampleCode  String @db.Text
+  exampleProps Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([submissionId])
+  @@map("submission_previews")
+}
+
+model SubmissionAttachment {
+  id           String              @id @default(cuid())
+  submissionId String
+  submission   ComponentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  fileName      String @db.VarChar(255)
+  fileType      String @db.VarChar(100)
+  fileSizeBytes Int
+  fileUrl       String @db.VarChar(500)
+
+  attachmentType AttachmentType
+  description    String?        @db.Text
+
+  uploadedAt DateTime @default(now())
+
+  @@index([submissionId])
+  @@map("submission_attachments")
+}
+
+enum AttachmentType {
+  SCREENSHOT
+  DEMO_VIDEO
+  DOCUMENTATION
+  TEST_FILE
+}
+
+model SubmissionReviewChecklist {
+  id           String              @id @default(cuid())
+  submissionId String              @unique
+  submission   ComponentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  // Code quality checks
+  codeFollowsStandards Boolean?
+  codeIsClean          Boolean?
+  codeHasComments      Boolean?
+  noConsoleLogs        Boolean?
+  noSecurityIssues     Boolean?
+
+  // Documentation checks
+  readmeExists     Boolean?
+  apiDocumented    Boolean?
+  examplesProvided Boolean?
+  propsDocumented  Boolean?
+
+  // Testing checks
+  testsExist       Boolean?
+  testsPass        Boolean?
+  coverageAdequate Boolean?
+
+  // Design checks
+  responsiveDesign  Boolean?
+  accessibleMarkup  Boolean?
+  consistentStyling Boolean?
+
+  // Legal checks
+  licenseAppropriate   Boolean?
+  noCopyrightIssues    Boolean?
+  dependenciesLicensed Boolean?
+
+  reviewerId String?
+  reviewer   User?    @relation(fields: [reviewerId], references: [id])
+  reviewedAt DateTime @default(now())
+
+  @@map("submission_review_checklist")
+}
+
+model SubmissionComment {
+  id           String              @id @default(cuid())
+  submissionId String
+  submission   ComponentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+  comment String @db.Text
+
+  // Comment context
+  commentType CommentType @default(GENERAL)
+  lineNumber  Int?
+  filePath    String?     @db.VarChar(255)
+
+  isInternal Boolean @default(false)
+  isResolved Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([submissionId])
+  @@map("submission_comments")
+}
+
+enum CommentType {
+  GENERAL
+  CODE_REVIEW
+  DESIGN_FEEDBACK
+  DOCUMENTATION
+}
+
+model SubmissionVersion {
+  id           String              @id @default(cuid())
+  submissionId String
+  submission   ComponentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  versionNumber Int
+  changesMade   String[]
+  sourceCode    String   @db.Text
+
+  createdBy String?
+  creator   User?    @relation(fields: [createdBy], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([submissionId, versionNumber])
+  @@index([submissionId])
+  @@map("submission_versions")
+}
+
+model SubmissionGuideline {
+  id String @id @default(cuid())
+
+  category String @db.VarChar(100)
+  title    String @db.VarChar(200)
+  content  String @db.Text
+
+  isRequired Boolean @default(false)
+  sortOrder  Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("submission_guidelines")
+}
+
+model FeaturedSubmission {
+  id         String   @id @default(cuid())
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id])
+
+  featuredReason String?   @db.Text
+  featuredBy     String?
+  featuredByUser User?     @relation(fields: [featuredBy], references: [id])
+  featuredAt     DateTime  @default(now())
+  featuredUntil  DateTime?
+
+  position Int     @default(0)
+  isActive Boolean @default(true)
+
+  @@index([isActive, featuredUntil])
+  @@map("featured_submissions")
+}
+
+// =====================================================
+// AI PROVIDER CONFIGURATION
+// =====================================================
+
+model AIProvider {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  slug        String  @unique
+  description String?
+  icon        String?
+
+  apiEndpoint  String?
+  apiKeyEnvVar String // Environment variable name
+
+  isActive  Boolean @default(true)
+  isDefault Boolean @default(false)
+
+  // Provider capabilities
+  supportsChat       Boolean @default(true)
+  supportsCompletion Boolean @default(true)
+  supportsEmbedding  Boolean @default(false)
+  supportsImage      Boolean @default(false)
+  supportsVision     Boolean @default(false)
+
+  // Model configurations
+  models       AIModel[]
+  usageRecords AIUsage[]
+  userConfigs  UserAIConfig[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("ai_providers")
+}
+
+model AIModel {
+  id         String     @id @default(cuid())
+  providerId String
+  provider   AIProvider @relation(fields: [providerId], references: [id])
+
+  modelName   String
+  displayName String
+  description String?
+
+  // Model capabilities
+  maxTokens         Int
+  supportsFunctions Boolean @default(false)
+  supportsStreaming Boolean @default(true)
+
+  // Pricing
+  inputCostPer1k  Float? // Cost per 1000 input tokens
+  outputCostPer1k Float? // Cost per 1000 output tokens
+
+  isActive  Boolean @default(true)
+  isDefault Boolean @default(false)
+
+  usageRecords AIUsage[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([providerId, modelName])
+  @@map("ai_models")
+}
+
+model UserAIConfig {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  providerId String?
+  provider   AIProvider? @relation(fields: [providerId], references: [id])
+
+  // User's API keys (encrypted)
+  encryptedApiKeys Json? // { provider: encryptedKey }
+
+  // User preferences
+  defaultModel String?
+  temperature  Float   @default(0.7)
+  maxTokens    Int     @default(2000)
+
+  // Usage limits
+  monthlyTokenLimit Int?
+  dailyRequestLimit Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId])
+  @@map("user_ai_configs")
+}
+
+model AIUsage {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  providerId String
+  provider   AIProvider @relation(fields: [providerId], references: [id])
+  modelId    String
+  model      AIModel    @relation(fields: [modelId], references: [id])
+
+  // Usage details
+  inputTokens  Int
+  outputTokens Int
+  totalTokens  Int
+
+  // Request details
+  requestType String // 'chat', 'completion', 'embedding', etc.
+  promptHash  String? // For caching
+
+  // Cost tracking
+  estimatedCost Float?
+
+  // Component generation
+  generatedComponent String? @db.Text
+  componentType      String?
+  framework          String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([providerId, createdAt])
+  @@map("ai_usage")
+}
+
+// =====================================================
+// TEAM COLLABORATION
+// =====================================================
+
+model Team {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String?
+
+  // Team settings
+  avatarUrl  String?
+  websiteUrl String?
+
+  // Billing
+  billingEmail     String?
+  stripeCustomerId String? @unique
+
+  // Relations
+  members         TeamMember[]
+  projects        Project[]
+  invitations     TeamInvitation[]
+  resources       TeamResource[]
+  privatePackages PrivatePackage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("teams")
+}
+
+model TeamMember {
+  id     String @id @default(cuid())
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  role        TeamRole @default(MEMBER)
+  permissions String[] // Custom permissions
+
+  joinedAt DateTime @default(now())
+
+  @@unique([teamId, userId])
+  @@index([userId])
+  @@map("team_members")
+}
+
+enum TeamRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+model TeamInvitation {
+  id     String @id @default(cuid())
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id])
+
+  email String
+  role  TeamRole @default(MEMBER)
+  token String   @unique
+
+  invitedBy     String
+  invitedByUser User   @relation(fields: [invitedBy], references: [id])
+
+  expiresAt  DateTime
+  acceptedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([token])
+  @@map("team_invitations")
+}
+
+model Project {
+  id     String  @id @default(cuid())
+  teamId String?
+  team   Team?   @relation(fields: [teamId], references: [id])
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  name        String
+  slug        String  @unique
+  description String?
+
+  // Project settings
+  framework String @default("react")
+  language  String @default("typescript")
+  styling   String @default("tailwind")
+
+  // Git integration
+  githubRepo String?
+  gitBranch  String  @default("main")
+
+  // Component library
+  components ProjectComponent[]
+
+  // Analytics
+  lastAccessedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([teamId])
+  @@index([userId])
+  @@map("projects")
+}
+
+model ProjectComponent {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  name String
+  type String // 'generated', 'imported', 'custom'
+
+  // Component source
+  sourceCode   String  @db.Text
+  compiledCode String? @db.Text
+
+  // Metadata
+  framework    String
+  dependencies Json?
+  props        Json?
+
+  // Generation details
+  generatedFrom    String? // Factory type or AI prompt
+  generationConfig Json?
+
+  // Version control
+  version          Int    @default(1)
+  previousVersions Json[] // Array of previous versions
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@map("project_components")
+}
+
+// =====================================================
+// COMPONENT LIBRARY & PRIVATE REGISTRY
+// =====================================================
+
+model PrivatePackage {
+  id String @id @default(cuid())
+
+  // Package identification
+  scope    String // @company
+  name     String // package-name
+  fullName String @unique // @company/package-name
+
+  // Ownership
+  ownerId String?
+  owner   User?   @relation(fields: [ownerId], references: [id])
+  teamId  String?
+  team    Team?   @relation(fields: [teamId], references: [id])
+
+  // Package details
+  description String?
+  keywords    String[]
+  homepage    String?
+  repository  String?
+
+  // Access control
+  isPrivate    Boolean              @default(true)
+  accessTokens PackageAccessToken[]
+
+  // Versions
+  versions      PackageVersion[]
+  latestVersion String?
+
+  // Stats
+  downloads       Int @default(0)
+  weeklyDownloads Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([scope, name])
+  @@map("private_packages")
+}
+
+model PackageVersion {
+  id        String         @id @default(cuid())
+  packageId String
+  package   PrivatePackage @relation(fields: [packageId], references: [id])
+
+  version String
+  tag     String @default("latest") // latest, beta, alpha
+
+  // Package contents
+  tarballUrl   String
+  tarballSize  Int
+  unpackedSize Int
+
+  // Package.json data
+  packageJson Json
+  readme      String? @db.Text
+
+  // Dependencies
+  dependencies     Json?
+  devDependencies  Json?
+  peerDependencies Json?
+
+  // Publishing info
+  publishedBy String?
+  publisher   User?    @relation(fields: [publishedBy], references: [id])
+  publishedAt DateTime @default(now())
+
+  // Stats
+  downloads Int @default(0)
+
+  @@unique([packageId, version])
+  @@index([packageId, tag])
+  @@map("package_versions")
+}
+
+model PackageAccessToken {
+  id        String         @id @default(cuid())
+  packageId String
+  package   PrivatePackage @relation(fields: [packageId], references: [id])
+
+  token String  @unique
+  name  String?
+
+  // Permissions
+  canRead  Boolean @default(true)
+  canWrite Boolean @default(false)
+
+  // Usage tracking
+  lastUsedAt DateTime?
+  usageCount Int       @default(0)
+
+  // Expiration
+  expiresAt DateTime?
+  revokedAt DateTime?
+
+  createdBy String
+  creator   User     @relation(fields: [createdBy], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@map("package_access_tokens")
+}
+
+// =====================================================
+// ANALYTICS & MONITORING
+// =====================================================
+
+model ComponentAnalytics {
+  id String @id @default(cuid())
+
+  // Component reference
+  resourceId    String?
+  resource      Resource? @relation(fields: [resourceId], references: [id])
+  componentName String?
+  componentType String?
+
+  // User/Team reference
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+  teamId String?
+
+  // Event data
+  eventType AnalyticsEventType
+  eventData Json?
+
+  // Context
+  sessionId String?
+  ipAddress String?
+  userAgent String?
+  referrer  String?
+
+  // Performance metrics
+  loadTime   Int? // milliseconds
+  renderTime Int? // milliseconds
+  bundleSize Int? // bytes
+
+  createdAt DateTime @default(now())
+
+  @@index([resourceId, createdAt])
+  @@index([userId, createdAt])
+  @@index([eventType, createdAt])
+  @@map("component_analytics")
+}
+
+enum AnalyticsEventType {
+  VIEW
+  PREVIEW
+  DOWNLOAD
+  COPY_CODE
+  GENERATE
+  CUSTOMIZE
+  SHARE
+  ERROR
+}
+
+model PerformanceMetric {
+  id String @id @default(cuid())
+
+  // Metric identification
+  metricType String // 'api_response', 'page_load', 'generation_time'
+  metricName String // Specific metric name
+
+  // Values
+  value Float
+  unit  String // 'ms', 'bytes', 'percent'
+
+  // Context
+  environment String  @default("production")
+  region      String?
+
+  // Additional data
+  metadata Json?
+
+  recordedAt DateTime @default(now())
+
+  @@index([metricType, recordedAt])
+  @@map("performance_metrics")
+}
+
+// =====================================================
+// NOTIFICATIONS & ACTIVITY
+// =====================================================
+
+model Notification {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  type    NotificationType
+  title   String
+  message String
+
+  // Related entities
+  resourceId String?
+  teamId     String?
+  projectId  String?
+
+  // Action
+  actionUrl   String?
+  actionLabel String?
+
+  // Status
+  isRead Boolean   @default(false)
+  readAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  SUBMISSION_APPROVED
+  SUBMISSION_REJECTED
+  REVIEW_RECEIVED
+  PURCHASE_MADE
+  PAYOUT_PROCESSED
+  TEAM_INVITATION
+  COMPONENT_FEATURED
+  SYSTEM_UPDATE
+  PRICING_UPDATE
+}
+
+model ActivityLog {
+  id String @id @default(cuid())
+
+  // Actor
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+  teamId String?
+
+  // Action
+  action     String // 'created', 'updated', 'deleted', etc.
+  entityType String // 'resource', 'project', 'team', etc.
+  entityId   String
+
+  // Details
+  changes  Json? // What changed
+  metadata Json? // Additional context
+
+  // Request info
+  ipAddress String?
+  userAgent String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([entityType, entityId])
+  @@map("activity_logs")
+}
+
+// =====================================================
+// FEATURE FLAGS & CONFIGURATION
+// =====================================================
+
+model FeatureFlag {
+  id          String  @id @default(cuid())
+  key         String  @unique
+  name        String
+  description String?
+
+  // Flag configuration
+  isEnabled         Boolean @default(false)
+  rolloutPercentage Int     @default(0) // 0-100
+
+  // Targeting
+  enabledForUsers String[] // User IDs
+  enabledForTeams String[] // Team IDs
+
+  // Conditions
+  conditions Json? // Complex targeting rules
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("feature_flags")
+}
+
+model SystemConfig {
+  id          String  @id @default(cuid())
+  key         String  @unique
+  value       Json
+  description String?
+
+  isSecret Boolean @default(false)
+
+  updatedBy String?
+  updatedAt DateTime @updatedAt
+
+  @@map("system_configs")
+}
+
+model TeamResource {
+  id         String   @id @default(cuid())
+  teamId     String
+  team       Team     @relation(fields: [teamId], references: [id])
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id])
+
+  addedBy     String
+  addedByUser User     @relation(fields: [addedBy], references: [id])
+  addedAt     DateTime @default(now())
+
+  @@unique([teamId, resourceId])
+  @@map("team_resources")
+}
+
+// =====================================================
+// SUBSCRIPTION MANAGEMENT
+// =====================================================
+
+model Subscription {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  tier                 String   // beta_tester, early_bird, personal, company, enterprise
+  stripeSubscriptionId String?  @unique
+  stripeCustomerId     String?
+  stripePriceId        String?
+  
+  status               String   @default("active") // active, cancelled, past_due, incomplete
+  billingPeriod        String   @default("monthly") // monthly, yearly
+  
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean  @default(false)
+  
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  
+  metadata             Json?    // Additional subscription data
+  
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  
+  // Relations
+  usageRecords         UsageRecord[]
+  invoices             Invoice[]
+  
+  @@index([userId])
+  @@index([stripeSubscriptionId])
+  @@index([status])
+}
+
+model UsageRecord {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  
+  metric         String   // ai_generations_monthly, api_calls_daily, etc.
+  value          Int      @default(0)
+  period         String   // YYYY-MM for monthly, YYYY-MM-DD for daily
+  
+  metadata       Json?    // Additional usage data
+  
+  createdAt      DateTime @default(now())
+  
+  @@index([userId])
+  @@index([subscriptionId])
+  @@index([metric, period])
+}
+
+model Invoice {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptionId   String
+  subscription     Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  
+  stripeInvoiceId  String?  @unique
+  status           String   @default("draft") // draft, open, paid, void, uncollectible
+  amount           Int      // Amount in cents
+  currency         String   @default("usd")
+  
+  periodStart      DateTime
+  periodEnd        DateTime
+  dueDate          DateTime?
+  paidAt           DateTime?
+  
+  metadata         Json?    // Additional invoice data
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  @@index([userId])
+  @@index([subscriptionId])
+  @@index([stripeInvoiceId])
+}
+
+model Feature {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  category    String
+  
+  tiers       String[] // Array of tiers that have this feature
+  limits      Json?    // Tier-specific limits
+  
+  active      Boolean  @default(true)
+  metadata    Json?    // Additional feature data
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([slug])
+  @@index([category])
+}
+

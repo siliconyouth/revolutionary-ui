@@ -1,0 +1,180 @@
+// React-Specific Enhancements for Prisma Schema
+// Add these models to the existing schema-ui-catalog.prisma
+
+model ReactComponentFeatures {
+  id                      String    @id @default(cuid())
+  resourceId              String    @unique
+  resource                Resource  @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  
+  // State Management
+  usesHooks               Boolean   @default(true)
+  usesClassComponents     Boolean   @default(false)
+  stateManagementApproach String?   // internal, redux, mobx, context, zustand
+  
+  // Styling
+  stylingApproach         String?   // css-modules, styled-components, emotion, tailwind, sass
+  themeable               Boolean   @default(false)
+  cssInJs                 Boolean   @default(false)
+  
+  // Component Architecture
+  compoundComponents      Boolean   @default(false)
+  renderProps             Boolean   @default(false)
+  higherOrderComponent    Boolean   @default(false)
+  customHooksProvided     Boolean   @default(false)
+  
+  // Accessibility
+  ariaCompliant           Boolean   @default(false)
+  keyboardNavigation      Boolean   @default(false)
+  screenReaderTested      Boolean   @default(false)
+  
+  // Performance
+  memoized                Boolean   @default(false)
+  codeSplittingReady      Boolean   @default(false)
+  treeShakeable           Boolean   @default(true)
+  
+  // Testing
+  unitTestsIncluded       Boolean   @default(false)
+  integrationTestsIncluded Boolean  @default(false)
+  storybookStories        Boolean   @default(false)
+  
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  @@map("react_component_features")
+}
+
+model ReactEcosystemCompatibility {
+  id                  String    @id @default(cuid())
+  resourceId          String
+  resource            Resource  @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  ecosystemTool       String    // next.js, gatsby, remix, vite, cra
+  compatibilityLevel  String    // native, full, partial, plugin
+  versionConstraint   String?
+  notes               String?   @db.Text
+  createdAt           DateTime  @default(now())
+
+  @@unique([resourceId, ecosystemTool])
+  @@map("react_ecosystem_compatibility")
+}
+
+model ComponentDependencies {
+  id                String    @id @default(cuid())
+  resourceId        String
+  resource          Resource  @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  dependencyName    String
+  dependencyVersion String?
+  dependencyType    DependencyType? // peer, dev, optional, required
+  isReactSpecific   Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+
+  @@map("component_dependencies")
+}
+
+model ComponentExamples {
+  id               String    @id @default(cuid())
+  resourceId       String
+  resource         Resource  @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  exampleName      String
+  description      String?   @db.Text
+  codeSnippet      String?   @db.Text
+  liveDemoUrl      String?
+  codesandboxUrl   String?
+  complexityLevel  ComplexityLevel? // basic, intermediate, advanced
+  useCaseId        String?
+  useCase          UseCase?  @relation(fields: [useCaseId], references: [id])
+  createdAt        DateTime  @default(now())
+
+  @@map("component_examples")
+}
+
+model PerformanceMetrics {
+  id               String    @id @default(cuid())
+  resourceId       String
+  resource         Resource  @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  metricType       MetricType // bundle-size, first-render, re-render, memory
+  metricValue      Float
+  metricUnit       String    // kb, ms, mb
+  testEnvironment  String?
+  measuredAt       DateTime  @default(now())
+
+  @@unique([resourceId, metricType, measuredAt])
+  @@map("performance_metrics")
+}
+
+// Enums for React-specific types
+enum DependencyType {
+  PEER
+  DEV
+  OPTIONAL
+  REQUIRED
+}
+
+enum ComplexityLevel {
+  BASIC
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum MetricType {
+  BUNDLE_SIZE
+  FIRST_RENDER
+  RE_RENDER
+  MEMORY_USAGE
+  LOAD_TIME
+}
+
+enum StateManagementApproach {
+  INTERNAL
+  REDUX
+  MOBX
+  CONTEXT_API
+  ZUSTAND
+  RECOIL
+  VALTIO
+  JOTAI
+}
+
+enum StylingApproach {
+  CSS_MODULES
+  STYLED_COMPONENTS
+  EMOTION
+  TAILWIND
+  SASS
+  VANILLA_CSS
+  STITCHES
+  VANILLA_EXTRACT
+}
+
+enum ReactEcosystemTool {
+  NEXTJS
+  GATSBY
+  REMIX
+  VITE
+  CREATE_REACT_APP
+  PARCEL
+  WEBPACK
+  ROLLUP
+}
+
+// Update the Resource model with React-specific fields
+model Resource {
+  // ... existing fields ...
+  
+  // React-specific fields
+  reactVersionMin        String?
+  reactVersionMax        String?
+  supportsSSR            Boolean?
+  supportsReactNative    Boolean   @default(false)
+  bundleSizeKb           Int?
+  hasTypescriptDefs      Boolean   @default(false)
+  qualityIndicators      String[]  // ['rocket', 'unicorn', 'butterfly', 'trophy']
+  
+  // New relations
+  reactFeatures          ReactComponentFeatures?
+  ecosystemCompatibility ReactEcosystemCompatibility[]
+  dependencies           ComponentDependencies[]
+  examples               ComponentExamples[]
+  performanceMetrics     PerformanceMetrics[]
+  
+  // ... rest of the model ...
+}

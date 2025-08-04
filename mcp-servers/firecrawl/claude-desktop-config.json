@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "firecrawl": {
+      "command": "node",
+      "args": ["${HOME}/projects/revolutionary-ui/mcp-servers/firecrawl/dist/index.js"],
+      "env": {
+        "FIRECRAWL_API_KEY": "${FIRECRAWL_API_KEY}",
+        "NODE_ENV": "production"
+      }
+    }
+  },
+  "comments": {
+    "description": "Add this configuration to your Claude Desktop settings",
+    "location": "~/Library/Application Support/Claude/claude_desktop_config.json",
+    "notes": [
+      "Replace ${HOME} with your actual home directory path",
+      "Set FIRECRAWL_API_KEY in your environment or replace with actual key",
+      "Ensure the server is built first with: npm run build"
+    ]
+  }
+}

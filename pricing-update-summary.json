@@ -1,0 +1,38 @@
+{
+  "timestamp": "2025-08-04T02:33:52.323Z",
+  "changes": [
+    {
+      "tier": "Beta Tester",
+      "updates": [
+        "AI generations: 50/month → Unlimited",
+        "Private components: 5 → Unlimited",
+        "Storage: 1GB → 20GB",
+        "API calls: 100/day → 2,000/day"
+      ]
+    },
+    {
+      "tier": "Early Bird",
+      "updates": [
+        "AI generations: 100/month → Unlimited",
+        "Private components: 10 → Unlimited",
+        "Storage: 5GB → 20GB",
+        "API calls: 500/day → 2,000/day"
+      ]
+    },
+    {
+      "tier": "Company",
+      "updates": [
+        "Monthly price: $29.99 → $49.99",
+        "Yearly price: $251.91 → $419.91"
+      ]
+    }
+  ],
+  "stripe_updates": {
+    "company": {
+      "old_monthly": "price_1RsDmsAlB5kkCVbouoIPi32r",
+      "new_monthly": "price_1RsEAyAlB5kkCVbooqG92Ifp",
+      "old_yearly": "price_1RsDmtAlB5kkCVbozrVbqReV",
+      "new_yearly": "price_1RsEAzAlB5kkCVbooZI9f5bx"
+    }
+  }
+}

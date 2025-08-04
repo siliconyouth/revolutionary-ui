@@ -52,3 +52,18 @@ screenshots/
 
 # Revolutionary UI
 .revolutionary-ui.config.json
+.revolutionary-ui/
+
+# Environment backups
+.env.local.backup*
+.env-setup-*.tmp
+
+# Cache and monitoring
+.cache/
+monitoring.log
+.enhanced-session-monitor.js
+.parallel-session-monitor.js
+.monitoring-config.json
+
+# MCP configs
+.firecrawl-mcp-config.json

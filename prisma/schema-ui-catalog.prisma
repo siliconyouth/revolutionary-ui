@@ -1,0 +1,323 @@
+// Revolutionary UI Component Catalog Schema
+// Based on awesome-web-components categorization analysis
+// For use with PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =====================================================
+// CORE CATEGORIZATION MODELS
+// =====================================================
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  icon        String?
+  sortOrder   Int       @default(0)
+  parentId    String?
+  parent      Category? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+  resources   Resource[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("categories")
+}
+
+model ResourceType {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  resources   Resource[]
+  createdAt   DateTime  @default(now())
+
+  @@map("resource_types")
+}
+
+model Paradigm {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  description String?
+  resources   Resource[]
+  createdAt   DateTime  @default(now())
+
+  @@map("paradigms")
+}
+
+// =====================================================
+// MAIN RESOURCE MODEL
+// =====================================================
+
+model Resource {
+  id               String      @id @default(cuid())
+  name             String
+  slug             String      @unique
+  description      String?
+  longDescription  String?     @db.Text
+  
+  // Relations
+  resourceTypeId   String
+  resourceType     ResourceType @relation(fields: [resourceTypeId], references: [id])
+  categoryId       String
+  category         Category    @relation(fields: [categoryId], references: [id])
+  paradigmId        String?
+  paradigm         Paradigm?   @relation(fields: [paradigmId], references: [id])
+  
+  // Source information
+  githubUrl        String?
+  npmPackage       String?
+  websiteUrl       String?
+  documentationUrl String?
+  demoUrl          String?
+  
+  // Metadata
+  author           String?
+  organization     String?
+  license          String?
+  version          String?
+  lastUpdated      DateTime?
+  firstReleased    DateTime?
+  
+  // Statistics
+  githubStars      Int         @default(0)
+  npmDownloads     Int         @default(0)
+  popularityScore  Float       @default(0)
+  
+  // Features
+  isTypescript     Boolean     @default(false)
+  isOpenSource     Boolean     @default(true)
+  isMaintained     Boolean     @default(true)
+  isDeprecated     Boolean     @default(false)
+  isFeatured       Boolean     @default(false)
+  
+  // Relations
+  tags             ResourceTag[]
+  frameworks       ResourceFramework[]
+  designSystem     DesignSystem?
+  components       Component[]
+  tools            Tool?
+  metrics          ResourceMetric[]
+  useCases         ResourceUseCase[]
+  relationships    ResourceRelationship[] @relation("SourceResource")
+  relatedTo        ResourceRelationship[] @relation("TargetResource")
+  learningResources LearningResource[]
+  
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([name, description])
+  @@map("resources")
+}
+
+// =====================================================
+// CLASSIFICATION & TAGGING
+// =====================================================
+
+model Tag {
+  id        String        @id @default(cuid())
+  name      String        @unique
+  slug      String        @unique
+  category  String?       // tech, feature, use-case, etc.
+  resources ResourceTag[]
+  createdAt DateTime      @default(now())
+
+  @@map("tags")
+}
+
+model ResourceTag {
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  tagId      String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([resourceId, tagId])
+  @@map("resource_tags")
+}
+
+// =====================================================
+// FRAMEWORK & TECHNOLOGY SUPPORT
+// =====================================================
+
+model Framework {
+  id         String    @id @default(cuid())
+  name       String    @unique
+  slug       String    @unique
+  version    String?
+  icon       String?
+  websiteUrl String?
+  resources  ResourceFramework[]
+  createdAt  DateTime  @default(now())
+
+  @@map("frameworks")
+}
+
+model ResourceFramework {
+  resourceId         String
+  resource           Resource  @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  frameworkId        String
+  framework          Framework @relation(fields: [frameworkId], references: [id], onDelete: Cascade)
+  compatibilityLevel String?   // full, partial, plugin
+  minVersion         String?
+  notes              String?   @db.Text
+
+  @@id([resourceId, frameworkId])
+  @@map("resource_frameworks")
+}
+
+// =====================================================
+// DESIGN SYSTEMS & COMPONENT LIBRARIES
+// =====================================================
+
+model DesignSystem {
+  id                String    @id @default(cuid())
+  resourceId        String    @unique
+  resource          Resource  @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  designLanguage    String?   // Material, Fluent, Carbon, etc.
+  company           String?
+  themingSupport    Boolean   @default(true)
+  darkModeSupport   Boolean   @default(true)
+  rtlSupport        Boolean   @default(false)
+  accessibilityLevel String?  // WCAG AA, AAA, etc.
+  componentCount    Int?
+  createdAt         DateTime  @default(now())
+
+  @@map("design_systems")
+}
+
+model Component {
+  id              String    @id @default(cuid())
+  parentResourceId String?
+  parentResource  Resource? @relation(fields: [parentResourceId], references: [id], onDelete: Cascade)
+  name            String
+  componentType   String?   // button, form, navigation, etc.
+  description     String?
+  propsSchema     Json?     // component props/attributes
+  codeExample     String?   @db.Text
+  previewUrl      String?
+  createdAt       DateTime  @default(now())
+
+  @@map("components")
+}
+
+// =====================================================
+// USE CASES & EXAMPLES
+// =====================================================
+
+model UseCase {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  category    String?   // e-commerce, dashboard, marketing, etc.
+  resources   ResourceUseCase[]
+  createdAt   DateTime  @default(now())
+
+  @@map("use_cases")
+}
+
+model ResourceUseCase {
+  resourceId     String
+  resource       Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  useCaseId      String
+  useCase        UseCase  @relation(fields: [useCaseId], references: [id], onDelete: Cascade)
+  relevanceScore Int      @default(5) // 1-10
+  notes          String?  @db.Text
+
+  @@id([resourceId, useCaseId])
+  @@map("resource_use_cases")
+}
+
+// =====================================================
+// TOOLS & ECOSYSTEM
+// =====================================================
+
+model Tool {
+  id                     String    @id @default(cuid())
+  resourceId             String    @unique
+  resource               Resource  @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  toolType               String?   // bundler, testing, devtools, etc.
+  supportedFeatures      String[]
+  configurationComplexity String?  // low, medium, high
+  createdAt              DateTime  @default(now())
+
+  @@map("tools")
+}
+
+// =====================================================
+// LEARNING RESOURCES
+// =====================================================
+
+model LearningResource {
+  id               String    @id @default(cuid())
+  title            String
+  url              String
+  resourceType     String    // tutorial, article, video, course
+  difficultyLevel  String?   // beginner, intermediate, advanced
+  durationMinutes  Int?
+  author           String?
+  publishedDate    DateTime?
+  relatedResourceId String?
+  relatedResource  Resource? @relation(fields: [relatedResourceId], references: [id])
+  createdAt        DateTime  @default(now())
+
+  @@map("learning_resources")
+}
+
+// =====================================================
+// COMMUNITY & METRICS
+// =====================================================
+
+model ResourceMetric {
+  id                    String    @id @default(cuid())
+  resourceId            String
+  resource              Resource  @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  metricDate            DateTime
+  githubStars           Int?
+  githubForks           Int?
+  githubIssuesOpen      Int?
+  githubIssuesClosed    Int?
+  githubContributors    Int?
+  npmWeeklyDownloads    Int?
+  stackoverflowQuestions Int?
+  communitySizeEstimate Int?
+  createdAt             DateTime  @default(now())
+
+  @@unique([resourceId, metricDate])
+  @@map("resource_metrics")
+}
+
+// =====================================================
+// RELATIONSHIPS & DEPENDENCIES
+// =====================================================
+
+enum RelationshipType {
+  ALTERNATIVE
+  DEPENDENCY
+  EXTENDS
+  INTEGRATES
+  INSPIRED_BY
+  FORK_OF
+  SIMILAR_TO
+}
+
+model ResourceRelationship {
+  id               String           @id @default(cuid())
+  sourceResourceId String
+  sourceResource   Resource         @relation("SourceResource", fields: [sourceResourceId], references: [id], onDelete: Cascade)
+  targetResourceId String
+  targetResource   Resource         @relation("TargetResource", fields: [targetResourceId], references: [id], onDelete: Cascade)
+  relationshipType RelationshipType
+  notes            String?          @db.Text
+  createdAt        DateTime         @default(now())
+
+  @@unique([sourceResourceId, targetResourceId, relationshipType])
+  @@map("resource_relationships")
+}

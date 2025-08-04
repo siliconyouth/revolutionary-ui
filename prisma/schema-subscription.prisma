@@ -1,0 +1,165 @@
+// Revolutionary UI - Subscription Schema
+// This schema handles subscription management and feature access
+
+model Subscription {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  tier                 String   // beta_tester, early_bird, personal, company, enterprise
+  stripeSubscriptionId String?  @unique
+  stripeCustomerId     String?
+  stripePriceId        String?
+  
+  status               String   @default("active") // active, cancelled, past_due, incomplete
+  billingPeriod        String   @default("monthly") // monthly, yearly
+  
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean  @default(false)
+  
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  
+  metadata             Json?    // Additional subscription data
+  
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  
+  // Relations
+  usageRecords         UsageRecord[]
+  invoices             Invoice[]
+  
+  @@index([userId])
+  @@index([stripeSubscriptionId])
+  @@index([status])
+}
+
+model UsageRecord {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  
+  metric         String   // ai_generations_monthly, api_calls_daily, etc.
+  value          Int      @default(0)
+  period         String   // YYYY-MM for monthly, YYYY-MM-DD for daily
+  
+  metadata       Json?    // Additional usage data
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  @@unique([userId, metric, period])
+  @@index([userId, period])
+  @@index([metric, period])
+}
+
+model FeatureUsage {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  feature        String   // Feature flag name
+  usedAt         DateTime @default(now())
+  metadata       Json?    // Additional context about the usage
+  
+  @@index([userId, feature])
+  @@index([feature, usedAt])
+}
+
+model Invoice {
+  id                   String   @id @default(cuid())
+  subscriptionId       String
+  subscription         Subscription @relation(fields: [subscriptionId], references: [id])
+  
+  stripeInvoiceId      String   @unique
+  stripePaymentIntentId String?
+  
+  amount               Int      // Amount in cents
+  currency             String   @default("usd")
+  status               String   // draft, open, paid, void, uncollectible
+  
+  periodStart          DateTime
+  periodEnd            DateTime
+  
+  paidAt               DateTime?
+  dueDate              DateTime?
+  
+  metadata             Json?
+  
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  
+  @@index([subscriptionId])
+  @@index([status])
+}
+
+model TeamMember {
+  id             String   @id @default(cuid())
+  teamId         String
+  team           Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  role           String   @default("member") // owner, admin, member, viewer
+  permissions    Json?    // Custom permissions
+  
+  invitedBy      String?
+  invitedAt      DateTime?
+  joinedAt       DateTime @default(now())
+  
+  @@unique([teamId, userId])
+  @@index([teamId])
+  @@index([userId])
+}
+
+model Team {
+  id             String   @id @default(cuid())
+  name           String
+  slug           String   @unique
+  ownerId        String
+  owner          User     @relation(fields: [ownerId], references: [id])
+  
+  subscriptionId String?
+  
+  metadata       Json?
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  // Relations
+  members        TeamMember[]
+  components     Component[]  @relation("TeamComponents")
+  
+  @@index([ownerId])
+  @@index([slug])
+}
+
+// Update User model to include subscription relation
+model User {
+  // ... existing fields ...
+  
+  // Subscription
+  subscription         Subscription?
+  usageRecords         UsageRecord[]
+  featureUsages        FeatureUsage[]
+  
+  // Teams
+  ownedTeams           Team[]
+  teamMemberships      TeamMember[]
+  
+  // ... rest of the model ...
+}
+
+// Update Component model to support team ownership
+model Component {
+  // ... existing fields ...
+  
+  // Team ownership
+  teamId               String?
+  team                 Team?    @relation("TeamComponents", fields: [teamId], references: [id])
+  
+  // ... rest of the model ...
+}

@@ -1,0 +1,173 @@
+// Visual Component Preview System Schema
+// Extension to the UI Catalog for live component previews
+
+model ComponentPreview {
+  id                 String      @id @default(cuid())
+  resourceId         String
+  resource           Resource    @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  
+  // Preview metadata
+  previewType        String      // 'live', 'static', 'sandbox', 'storybook', 'codepen'
+  previewUrl         String?     @db.VarChar(500)
+  previewHeight      Int         @default(400)
+  previewWidth       String      @default("100%") @db.VarChar(20)
+  
+  // Code examples
+  exampleCode        String?     @db.Text
+  exampleFramework   String      @default("react") @db.VarChar(50)
+  exampleDependencies Json?
+  
+  // Static preview assets
+  screenshotUrl      String?     @db.VarChar(500)
+  thumbnailUrl       String?     @db.VarChar(500)
+  videoUrl           String?     @db.VarChar(500)
+  
+  // Interactive preview configuration
+  sandboxTemplate    String?     @db.VarChar(100)
+  sandboxFiles       Json?
+  sandboxConfig      Json?
+  
+  // Preview features
+  isInteractive      Boolean     @default(true)
+  isResponsive       Boolean     @default(true)
+  supportsThemes     Boolean     @default(false)
+  supportsRtl        Boolean     @default(false)
+  
+  // Performance
+  loadTimeMs         Int?
+  bundleSizeKb       Int?
+  
+  // Relations
+  variations         PreviewVariation[]
+  analytics          PreviewAnalytics[]
+  
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  
+  @@unique([resourceId, previewType, exampleFramework])
+  @@index([resourceId])
+  @@index([previewType])
+  @@index([exampleFramework])
+  @@map("component_previews")
+}
+
+model PreviewVariation {
+  id               String           @id @default(cuid())
+  previewId        String
+  preview          ComponentPreview @relation(fields: [previewId], references: [id], onDelete: Cascade)
+  
+  name             String           @db.VarChar(100)
+  description      String?
+  
+  // Variation specifics
+  propsOverride    Json?
+  stylesOverride   String?          @db.Text
+  codeSnippet      String?          @db.Text
+  screenshotUrl    String?          @db.VarChar(500)
+  
+  sortOrder        Int              @default(0)
+  isDefault        Boolean          @default(false)
+  
+  createdAt        DateTime         @default(now())
+  
+  @@index([previewId])
+  @@map("preview_variations")
+}
+
+model PlaygroundTemplate {
+  id                  String    @id @default(cuid())
+  resourceId          String
+  resource            Resource  @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  
+  // Template configuration
+  templateName        String    @db.VarChar(100)
+  templateDescription String?
+  
+  // Base setup
+  baseCode            String    @db.Text
+  baseProps           Json?
+  baseStyles          String?   @db.Text
+  
+  // Customization options
+  editableProps       Json?
+  propControls        Json?
+  themeOptions        Json?
+  
+  // Dependencies
+  requiredPackages    Json?
+  cdnLinks            Json?
+  
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  
+  @@index([resourceId])
+  @@map("playground_templates")
+}
+
+model PreviewProvider {
+  id                  String    @id @default(cuid())
+  name                String    @unique @db.VarChar(50)
+  slug                String    @unique @db.VarChar(50)
+  
+  // Provider configuration
+  baseUrl             String?   @db.VarChar(200)
+  embedPattern        String?   @db.VarChar(500)
+  apiEndpoint         String?   @db.VarChar(200)
+  apiKeyRequired      Boolean   @default(false)
+  
+  // Supported features
+  supportsReact       Boolean   @default(true)
+  supportsVue         Boolean   @default(false)
+  supportsAngular     Boolean   @default(false)
+  supportsSvelte      Boolean   @default(false)
+  supportsTypescript  Boolean   @default(true)
+  
+  // Limits
+  maxFileSizeKb       Int?      @default(1000)
+  maxDependencies     Int?      @default(50)
+  rateLimitPerHour    Int?
+  
+  isActive            Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  
+  @@map("preview_providers")
+}
+
+model PreviewAnalytics {
+  id                   String           @id @default(cuid())
+  previewId            String
+  preview              ComponentPreview @relation(fields: [previewId], references: [id], onDelete: Cascade)
+  
+  // Metrics
+  viewCount            Int              @default(0)
+  interactionCount     Int              @default(0)
+  copyCount            Int              @default(0)
+  sandboxOpens         Int              @default(0)
+  
+  // Performance metrics
+  avgLoadTimeMs        Int?
+  errorCount           Int              @default(0)
+  successRate          Float            @default(100)
+  
+  // User engagement
+  avgTimeSpentSeconds  Int?
+  bounceRate           Float?
+  
+  // Date tracking
+  date                 DateTime         @db.Date
+  
+  @@unique([previewId, date])
+  @@index([previewId, date])
+  @@map("preview_analytics")
+}
+
+// Update Resource model to include preview relations
+model Resource {
+  // ... existing fields ...
+  
+  // Add preview relations
+  previews            ComponentPreview[]
+  playgroundTemplates PlaygroundTemplate[]
+  
+  // ... rest of the model ...
+}

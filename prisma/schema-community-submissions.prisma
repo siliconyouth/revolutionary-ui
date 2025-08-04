@@ -1,0 +1,293 @@
+// Community Component Submissions Schema
+
+model ComponentSubmission {
+  id                String      @id @default(cuid())
+  
+  // Submitter information
+  userId            String
+  user              User        @relation(fields: [userId], references: [id])
+  submitterName     String      @db.VarChar(100)
+  submitterEmail    String      @db.VarChar(255)
+  submitterGithub   String?     @db.VarChar(100)
+  
+  // Component information
+  name              String      @db.VarChar(200)
+  slug              String?     @unique @db.VarChar(200)
+  description       String      @db.Text
+  longDescription   String?     @db.Text
+  
+  // Component details
+  categoryId        String
+  category          Category    @relation(fields: [categoryId], references: [id])
+  resourceTypeId    String
+  resourceType      ResourceType @relation(fields: [resourceTypeId], references: [id])
+  frameworks        String[]
+  
+  // Code and documentation
+  sourceCode        String      @db.Text
+  documentation     String?     @db.Text
+  demoUrl           String?     @db.VarChar(500)
+  githubUrl         String?     @db.VarChar(500)
+  npmPackage        String?     @db.VarChar(200)
+  
+  // Technical details
+  dependencies      Json?
+  peerDependencies  Json?
+  devDependencies   Json?
+  bundleSizeKb      Int?
+  minReactVersion   String?     @db.VarChar(20)
+  minVueVersion     String?     @db.VarChar(20)
+  minAngularVersion String?     @db.VarChar(20)
+  
+  // Features
+  hasTypescript     Boolean     @default(false)
+  hasTests          Boolean     @default(false)
+  hasDocumentation  Boolean     @default(true)
+  hasPreview        Boolean     @default(false)
+  isResponsive      Boolean     @default(true)
+  isAccessible      Boolean     @default(false)
+  supportsDarkMode  Boolean     @default(false)
+  supportsRtl       Boolean     @default(false)
+  
+  // License and legal
+  license           String      @default("MIT") @db.VarChar(50)
+  acceptsTerms      Boolean     @default(false)
+  copyrightOwner    String?     @db.VarChar(200)
+  
+  // Submission status
+  status            SubmissionStatus @default(DRAFT)
+  submissionDate    DateTime?
+  reviewStartedAt   DateTime?
+  reviewCompletedAt DateTime?
+  publishedAt       DateTime?
+  
+  // Review details
+  reviewerId        String?
+  reviewer          User?       @relation("ReviewerSubmissions", fields: [reviewerId], references: [id])
+  reviewNotes       String?     @db.Text
+  rejectionReason   String?     @db.Text
+  requiredChanges   String[]
+  
+  // Quality scores (0-100)
+  codeQualityScore  Int?
+  documentationScore Int?
+  designScore       Int?
+  
+  // Publishing details
+  publishedResourceId String?
+  publishedResource Resource?   @relation(fields: [publishedResourceId], references: [id])
+  version           String      @default("1.0.0") @db.VarChar(20)
+  
+  // Relations
+  previews          SubmissionPreview[]
+  attachments       SubmissionAttachment[]
+  checklist         SubmissionReviewChecklist?
+  comments          SubmissionComment[]
+  versions          SubmissionVersion[]
+  
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+  @@index([categoryId])
+  @@index([submissionDate])
+  @@index([reviewerId])
+  @@map("component_submissions")
+}
+
+enum SubmissionStatus {
+  DRAFT
+  SUBMITTED
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  PUBLISHED
+  ARCHIVED
+}
+
+model SubmissionPreview {
+  id                 String      @id @default(cuid())
+  submissionId       String
+  submission         ComponentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  
+  // Preview configuration
+  previewType        String      @db.VarChar(50) // 'live', 'static', 'sandbox'
+  previewCode        String      @db.Text
+  previewDependencies Json?
+  sandboxUrl         String?     @db.VarChar(500)
+  screenshotUrl      String?     @db.VarChar(500)
+  
+  // Framework-specific examples
+  framework          String      @db.VarChar(50)
+  exampleCode        String      @db.Text
+  exampleProps       Json?
+  
+  createdAt          DateTime    @default(now())
+  
+  @@index([submissionId])
+  @@map("submission_previews")
+}
+
+model SubmissionAttachment {
+  id                 String      @id @default(cuid())
+  submissionId       String
+  submission         ComponentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  
+  fileName           String      @db.VarChar(255)
+  fileType           String      @db.VarChar(100)
+  fileSizeBytes      Int
+  fileUrl            String      @db.VarChar(500)
+  
+  attachmentType     AttachmentType
+  description        String?     @db.Text
+  
+  uploadedAt         DateTime    @default(now())
+  
+  @@index([submissionId])
+  @@map("submission_attachments")
+}
+
+enum AttachmentType {
+  SCREENSHOT
+  DEMO_VIDEO
+  DOCUMENTATION
+  TEST_FILE
+}
+
+model SubmissionReviewChecklist {
+  id                   String      @id @default(cuid())
+  submissionId         String      @unique
+  submission           ComponentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  
+  // Code quality checks
+  codeFollowsStandards Boolean?
+  codeIsClean          Boolean?
+  codeHasComments      Boolean?
+  noConsoleLogs        Boolean?
+  noSecurityIssues     Boolean?
+  
+  // Documentation checks
+  readmeExists         Boolean?
+  apiDocumented        Boolean?
+  examplesProvided     Boolean?
+  propsDocumented      Boolean?
+  
+  // Testing checks
+  testsExist           Boolean?
+  testsPass            Boolean?
+  coverageAdequate     Boolean?
+  
+  // Design checks
+  responsiveDesign     Boolean?
+  accessibleMarkup     Boolean?
+  consistentStyling    Boolean?
+  
+  // Legal checks
+  licenseAppropriate   Boolean?
+  noCopyrightIssues    Boolean?
+  dependenciesLicensed Boolean?
+  
+  reviewerId           String?
+  reviewer             User?       @relation(fields: [reviewerId], references: [id])
+  reviewedAt           DateTime    @default(now())
+  
+  @@map("submission_review_checklist")
+}
+
+model SubmissionComment {
+  id                 String      @id @default(cuid())
+  submissionId       String
+  submission         ComponentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  
+  userId             String
+  user               User        @relation(fields: [userId], references: [id])
+  comment            String      @db.Text
+  
+  // Comment context
+  commentType        CommentType @default(GENERAL)
+  lineNumber         Int?
+  filePath           String?     @db.VarChar(255)
+  
+  isInternal         Boolean     @default(false)
+  isResolved         Boolean     @default(false)
+  
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  
+  @@index([submissionId])
+  @@map("submission_comments")
+}
+
+enum CommentType {
+  GENERAL
+  CODE_REVIEW
+  DESIGN_FEEDBACK
+  DOCUMENTATION
+}
+
+model SubmissionVersion {
+  id                 String      @id @default(cuid())
+  submissionId       String
+  submission         ComponentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  
+  versionNumber      Int
+  changesMade        String[]
+  sourceCode         String      @db.Text
+  
+  createdBy          String?
+  creator            User?       @relation(fields: [createdBy], references: [id])
+  createdAt          DateTime    @default(now())
+  
+  @@unique([submissionId, versionNumber])
+  @@index([submissionId])
+  @@map("submission_versions")
+}
+
+model SubmissionGuideline {
+  id                 String      @id @default(cuid())
+  
+  category           String      @db.VarChar(100)
+  title              String      @db.VarChar(200)
+  content            String      @db.Text
+  
+  isRequired         Boolean     @default(false)
+  sortOrder          Int         @default(0)
+  
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+  
+  @@map("submission_guidelines")
+}
+
+model FeaturedSubmission {
+  id                 String      @id @default(cuid())
+  resourceId         String
+  resource           Resource    @relation(fields: [resourceId], references: [id])
+  
+  featuredReason     String?     @db.Text
+  featuredBy         String?
+  featuredByUser     User?       @relation(fields: [featuredBy], references: [id])
+  featuredAt         DateTime    @default(now())
+  featuredUntil      DateTime?
+  
+  position           Int         @default(0)
+  isActive           Boolean     @default(true)
+  
+  @@index([isActive, featuredUntil])
+  @@map("featured_submissions")
+}
+
+// Update User model to include submission relations
+model User {
+  // ... existing fields ...
+  
+  submissions        ComponentSubmission[]
+  reviewedSubmissions ComponentSubmission[] @relation("ReviewerSubmissions")
+  submissionComments SubmissionComment[]
+  reviewChecklists   SubmissionReviewChecklist[]
+  submissionVersions SubmissionVersion[]
+  featuredSubmissions FeaturedSubmission[]
+  
+  // ... rest of the model ...
+}
