@@ -24,11 +24,13 @@ if (fs.existsSync(tempDir)) {
 fs.mkdirSync(tempDir, { recursive: true });
 
 // Copy necessary directories
-const dirs = ['src/lib/factory', 'src/bin', 'src/config'];
+const dirs = ['src/lib/factory', 'src/cli', 'src/bin', 'src/config'];
 dirs.forEach(dir => {
-  const targetDir = path.join(tempDir, dir);
-  fs.mkdirSync(targetDir, { recursive: true });
-  copyDir(dir, targetDir);
+  if (fs.existsSync(dir)) {
+    const targetDir = path.join(tempDir, dir);
+    fs.mkdirSync(targetDir, { recursive: true });
+    copyDir(dir, targetDir);
+  }
 });
 
 // Step 3: Replace path aliases in all TypeScript files

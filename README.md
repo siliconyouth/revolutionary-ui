@@ -27,11 +27,18 @@
  npm install @vladimirdukelic/revolutionary-ui-factory
  ```
 
- ### 3. Use the AI CLI
+ ### 3. Use the Unified CLI
  ```bash
- revolutionary-ui login               # authenticate for premium features
+ # Install globally
+ npm install -g revolutionary-ui
+
+ # Start interactive wizard (context-aware)
+ revolutionary-ui
+
+ # Or use specific commands
+ revolutionary-ui create my-app       # create new project
  revolutionary-ui analyze             # analyze your project
- revolutionary-ui generate --ai "Create a pricing table with toggle"
+ revolutionary-ui generate            # generate components interactively
  ```
 
  ### 4. VSCode Extension

@@ -6,9 +6,16 @@ All notable changes to the Revolutionary UI Factory System will be documented in
 
 ## [3.2.0] - 2025-08-04
 
-### 🚀 Major Update: Deprecation Fixes & Modern API Adoption
+### 🚀 Major Update: Unified CLI, Deprecation Fixes & Modern API Adoption
 
-This release focuses on eliminating deprecated APIs, updating to the latest package versions, and significantly improving TypeScript compliance and build stability.
+This release introduces a unified CLI system, eliminates deprecated APIs, updates to the latest package versions, and significantly improves TypeScript compliance and build stability.
+
+#### 🎯 Unified CLI System
+- **Single Entry Point**: All CLI features now accessible through `revolutionary-ui` command
+- **Context-Aware Routing**: Automatically selects appropriate interface based on project state
+- **Intelligent Command Routing**: Routes commands to specialized CLI implementations
+- **Interactive Wizard Default**: User-friendly wizard interface as the primary interaction mode
+- **Backwards Compatible**: Maintains support for all existing commands and features
 
 #### ✨ New Features
 

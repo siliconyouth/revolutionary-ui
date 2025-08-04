@@ -61,12 +61,8 @@
     "./cli": "./bin/cli.js"
   },
   "bin": {
-    "create-factory": "./bin/cli.js",
-    "revolutionary-ui": "./dist/cli/index.js",
-    "rui": "./dist/cli/rui-cli.js",
-    "rui-wizard": "./dist/cli/revolutionary-cli.js",
-    "create-revolutionary-app": "./dist/cli/create-app.js",
-    "rui-simple": "./dist/cli/simple-wizard.js"
+    "revolutionary-ui": "./bin/revolutionary-ui",
+    "rui": "./bin/revolutionary-ui"
   },
   "files": [
     "dist",
