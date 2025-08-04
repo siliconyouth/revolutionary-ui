@@ -349,61 +349,44 @@ export class SmartProjectAnalyzer {
     const allDeps = { ...deps, ...devDeps }
     const frameworks: string[] = []
     
-    // Next.js takes precedence
-    if (allDeps['next']) {
-      frameworks.push('Next.js')
+    // Import framework configs
+    const { FRAMEWORK_CONFIGS } = require('../../../config/frameworks')
+    
+    // Check each framework from our comprehensive list
+    for (const framework of FRAMEWORK_CONFIGS) {
+      if (framework.packageName && framework.packageName !== 'none') {
+        if (allDeps[framework.packageName]) {
+          frameworks.push(framework.name)
+        }
+      }
     }
     
-    // Nuxt
-    if (allDeps['nuxt'] || allDeps['@nuxt/core']) {
-      frameworks.push('Nuxt')
+    // Check for additional meta-frameworks
+    const additionalChecks = [
+      { package: 'gatsby', name: 'Gatsby' },
+      { package: 'remix', name: 'Remix' },
+      { package: '@remix-run/react', name: 'Remix' },
+      { package: 'astro', name: 'Astro' },
+      { package: 'vitepress', name: 'VitePress' },
+      { package: 'docusaurus', name: 'Docusaurus' },
+      { package: 'expo', name: 'Expo' },
+      { package: 'react-native', name: 'React Native' },
+      { package: 'electron', name: 'Electron' },
+      { package: 'tauri', name: 'Tauri' }
+    ]
+    
+    for (const check of additionalChecks) {
+      if (allDeps[check.package] && !frameworks.includes(check.name)) {
+        frameworks.push(check.name)
+      }
     }
     
-    // Remix
-    if (allDeps['@remix-run/react']) {
-      frameworks.push('Remix')
-    }
-    
-    // Gatsby
-    if (allDeps['gatsby']) {
-      frameworks.push('Gatsby')
-    }
-    
-    // React (if not already detected with a meta-framework)
-    if (allDeps['react'] && frameworks.length === 0) {
-      frameworks.push('React')
-    }
-    
-    // Vue
-    if (allDeps['vue'] && !frameworks.includes('Nuxt')) {
-      frameworks.push('Vue')
-    }
-    
-    // Angular
-    if (allDeps['@angular/core']) {
-      frameworks.push('Angular')
-    }
-    
-    // Svelte/SvelteKit
-    if (allDeps['@sveltejs/kit']) {
-      frameworks.push('SvelteKit')
-    } else if (allDeps['svelte']) {
-      frameworks.push('Svelte')
-    }
-    
-    // Solid
-    if (allDeps['solid-js']) {
-      frameworks.push('Solid')
-    }
-    
-    // Qwik
-    if (allDeps['@builder.io/qwik']) {
-      frameworks.push('Qwik')
-    }
-    
-    // Astro
-    if (allDeps['astro']) {
-      frameworks.push('Astro')
+    // If no frameworks detected but has common build tools
+    if (frameworks.length === 0) {
+      if (allDeps['vite']) frameworks.push('Vite Project')
+      else if (allDeps['webpack']) frameworks.push('Webpack Project')
+      else if (allDeps['rollup']) frameworks.push('Rollup Project')
+      else if (allDeps['parcel']) frameworks.push('Parcel Project')
     }
     
     return frameworks

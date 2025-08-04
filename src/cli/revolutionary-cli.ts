@@ -205,6 +205,7 @@ export class RevolutionaryCLI {
       overview: {
         name: smartAnalysis.name,
         framework: smartAnalysis.framework,
+        frameworks: smartAnalysis.frameworks, // Add all detected frameworks
         language: smartAnalysis.language,
         styling: smartAnalysis.styling.system,
         buildTool: smartAnalysis.buildTool
@@ -225,7 +226,10 @@ export class RevolutionaryCLI {
     // Project Overview
     console.log(chalk.yellow('Project Overview:'))
     console.log(`  Name: ${chalk.white(report.overview.name)}`)
-    console.log(`  Framework: ${chalk.white(report.overview.framework)}`)
+    console.log(`  Primary Framework: ${chalk.white(report.overview.framework)}`)
+    if (report.overview.frameworks && report.overview.frameworks.length > 1) {
+      console.log(`  All Frameworks: ${chalk.white(report.overview.frameworks.join(', '))}`)
+    }
     console.log(`  Language: ${chalk.white(report.overview.language)}`)
     console.log(`  Styling: ${chalk.white(report.overview.styling)}`)
     console.log(`  Build Tool: ${chalk.white(report.overview.buildTool)}`)
@@ -891,6 +895,7 @@ export class RevolutionaryCLI {
         overview: {
           name: smartAnalysis.name,
           framework: smartAnalysis.framework,
+          frameworks: smartAnalysis.frameworks, // Add all detected frameworks
           language: smartAnalysis.language,
           styling: smartAnalysis.styling.system,
           buildTool: smartAnalysis.buildTool
@@ -914,7 +919,10 @@ export class RevolutionaryCLI {
       // Project Overview
       console.log(chalk.yellow('Project Overview:'))
       console.log(`  Name: ${chalk.white(report.overview.name)}`)
-      console.log(`  Framework: ${chalk.white(report.overview.framework)}`)
+      console.log(`  Primary Framework: ${chalk.white(report.overview.framework)}`)
+      if (report.overview.frameworks && report.overview.frameworks.length > 1) {
+        console.log(`  All Frameworks: ${chalk.white(report.overview.frameworks.join(', '))}`)
+      }
       console.log(`  Language: ${chalk.white(report.overview.language)}`)
       console.log(`  Styling: ${chalk.white(report.overview.styling)}`)
       console.log(`  Build Tool: ${chalk.white(report.overview.buildTool)}`)
