@@ -1,0 +1,118 @@
+{
+  "project": {
+    "name": "Revolutionary UI Factory System",
+    "version": "3.2.0",
+    "repository": "https://github.com/siliconyouth/revolutionary-ui.git",
+    "author": "Vladimir Dukelic <vladimir@dukelic.com>"
+  },
+  "codex": {
+    "model": "gpt-4o-code-preview",
+    "contextFiles": [
+      "AGENTS.md",
+      "CLAUDE.md",
+      "CLAUDE_CONTEXT.md",
+      "GEMINI.md",
+      "CODEX.md",
+      "docs/AI_INTEGRATION.md",
+      "docs/CONTEXT_ENGINEERING.md",
+      "CHANGELOG.md",
+      "CLI_DOCUMENTATION.md",
+      "README.md"
+    ],
+    "autoLoad": true,
+    "memory": {
+      "enabled": true,
+      "path": ".codex/memory.json"
+    },
+    "session": {
+      "enabled": true,
+      "path": ".codex/session.json"
+    }
+  },
+  "development": {
+    "commands": {
+      "dev": "npm run dev",
+      "build": "npm run build",
+      "test": "npm test",
+      "lint": "npm run lint",
+      "typecheck": "npm run typecheck"
+    },
+    "scripts": {
+      "checkEnv": "node scripts/check-env.js",
+      "setupEnv": "node scripts/setup-env-interactive.js",
+      "runPrisma": "node scripts/run-prisma.js",
+      "resetDatabase": "node scripts/reset-and-seed.js"
+    }
+  },
+  "ai": {
+    "providers": {
+      "openai": {
+        "models": ["gpt-4o", "gpt-4o-mini"],
+        "apiKeyEnv": "OPENAI_API_KEY"
+      },
+      "anthropic": {
+        "models": ["claude-3-5-sonnet"],
+        "apiKeyEnv": "ANTHROPIC_API_KEY"
+      },
+      "google": {
+        "models": ["gemini-1.5-pro"],
+        "apiKeyEnv": "GOOGLE_AI_API_KEY"
+      },
+      "mistral": {
+        "models": ["mistral-large"],
+        "apiKeyEnv": "MISTRAL_API_KEY"
+      }
+    },
+    "defaultProvider": "openai",
+    "defaultModel": "gpt-4o"
+  },
+  "features": {
+    "frameworkTranspilation": {
+      "enabled": true,
+      "frameworks": ["React", "Vue", "Angular", "Svelte", "Solid", "Preact", "Lit"]
+    },
+    "visualComponentPreview": {
+      "enabled": true,
+      "previewModes": ["desktop", "tablet", "mobile"]
+    },
+    "uiComponentCatalog": {
+      "enabled": true,
+      "totalComponents": 10000,
+      "frameworks": 50,
+      "categories": 15
+    },
+    "aiTrainingDatasets": {
+      "enabled": true,
+      "datasets": 9,
+      "format": "jsonl"
+    },
+    "marketplace": {
+      "enabled": true,
+      "features": ["stripe", "subscriptions", "reviews", "analytics"]
+    }
+  },
+  "build": {
+    "outputDir": "dist/",
+    "sourceMap": true,
+    "minify": true,
+    "target": "ES2020"
+  },
+  "typescript": {
+    "strict": false,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "esModuleInterop": true
+  },
+  "testing": {
+    "framework": "jest",
+    "coverage": {
+      "threshold": 80,
+      "reporters": ["text", "lcov", "html"]
+    }
+  },
+  "deployment": {
+    "platforms": ["vercel", "netlify", "custom"],
+    "database": "supabase",
+    "authentication": "nextauth"
+  }
+}
