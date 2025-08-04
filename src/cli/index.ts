@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Revolutionary UI v3.0 CLI
+ * Revolutionary UI v3.2.0 CLI
  * Enhanced command-line interface with authentication, AI, catalog, and monitoring
  */
 
@@ -32,9 +32,9 @@ import { UpdateChecker } from './utils/update-checker'
 import { TelemetryManager } from './utils/telemetry'
 
 // Version from package.json
-const VERSION = '3.0.0'
+const VERSION = '3.2.0'
 
-// Enhanced factory stats for v3.0
+// Enhanced factory stats for v3.2.0
 const FACTORY_STATS = {
   totalFrameworks: 50,
   totalComponents: 10000,
@@ -91,7 +91,7 @@ const program = new Command()
 
 program
   .name('revolutionary-ui')
-  .description('Revolutionary UI v3.0 - AI-Powered Component Generation')
+  .description('Revolutionary UI v3.2.0 - AI-Powered Component Generation')
   .version(VERSION)
   .hook('preAction', async () => {
     // Initialize CLI components before any command
@@ -409,15 +409,15 @@ program
     console.log(chalk.cyan('\n👋 Thanks for using Revolutionary UI!\n'))
   })
 
-// Info command with v3.0 features
+// Info command with v3.2.0 features
 program
   .command('info')
-  .description('Show information about Revolutionary UI v3.0')
+  .description('Show information about Revolutionary UI v3.2.0')
   .action(() => {
     printBanner()
     printStats()
     
-    console.log(chalk.bold('\n🚀 What\'s New in v3.0?\n'))
+    console.log(chalk.bold('\n🚀 What\'s New in v3.2.0?\n'))
     console.log('  • 🤖 AI-Powered Component Generation (GPT-4, Claude 3, Gemini, Mistral)')
     console.log('  • 📚 Component Catalog with 10,000+ components')
     console.log('  • 🛍️  Full Marketplace with e-commerce capabilities')

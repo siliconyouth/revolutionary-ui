@@ -40,8 +40,8 @@ async function main() {
         
       case 'setup':
       case 'init':
-        // Use setup wizard
-        runCLI('simple-wizard', []);
+        // Use full revolutionary CLI for complete setup experience
+        runCLI('revolutionary', []);
         return;
         
       case 'auth':
@@ -70,16 +70,16 @@ async function main() {
   
   // Default behavior: Use interactive wizard
   if (!hasPackageJson) {
-    // No project - use simple wizard for setup
-    console.log('No project detected. Starting setup wizard...\n');
-    runCLI('simple-wizard', []);
+    // No project - use full revolutionary CLI for complete experience
+    console.log('Welcome to Revolutionary UI! Starting interactive experience...\n');
+    runCLI('revolutionary', []);
   } else if (hasRevolutionaryConfig) {
     // Revolutionary UI project - use full interactive CLI
     runCLI('revolutionary', []);
   } else {
-    // Has package.json but no Revolutionary UI - suggest setup
-    console.log('Project detected but Revolutionary UI not configured.\n');
-    runCLI('simple-wizard', []);
+    // Has package.json but no Revolutionary UI - use full CLI
+    console.log('Project detected. Starting Revolutionary UI interactive experience...\n');
+    runCLI('revolutionary', []);
   }
 }
 

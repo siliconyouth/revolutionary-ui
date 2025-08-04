@@ -571,7 +571,7 @@ ${Object.entries(config.features)
 
 ---
 
-Created with ❤️ by Revolutionary UI v3.0
+Created with ❤️ by Revolutionary UI v3.2.0
 `
 
     await fs.writeFile(path.join(projectPath, 'README.md'), readme)

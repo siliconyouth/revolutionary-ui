@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Revolutionary UI v3.0 - Create New App CLI
+ * Revolutionary UI v3.2.0 - Create New App CLI
  * Always generates a new project with user-selected configuration
  */
 
@@ -27,7 +27,7 @@ const printBanner = () => {
 ║  ██║  ██║███████╗ ╚████╔╝ ╚██████╔╝███████╗╚██████╔╝   ██║   ██║╚██████╔╝██║ ╚████║ ║
 ║  ╚═╝  ╚═╝╚══════╝  ╚═══╝   ╚═════╝ ╚══════╝ ╚═════╝    ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ║
 ║                                                                               ║
-║                          U I   F A C T O R Y   v3.0                          ║
+║                          U I   F A C T O R Y   v3.2.0                        ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
 `))

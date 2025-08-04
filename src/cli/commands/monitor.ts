@@ -443,7 +443,7 @@ export class MonitorCommand {
 
       // Update config file
       const fullConfig = {
-        project: 'Revolutionary UI v3.0.0',
+        project: 'Revolutionary UI v3.2.0',
         version: '1.0.0',
         created: new Date().toISOString(),
         monitoring: {

@@ -16,7 +16,7 @@ import { AuthManager } from './auth-manager'
 import * as fs from 'fs/promises'
 import * as path from 'path'
 
-const VERSION = '2.1.0'
+const VERSION = '3.2.0'
 const program = new Command()
 
 program

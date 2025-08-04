@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Revolutionary UI v3.0 - Comprehensive Interactive CLI
+ * Revolutionary UI v3.2.0 - Comprehensive Interactive CLI
  * Smart wizard-based interface with full project analysis and configuration
  */
 
@@ -34,7 +34,7 @@ import { TeamManager } from './features/team-manager'
 import { CloudManager } from './features/cloud-manager'
 
 // Version
-const VERSION = '3.0.0'
+const VERSION = '3.2.0'
 
 // Revolutionary banner
 const printBanner = () => {
@@ -42,7 +42,7 @@ const printBanner = () => {
   console.log(chalk.magenta.bold(`
 ╔═══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                               ║
-║   🏭 Revolutionary UI v${VERSION} - Interactive Development Suite                ║
+║   🏭 Revolutionary UI v${VERSION} - Interactive Development Suite              ║
 ║   Transform Your Development with 60-95% Less Code                           ║
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝
