@@ -9,10 +9,7 @@ import ora from 'ora'
 import { ProjectAnalysis } from './project-detector'
 import { AnalysisReport } from './project-analyzer'
 import { AIAnalysisResult } from './ai-analyzer'
-import { FRAMEWORK_CONFIGS } from '../../config/frameworks'
-import { UI_LIBRARIES } from '../../config/ui-libraries'
-import { ICON_LIBRARIES } from '../../config/icon-libraries'
-import { DESIGN_TOOLS, COLOR_TOOLS, FONTS } from '../../config/design-tools'
+import { ConfigDatabaseService } from '../../services/config-database-service'
 
 export interface WizardOptions {
   interactive: boolean
@@ -48,6 +45,7 @@ export interface ConfigFile {
 export class SetupWizard {
   private analysis: ProjectAnalysis
   private report: AnalysisReport
+  private configService: ConfigDatabaseService
   private options: Partial<WizardOptions>
   private aiResults: AIAnalysisResult | null
 
@@ -61,6 +59,7 @@ export class SetupWizard {
     this.report = report
     this.options = options
     this.aiResults = aiResults
+    this.configService = ConfigDatabaseService.getInstance()
   }
 
   /**
@@ -181,7 +180,7 @@ export class SetupWizard {
             } as any)
 
             // Add to appropriate category
-            this.categorizePackages(selected, selections)
+            await this.categorizePackages(selected, selections)
           }
         }
       }
@@ -290,7 +289,7 @@ export class SetupWizard {
     for (const feature of this.report.missingFeatures) {
       if (feature.impact !== 'nice-to-have') {
         const packages = feature.suggestedPackages.slice(0, 1) // Just the first suggestion
-        this.categorizePackages(packages, selections)
+        await this.categorizePackages(packages, selections)
       }
     }
 
@@ -298,7 +297,7 @@ export class SetupWizard {
     for (const rec of this.report.recommendations) {
       if (rec.priority === 'high') {
         const packages = rec.packages.slice(0, 1) // Just the first suggestion
-        this.categorizePackages(packages, selections)
+        await this.categorizePackages(packages, selections)
       }
     }
 
@@ -337,7 +336,7 @@ export class SetupWizard {
         continue
       }
 
-      const packages = this.getPackagesByCategory(category)
+      const packages = await this.getPackagesByCategory(category)
       const installed = this.getInstalledPackages(category)
 
       const { selected } = await inquirer.prompt([{
@@ -352,7 +351,7 @@ export class SetupWizard {
         }))
       }])
 
-      this.categorizePackages(selected, selections)
+      await this.categorizePackages(selected, selections)
     }
   }
 
@@ -529,19 +528,28 @@ module.exports = {
 
   // Helper methods
 
-  private categorizePackages(packages: string[], selections: SelectionResult): void {
+  private async categorizePackages(packages: string[], selections: SelectionResult): Promise<void> {
+    const [frameworkConfigs, uiLibraries, iconLibraries, designTools, colorTools, fonts] = await Promise.all([
+      this.configService.getFrameworkConfigs(),
+      this.configService.getUILibraries(),
+      this.configService.getIconLibraries(),
+      this.configService.getDesignTools(),
+      this.configService.getColorTools(),
+      this.configService.getFonts()
+    ])
+
     for (const pkg of packages) {
-      if (FRAMEWORK_CONFIGS.some(f => f.packageName === pkg)) {
+      if (frameworkConfigs.some(f => f.packageName === pkg)) {
         selections.frameworks.push(pkg)
-      } else if (UI_LIBRARIES.some(l => l.packageName === pkg)) {
+      } else if (uiLibraries.some(l => l.packageName === pkg)) {
         selections.uiLibraries.push(pkg)
-      } else if (ICON_LIBRARIES.some(i => i.packageName === pkg)) {
+      } else if (iconLibraries.some(i => i.packageName === pkg)) {
         selections.iconLibraries.push(pkg)
-      } else if (DESIGN_TOOLS.some(d => d.packageName === pkg)) {
+      } else if (designTools.some(d => d.packageName === pkg)) {
         selections.designTools.push(pkg)
-      } else if (COLOR_TOOLS.some(c => c.packageName === pkg)) {
+      } else if (colorTools.some(c => c.packageName === pkg)) {
         selections.colorTools.push(pkg)
-      } else if (FONTS.some(f => f.packageName === pkg)) {
+      } else if (fonts.some(f => f.packageName === pkg)) {
         selections.fonts.push(pkg)
       } else {
         selections.utilities.push(pkg)
@@ -549,13 +557,13 @@ module.exports = {
     }
   }
 
-  private getPackagesByCategory(category: string): any[] {
+  private async getPackagesByCategory(category: string): Promise<any[]> {
     switch (category) {
-      case 'ui': return UI_LIBRARIES
-      case 'icons': return ICON_LIBRARIES
-      case 'design': return DESIGN_TOOLS
-      case 'color': return COLOR_TOOLS
-      case 'fonts': return FONTS
+      case 'ui': return await this.configService.getUILibraries()
+      case 'icons': return await this.configService.getIconLibraries()
+      case 'design': return await this.configService.getDesignTools()
+      case 'color': return await this.configService.getColorTools()
+      case 'fonts': return await this.configService.getFonts()
       default: return []
     }
   }

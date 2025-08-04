@@ -4,11 +4,7 @@
  */
 
 import { ProjectAnalysis, DetectedPackage, Recommendation } from './project-detector'
-import { FRAMEWORK_CONFIGS } from '../../config/frameworks'
-import { UI_LIBRARIES } from '../../config/ui-libraries'
-import { ICON_LIBRARIES } from '../../config/icon-libraries'
-import { DESIGN_TOOLS, COLOR_TOOLS, FONTS } from '../../config/design-tools'
-import { FRAMEWORK_FEATURE_MATRIX } from '../../config/factory-resources'
+import { ConfigDatabaseService } from '../../services/config-database-service'
 
 export interface AnalysisReport {
   summary: ProjectSummary
@@ -77,16 +73,18 @@ export interface SetupStep {
 
 export class ProjectAnalyzer {
   private analysis: ProjectAnalysis
+  private configService: ConfigDatabaseService
 
   constructor(analysis: ProjectAnalysis) {
     this.analysis = analysis
+    this.configService = ConfigDatabaseService.getInstance()
   }
 
   /**
    * Generate comprehensive analysis report
    */
-  generateReport(): AnalysisReport {
-    const summary = this.generateSummary()
+  async generateReport(): Promise<AnalysisReport> {
+    const summary = await this.generateSummary()
     const compatibility = this.checkCompatibility()
     const recommendations = this.enhanceRecommendations()
     const missingFeatures = this.identifyMissingFeatures()
@@ -106,7 +104,7 @@ export class ProjectAnalyzer {
   /**
    * Generate project summary
    */
-  private generateSummary(): ProjectSummary {
+  private async generateSummary(): Promise<ProjectSummary> {
     const frameworkStack = this.analysis.frameworks
       .filter(f => f.installed)
       .map(f => f.name)
@@ -127,11 +125,17 @@ export class ProjectAnalyzer {
     if (this.analysis.hasPrettier) developmentTools.push('Prettier')
     developmentTools.push(...this.analysis.buildTools)
 
+    // Get counts from database
+    const frameworkConfigs = await this.configService.getFrameworkConfigs()
+    const uiLibraries = await this.configService.getUILibraries()
+    const iconLibraries = await this.configService.getIconLibraries()
+    const designTools = await this.configService.getDesignTools()
+
     const totalPossible = 
-      FRAMEWORK_CONFIGS.length + 
-      UI_LIBRARIES.length + 
-      ICON_LIBRARIES.length + 
-      DESIGN_TOOLS.length
+      frameworkConfigs.length + 
+      uiLibraries.length + 
+      iconLibraries.length + 
+      designTools.length
 
     const totalInstalled = 
       this.analysis.frameworks.filter(f => f.installed).length +
@@ -145,10 +149,10 @@ export class ProjectAnalyzer {
       designCapabilities,
       developmentTools,
       coverage: {
-        frameworks: Math.round((this.analysis.frameworks.filter(f => f.installed).length / FRAMEWORK_CONFIGS.length) * 100),
-        uiLibraries: Math.round((this.analysis.uiLibraries.filter(l => l.installed).length / UI_LIBRARIES.length) * 100),
-        icons: Math.round((this.analysis.iconLibraries.filter(l => l.installed).length / ICON_LIBRARIES.length) * 100),
-        designTools: Math.round((this.analysis.designTools.filter(t => t.installed).length / DESIGN_TOOLS.length) * 100),
+        frameworks: Math.round((this.analysis.frameworks.filter(f => f.installed).length / frameworkConfigs.length) * 100),
+        uiLibraries: Math.round((this.analysis.uiLibraries.filter(l => l.installed).length / uiLibraries.length) * 100),
+        icons: Math.round((this.analysis.iconLibraries.filter(l => l.installed).length / iconLibraries.length) * 100),
+        designTools: Math.round((this.analysis.designTools.filter(t => t.installed).length / designTools.length) * 100),
         overall: Math.round((totalInstalled / totalPossible) * 100)
       }
     }

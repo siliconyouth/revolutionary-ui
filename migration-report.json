@@ -1,0 +1,18 @@
+{
+  "date": "2025-08-04T10:37:26.807Z",
+  "stats": {
+    "totalResources": 19,
+    "totalSubmissions": 0,
+    "migratedResources": 18,
+    "migratedSubmissions": 0,
+    "failedResources": [
+      "cmdwvbkqx009du2kvlex9md6q"
+    ],
+    "failedSubmissions": [],
+    "totalSizeUploaded": 2866
+  },
+  "environment": {
+    "bucket": "revolutionary-ui-components",
+    "publicUrl": "https://pub-623b4f8f62e949fba7c96eac7f164a4a.r2.dev"
+  }
+}

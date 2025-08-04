@@ -199,6 +199,51 @@ const ENV_DEFINITIONS = {
     errorHelp: 'Mistral API keys are provided by Mistral AI'
   },
 
+  // Cloudflare R2 Storage Configuration
+  R2_ACCOUNT_ID: {
+    category: 'R2 Storage',
+    description: 'Cloudflare account ID for R2 storage',
+    example: '1234567890abcdef1234567890abcdef',
+    required: false,
+    secret: true,
+    validate: (value) => !value || value.length === 32,
+    errorHelp: 'R2 account ID is a 32-character string found in Cloudflare Dashboard > R2'
+  },
+  R2_ACCESS_KEY_ID: {
+    category: 'R2 Storage',
+    description: 'R2 API access key ID',
+    example: '1234567890abcdef1234567890abcdef',
+    required: false,
+    validate: (value) => !value || value.length === 32,
+    errorHelp: 'Create API token in Cloudflare Dashboard > R2 > Manage API Tokens'
+  },
+  R2_SECRET_ACCESS_KEY: {
+    category: 'R2 Storage',
+    description: 'R2 API secret access key',
+    example: 'abcdef1234567890abcdef1234567890abcdef1234567890abcdef123456',
+    required: false,
+    secret: true,
+    validate: (value) => !value || value.length > 40,
+    errorHelp: 'Secret key is shown once when creating the API token'
+  },
+  R2_BUCKET_NAME: {
+    category: 'R2 Storage',
+    description: 'R2 bucket name for component storage',
+    example: 'revolutionary-ui-components',
+    required: false,
+    default: 'revolutionary-ui-components',
+    validate: (value) => !value || /^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(value),
+    errorHelp: 'Bucket names must be lowercase, start/end with letter/number, and contain only letters, numbers, and hyphens'
+  },
+  R2_PUBLIC_URL: {
+    category: 'R2 Storage',
+    description: 'Public URL for R2 bucket (optional)',
+    example: 'https://components.revolutionary-ui.com',
+    required: false,
+    validate: (value) => !value || value.startsWith('https://'),
+    errorHelp: 'Use custom domain or R2.dev URL for public access'
+  },
+
   // Payment Configuration
   STRIPE_PUBLISHABLE_KEY: {
     category: 'Payments',

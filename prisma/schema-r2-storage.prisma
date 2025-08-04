@@ -1,0 +1,79 @@
+// R2 Storage Schema Extension
+// This file defines the storage location models for Cloudflare R2
+
+model StorageObject {
+  id String @id @default(cuid())
+  
+  // Storage location
+  bucket      String
+  key         String
+  url         String
+  publicUrl   String?
+  
+  // Object metadata
+  size        Int?
+  contentType String?
+  etag        String?
+  contentHash String?
+  
+  // Storage type
+  storageType StorageType
+  
+  // Relations
+  resourceId           String?
+  resource             Resource?            @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  submissionId         String?
+  submission           ComponentSubmission? @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  previewId            String?
+  preview              Preview?             @relation(fields: [previewId], references: [id], onDelete: Cascade)
+  packageVersionId     String?
+  packageVersion       PackageVersion?      @relation(fields: [packageVersionId], references: [id], onDelete: Cascade)
+  
+  // Metadata
+  metadata    Json?
+  
+  // Timestamps
+  uploadedAt  DateTime @default(now())
+  lastAccessed DateTime?
+  
+  @@unique([bucket, key])
+  @@index([resourceId])
+  @@index([submissionId])
+  @@index([storageType])
+  @@map("storage_objects")
+}
+
+enum StorageType {
+  SOURCE_CODE
+  DOCUMENTATION
+  PREVIEW_IMAGE
+  PREVIEW_VIDEO
+  COMPILED_CODE
+  PACKAGE_TARBALL
+  ASSET
+  EXAMPLE
+  SCREENSHOT
+}
+
+// Add storage fields to existing models
+// These would be added to the main schema.prisma file:
+
+// In Resource model:
+// storageObjects StorageObject[]
+// codeStorageId  String? @unique
+// codeStorage    StorageObject? @relation("ResourceCode", fields: [codeStorageId], references: [id])
+// docsStorageId  String? @unique
+// docsStorage    StorageObject? @relation("ResourceDocs", fields: [docsStorageId], references: [id])
+
+// In ComponentSubmission model:
+// storageObjects StorageObject[]
+// codeStorageId  String? @unique
+// codeStorage    StorageObject? @relation("SubmissionCode", fields: [codeStorageId], references: [id])
+
+// In Preview model:
+// storageObjects StorageObject[]
+
+// In PackageVersion model:
+// storageObjects StorageObject[]
+// tarballStorageId String? @unique
+// tarballStorage   StorageObject? @relation("PackageTarball", fields: [tarballStorageId], references: [id])

@@ -1,7 +1,7 @@
 {
   "name": "revolutionary-ui",
-  "version": "3.2.0",
-  "description": "Revolutionary UI v3.1 - Production-Ready Marketplace with Stripe Integration, Enhanced AI CLI, and 60-95% Code Reduction",
+  "version": "3.3.0",
+  "description": "Revolutionary UI v3.3 - AI-Powered Component Search with R2 Storage, Vector Embeddings, and VS Code Extension",
   "keywords": [
     "ui",
     "factory",
@@ -101,8 +101,22 @@
     "seed:billing-test": "node -r dotenv/config scripts/test-billing-page.js dotenv_config_path=.env.local",
     "db:setup": "npm run prisma:generate && npm run prisma:push",
     "db:reset": "prisma migrate reset",
+    "migrate:r2": "dotenvx run -f .env.local -- tsx scripts/migrate-to-r2.ts",
+    "check:r2": "dotenvx run -f .env.local -- tsx scripts/check-r2-migration-status.ts",
+    "db:import-all": "dotenvx run -f .env.local -- tsx scripts/import-all-configurations.ts",
     "env:check": "node scripts/check-env.js",
-    "env:load": "dotenvx run -f .env.local -- node -e \"console.log('Environment loaded successfully')\""
+    "env:load": "dotenvx run -f .env.local -- node -e \"console.log('Environment loaded successfully')\"",
+    "test:r2-api": "dotenvx run -f .env.local -- tsx scripts/test-r2-api.ts",
+    "backup:r2": "dotenvx run -f .env.local -- tsx scripts/backup-r2-to-s3.ts",
+    "configure:r2-cors": "dotenvx run -f .env.local -- tsx scripts/configure-r2-cors.ts",
+    "configure:r2-caching": "dotenvx run -f .env.local -- tsx scripts/configure-r2-caching.ts",
+    "purge-cache": "dotenvx run -f .env.local -- tsx scripts/purge-r2-cache.ts",
+    "setup:vector-search": "dotenvx run -f .env.local -- tsx scripts/setup-vector-search.ts",
+    "embeddings:generate": "dotenvx run -f .env.local -- tsx scripts/generate-embeddings.ts",
+    "embeddings:generate:dry": "npm run embeddings:generate -- --dry-run",
+    "embeddings:generate:alt": "dotenvx run -f .env.local -- tsx scripts/generate-embeddings-alt.ts",
+    "embeddings:generate:local": "dotenvx run -f .env.local -- tsx scripts/generate-local-embeddings.ts",
+    "search:test": "dotenvx run -f .env.local -- tsx scripts/test-semantic-search.ts"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
@@ -118,6 +132,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.57.0",
+    "@aws-sdk/client-s3": "^3.859.0",
+    "@aws-sdk/s3-request-presigner": "^3.859.0",
     "@dotenvx/dotenvx": "^1.48.4",
     "@google/generative-ai": "^0.24.1",
     "@mistralai/mistralai": "^1.7.5",
@@ -126,6 +142,7 @@
     "@supabase/supabase-js": "^2.53.0",
     "@types/glob": "^9.0.0",
     "@types/prismjs": "^1.26.5",
+    "@xenova/transformers": "^2.17.2",
     "algoliasearch": "^5.35.0",
     "axios": "^1.11.0",
     "chalk": "^5.5.0",

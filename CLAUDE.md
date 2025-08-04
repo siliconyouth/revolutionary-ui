@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 The Revolutionary UI Factory System is a groundbreaking approach to UI component generation that achieves 60-95% code reduction through intelligent factory patterns and AI-powered generation.
 
-**Current Version**: 3.2.0 (as of August 4, 2025)
+**Current Version**: 3.3.0 (as of August 4, 2025)
 
 ## Core Principles
 
@@ -55,6 +55,20 @@ The Revolutionary UI Factory System is a groundbreaking approach to UI component
 - Code reduction metrics
 - Performance insights
 - Export capabilities
+
+### 🔍 Semantic Search (v3.3)
+- **Vector Embeddings**: PostgreSQL pgvector with HNSW indexing
+- **Natural Language Search**: Find components using plain English
+- **Multi-Provider Support**: OpenAI, Together AI, Cohere, and local models
+- **183 Components Indexed**: Complete coverage of all marketplace resources
+- **Similar Components**: Find related components using vector similarity
+
+### ☁️ R2 Storage Integration (v3.3)
+- **Complete Migration**: 115/116 resources stored in Cloudflare R2
+- **Global CDN**: Components served from 200+ edge locations
+- **Automatic Versioning**: Track all component versions
+- **Backup & Restore**: Automated backup with configurable retention
+- **Analytics**: Real-time storage metrics and usage tracking
 
 ### 🛍️ Component Marketplace
 - **Real Backend**: PostgreSQL database with Prisma ORM

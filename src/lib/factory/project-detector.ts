@@ -5,10 +5,7 @@
 
 import * as fs from 'fs'
 import * as path from 'path'
-import { FRAMEWORK_CONFIGS } from '../../config/frameworks'
-import { UI_LIBRARIES } from '../../config/ui-libraries'
-import { ICON_LIBRARIES } from '../../config/icon-libraries'
-import { DESIGN_TOOLS, COLOR_TOOLS, FONTS } from '../../config/design-tools'
+import { ConfigDatabaseService } from '../../services/config-database-service'
 
 export interface DetectedPackage {
   name: string
@@ -50,91 +47,63 @@ export interface Recommendation {
 export class ProjectDetector {
   private projectPath: string
   private packageJson: any
-  private packageLockJson: any
-  private dependencies: Record<string, string> = {}
-  private devDependencies: Record<string, string> = {}
+  private configService: ConfigDatabaseService
 
-  constructor(projectPath: string = process.cwd()) {
+  constructor(projectPath: string) {
     this.projectPath = projectPath
+    this.configService = ConfigDatabaseService.getInstance()
   }
 
   /**
-   * Main analysis function
+   * Analyze the project and return comprehensive results
    */
   async analyze(): Promise<ProjectAnalysis> {
-    // Load package.json
-    await this.loadPackageJson()
-    
-    // Detect package manager
-    const packageManager = this.detectPackageManager()
-    
-    // Merge dependencies
-    this.dependencies = { ...this.packageJson.dependencies || {} }
-    this.devDependencies = { ...this.packageJson.devDependencies || {} }
-    
-    // Detect all components
-    const frameworks = this.detectFrameworks()
-    const uiLibraries = this.detectUILibraries()
-    const iconLibraries = this.detectIconLibraries()
-    const designTools = this.detectDesignTools()
-    const colorTools = this.detectColorTools()
-    const fonts = this.detectFonts()
-    const utilities = this.detectUtilities()
-    const buildTools = this.detectBuildTools()
-    
-    // Check for common tools
-    const hasTypeScript = this.hasTypeScript()
-    const hasTailwind = this.hasTailwind()
-    const hasESLint = this.hasESLint()
-    const hasPrettier = this.hasPrettier()
-    const testingFrameworks = this.detectTestingFrameworks()
-    
-    // Generate recommendations
-    const recommendations = this.generateRecommendations({
-      frameworks,
-      uiLibraries,
-      iconLibraries,
-      hasTypeScript,
-      hasTailwind
-    })
-
-    return {
-      projectName: this.packageJson.name || 'unknown',
-      projectPath: this.projectPath,
-      packageManager,
-      frameworks,
-      uiLibraries,
-      iconLibraries,
-      designTools,
-      colorTools,
-      fonts,
-      utilities,
-      buildTools,
-      hasTypeScript,
-      hasTailwind,
-      hasESLint,
-      hasPrettier,
-      testingFrameworks,
-      recommendations
-    }
-  }
-
-  /**
-   * Load package.json
-   */
-  private async loadPackageJson(): Promise<void> {
+    // Read package.json
     const packageJsonPath = path.join(this.projectPath, 'package.json')
-    
     if (!fs.existsSync(packageJsonPath)) {
       throw new Error('No package.json found in the project directory')
     }
+
+    this.packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
     
-    const content = fs.readFileSync(packageJsonPath, 'utf-8')
-    this.packageJson = JSON.parse(content)
+    const dependencies = { ...this.packageJson.dependencies, ...this.packageJson.devDependencies }
+
+    // Get configurations from database
+    const frameworkConfigs = await this.configService.getFrameworkConfigs()
+    const uiLibraries = await this.configService.getUILibraries()
+    const iconLibraries = await this.configService.getIconLibraries()
+    const designTools = await this.configService.getDesignTools()
+    const colorTools = await this.configService.getColorTools()
+    const fonts = await this.configService.getFonts()
+
+    const analysis: ProjectAnalysis = {
+      projectName: this.packageJson.name || path.basename(this.projectPath),
+      projectPath: this.projectPath,
+      packageManager: this.detectPackageManager(),
+      frameworks: this.detectPackages(dependencies, frameworkConfigs, 'framework'),
+      uiLibraries: this.detectPackages(dependencies, uiLibraries, 'ui-library'),
+      iconLibraries: this.detectPackages(dependencies, iconLibraries, 'icon-library'),
+      designTools: this.detectPackages(dependencies, designTools, 'design-tool'),
+      colorTools: this.detectPackages(dependencies, colorTools, 'color-tool'),
+      fonts: this.detectPackages(dependencies, fonts, 'font'),
+      utilities: this.detectUtilities(dependencies),
+      buildTools: this.detectBuildTools(dependencies),
+      hasTypeScript: this.hasTypeScript(dependencies),
+      hasTailwind: this.hasTailwind(dependencies),
+      hasESLint: this.hasESLint(dependencies),
+      hasPrettier: this.hasPrettier(dependencies),
+      testingFrameworks: this.detectTestingFrameworks(dependencies),
+      recommendations: []
+    }
+
+    // Generate recommendations based on analysis
+    analysis.recommendations = this.generateRecommendations(analysis)
+
+    return analysis
   }
 
   /**
-   * Detect package manager
+   * Detect which package manager is being used
    */
   private detectPackageManager(): 'npm' | 'yarn' | 'pnpm' | 'bun' {
     if (fs.existsSync(path.join(this.projectPath, 'bun.lockb'))) return 'bun'
@@ -144,387 +113,206 @@ export class ProjectDetector {
   }
 
   /**
-   * Detect installed frameworks
+   * Detect packages based on configuration
    */
-  private detectFrameworks(): DetectedPackage[] {
-    const detected: DetectedPackage[] = []
-    
-    for (const framework of FRAMEWORK_CONFIGS) {
-      const isInstalled = this.isPackageInstalled(framework.packageName)
-      const currentVersion = this.getPackageVersion(framework.packageName)
-      
-      detected.push({
-        name: framework.name,
-        version: framework.version,
-        type: 'framework',
-        installed: isInstalled,
+  private detectPackages(
+    dependencies: Record<string, string>, 
+    configs: any[], 
+    type: DetectedPackage['type']
+  ): DetectedPackage[] {
+    return configs.map(config => {
+      const installed = !!dependencies[config.packageName]
+      const currentVersion = installed ? dependencies[config.packageName].replace(/[\^~]/, '') : undefined
+
+      return {
+        name: config.name,
+        version: config.version || 'latest',
+        type,
+        installed,
         currentVersion,
-        latestVersion: framework.version,
-        needsUpdate: currentVersion ? this.needsUpdate(currentVersion, framework.version) : false
-      })
-    }
-    
-    // Also check for common frameworks not in our config
-    const additionalFrameworks = [
-      { name: 'gatsby', display: 'Gatsby' },
-      { name: 'remix', display: 'Remix' },
-      { name: 'astro', display: 'Astro' },
-      { name: 'vitepress', display: 'VitePress' }
-    ]
-    
-    for (const fw of additionalFrameworks) {
-      if (this.isPackageInstalled(fw.name)) {
-        detected.push({
-          name: fw.display,
-          version: this.getPackageVersion(fw.name) || 'unknown',
-          type: 'framework',
-          installed: true,
-          currentVersion: this.getPackageVersion(fw.name)
-        })
+        latestVersion: config.version || 'latest',
+        needsUpdate: installed && currentVersion !== config.version
       }
-    }
-    
-    return detected
+    })
   }
 
   /**
-   * Detect UI libraries
+   * Detect utility packages
    */
-  private detectUILibraries(): DetectedPackage[] {
-    const detected: DetectedPackage[] = []
-    
-    for (const lib of UI_LIBRARIES) {
-      const isInstalled = this.isPackageInstalled(lib.packageName)
-      const currentVersion = this.getPackageVersion(lib.packageName)
-      
-      detected.push({
-        name: lib.name,
-        version: lib.version,
-        type: 'ui-library',
-        installed: isInstalled,
-        currentVersion,
-        latestVersion: lib.version,
-        needsUpdate: currentVersion ? this.needsUpdate(currentVersion, lib.version) : false
-      })
-    }
-    
-    return detected
-  }
-
-  /**
-   * Detect icon libraries
-   */
-  private detectIconLibraries(): DetectedPackage[] {
-    const detected: DetectedPackage[] = []
-    
-    for (const lib of ICON_LIBRARIES) {
-      const isInstalled = this.isPackageInstalled(lib.packageName)
-      const currentVersion = this.getPackageVersion(lib.packageName)
-      
-      detected.push({
-        name: lib.name,
-        version: lib.version,
-        type: 'icon-library',
-        installed: isInstalled,
-        currentVersion,
-        latestVersion: lib.version,
-        needsUpdate: currentVersion ? this.needsUpdate(currentVersion, lib.version) : false
-      })
-    }
-    
-    return detected
-  }
-
-  /**
-   * Detect design tools
-   */
-  private detectDesignTools(): DetectedPackage[] {
-    const detected: DetectedPackage[] = []
-    
-    for (const tool of DESIGN_TOOLS) {
-      const isInstalled = this.isPackageInstalled(tool.packageName)
-      const currentVersion = this.getPackageVersion(tool.packageName)
-      
-      detected.push({
-        name: tool.name,
-        version: tool.version,
-        type: 'design-tool',
-        installed: isInstalled,
-        currentVersion,
-        latestVersion: tool.version,
-        needsUpdate: currentVersion ? this.needsUpdate(currentVersion, tool.version) : false
-      })
-    }
-    
-    return detected
-  }
-
-  /**
-   * Detect color tools
-   */
-  private detectColorTools(): DetectedPackage[] {
-    const detected: DetectedPackage[] = []
-    
-    for (const tool of COLOR_TOOLS) {
-      const isInstalled = this.isPackageInstalled(tool.packageName)
-      const currentVersion = this.getPackageVersion(tool.packageName)
-      
-      detected.push({
-        name: tool.name,
-        version: tool.version,
-        type: 'color-tool',
-        installed: isInstalled,
-        currentVersion,
-        latestVersion: tool.version,
-        needsUpdate: currentVersion ? this.needsUpdate(currentVersion, tool.version) : false
-      })
-    }
-    
-    return detected
-  }
-
-  /**
-   * Detect fonts
-   */
-  private detectFonts(): DetectedPackage[] {
-    const detected: DetectedPackage[] = []
-    
-    for (const font of FONTS) {
-      const isInstalled = this.isPackageInstalled(font.packageName)
-      const currentVersion = this.getPackageVersion(font.packageName)
-      
-      detected.push({
-        name: font.name,
-        version: font.version,
-        type: 'font',
-        installed: isInstalled,
-        currentVersion,
-        latestVersion: font.version,
-        needsUpdate: currentVersion ? this.needsUpdate(currentVersion, font.version) : false
-      })
-    }
-    
-    return detected
-  }
-
-  /**
-   * Detect common utilities
-   */
-  private detectUtilities(): DetectedPackage[] {
-    const utilities = [
-      { name: 'clsx', display: 'clsx' },
-      { name: 'classnames', display: 'classnames' },
-      { name: 'tailwind-merge', display: 'Tailwind Merge' },
-      { name: 'class-variance-authority', display: 'CVA' },
-      { name: 'framer-motion', display: 'Framer Motion' },
-      { name: 'zod', display: 'Zod' },
-      { name: 'react-hook-form', display: 'React Hook Form' },
-      { name: 'axios', display: 'Axios' },
-      { name: 'swr', display: 'SWR' },
-      { name: '@tanstack/react-query', display: 'React Query' }
+  private detectUtilities(dependencies: Record<string, string>): DetectedPackage[] {
+    const utilityPackages = [
+      { name: 'clsx', packageName: 'clsx' },
+      { name: 'class-variance-authority', packageName: 'class-variance-authority' },
+      { name: 'framer-motion', packageName: 'framer-motion' },
+      { name: 'zod', packageName: 'zod' },
+      { name: 'react-hook-form', packageName: 'react-hook-form' },
+      { name: 'formik', packageName: 'formik' },
+      { name: 'zustand', packageName: 'zustand' },
+      { name: 'valtio', packageName: 'valtio' },
+      { name: 'jotai', packageName: 'jotai' },
+      { name: 'redux', packageName: 'redux' },
+      { name: '@reduxjs/toolkit', packageName: '@reduxjs/toolkit' },
+      { name: 'react-query', packageName: 'react-query' },
+      { name: '@tanstack/react-query', packageName: '@tanstack/react-query' },
+      { name: 'swr', packageName: 'swr' },
+      { name: 'axios', packageName: 'axios' },
+      { name: 'lodash', packageName: 'lodash' },
+      { name: 'date-fns', packageName: 'date-fns' },
+      { name: 'dayjs', packageName: 'dayjs' },
+      { name: 'moment', packageName: 'moment' }
     ]
-    
-    return utilities
-      .filter(util => this.isPackageInstalled(util.name))
-      .map(util => ({
-        name: util.display,
-        version: this.getPackageVersion(util.name) || 'unknown',
+
+    return utilityPackages
+      .filter(pkg => dependencies[pkg.packageName])
+      .map(pkg => ({
+        name: pkg.name,
+        version: dependencies[pkg.packageName].replace(/[\^~]/, ''),
         type: 'utility' as const,
         installed: true,
-        currentVersion: this.getPackageVersion(util.name)
+        currentVersion: dependencies[pkg.packageName].replace(/[\^~]/, '')
       }))
   }
 
   /**
    * Detect build tools
    */
-  private detectBuildTools(): string[] {
-    const tools: string[] = []
+  private detectBuildTools(dependencies: Record<string, string>): string[] {
+    const buildTools = []
     
-    const buildTools = [
-      'webpack', 'vite', 'parcel', 'rollup', 'esbuild', 
-      'turbo', 'nx', 'lerna', 'rush'
-    ]
-    
-    for (const tool of buildTools) {
-      if (this.isPackageInstalled(tool)) {
-        tools.push(tool)
-      }
-    }
-    
-    return tools
+    if (dependencies['vite']) buildTools.push('Vite')
+    if (dependencies['webpack']) buildTools.push('Webpack')
+    if (dependencies['parcel']) buildTools.push('Parcel')
+    if (dependencies['rollup']) buildTools.push('Rollup')
+    if (dependencies['esbuild']) buildTools.push('esbuild')
+    if (dependencies['turbopack']) buildTools.push('Turbopack')
+    if (dependencies['@swc/core']) buildTools.push('SWC')
+    if (dependencies['babel-core'] || dependencies['@babel/core']) buildTools.push('Babel')
+
+    return buildTools
+  }
+
+  /**
+   * Check for TypeScript
+   */
+  private hasTypeScript(dependencies: Record<string, string>): boolean {
+    return !!dependencies['typescript']
+  }
+
+  /**
+   * Check for Tailwind CSS
+   */
+  private hasTailwind(dependencies: Record<string, string>): boolean {
+    return !!dependencies['tailwindcss']
+  }
+
+  /**
+   * Check for ESLint
+   */
+  private hasESLint(dependencies: Record<string, string>): boolean {
+    return !!dependencies['eslint']
+  }
+
+  /**
+   * Check for Prettier
+   */
+  private hasPrettier(dependencies: Record<string, string>): boolean {
+    return !!dependencies['prettier']
   }
 
   /**
    * Detect testing frameworks
    */
-  private detectTestingFrameworks(): string[] {
-    const frameworks: string[] = []
-    
-    const testingTools = [
-      'jest', 'vitest', 'mocha', 'jasmine',
-      '@testing-library/react', '@testing-library/vue',
-      'cypress', 'playwright', '@playwright/test',
-      'puppeteer', 'karma'
-    ]
-    
-    for (const tool of testingTools) {
-      if (this.isPackageInstalled(tool)) {
-        frameworks.push(tool)
-      }
-    }
-    
-    return frameworks
+  private detectTestingFrameworks(dependencies: Record<string, string>): string[] {
+    const testingFrameworks = []
+
+    if (dependencies['jest']) testingFrameworks.push('Jest')
+    if (dependencies['vitest']) testingFrameworks.push('Vitest')
+    if (dependencies['mocha']) testingFrameworks.push('Mocha')
+    if (dependencies['cypress']) testingFrameworks.push('Cypress')
+    if (dependencies['playwright']) testingFrameworks.push('Playwright')
+    if (dependencies['@testing-library/react']) testingFrameworks.push('React Testing Library')
+    if (dependencies['@testing-library/vue']) testingFrameworks.push('Vue Testing Library')
+    if (dependencies['karma']) testingFrameworks.push('Karma')
+    if (dependencies['jasmine']) testingFrameworks.push('Jasmine')
+
+    return testingFrameworks
   }
 
   /**
-   * Check if TypeScript is installed
+   * Generate recommendations based on project analysis
    */
-  private hasTypeScript(): boolean {
-    return this.isPackageInstalled('typescript') || 
-           fs.existsSync(path.join(this.projectPath, 'tsconfig.json'))
-  }
-
-  /**
-   * Check if Tailwind is installed
-   */
-  private hasTailwind(): boolean {
-    return this.isPackageInstalled('tailwindcss') || 
-           fs.existsSync(path.join(this.projectPath, 'tailwind.config.js')) ||
-           fs.existsSync(path.join(this.projectPath, 'tailwind.config.ts'))
-  }
-
-  /**
-   * Check if ESLint is installed
-   */
-  private hasESLint(): boolean {
-    return this.isPackageInstalled('eslint') || 
-           fs.existsSync(path.join(this.projectPath, '.eslintrc.js')) ||
-           fs.existsSync(path.join(this.projectPath, '.eslintrc.json'))
-  }
-
-  /**
-   * Check if Prettier is installed
-   */
-  private hasPrettier(): boolean {
-    return this.isPackageInstalled('prettier') || 
-           fs.existsSync(path.join(this.projectPath, '.prettierrc'))
-  }
-
-  /**
-   * Check if a package is installed
-   */
-  private isPackageInstalled(packageName: string): boolean {
-    return packageName in this.dependencies || packageName in this.devDependencies
-  }
-
-  /**
-   * Get package version
-   */
-  private getPackageVersion(packageName: string): string | undefined {
-    return this.dependencies[packageName] || this.devDependencies[packageName]
-  }
-
-  /**
-   * Check if package needs update
-   */
-  private needsUpdate(currentVersion: string, latestVersion: string): boolean {
-    // Simple version comparison - in real app would use semver
-    const current = currentVersion.replace(/[\^~]/, '').split('.').map(Number)
-    const latest = latestVersion.split('.').map(Number)
-    
-    for (let i = 0; i < 3; i++) {
-      if ((latest[i] || 0) > (current[i] || 0)) return true
-      if ((latest[i] || 0) < (current[i] || 0)) return false
-    }
-    
-    return false
-  }
-
-  /**
-   * Generate recommendations based on analysis
-   */
-  private generateRecommendations(analysis: {
-    frameworks: DetectedPackage[]
-    uiLibraries: DetectedPackage[]
-    iconLibraries: DetectedPackage[]
-    hasTypeScript: boolean
-    hasTailwind: boolean
-  }): Recommendation[] {
+  private generateRecommendations(analysis: ProjectAnalysis): Recommendation[] {
     const recommendations: Recommendation[] = []
-    
-    // Check if any framework is installed
-    const hasFramework = analysis.frameworks.some(f => f.installed)
-    if (!hasFramework) {
+
+    // Framework recommendations
+    if (!analysis.frameworks.some(f => f.installed)) {
       recommendations.push({
         type: 'framework',
         packages: ['react', 'vue', 'angular'],
-        reason: 'No framework detected. Consider installing a modern framework.',
+        reason: 'No JavaScript framework detected. Consider adding one for better structure.',
         priority: 'high'
       })
     }
-    
-    // Check for UI libraries
-    const hasUILibrary = analysis.uiLibraries.some(lib => lib.installed)
-    if (!hasUILibrary && hasFramework) {
+
+    // UI Library recommendations
+    if (!analysis.uiLibraries.some(lib => lib.installed)) {
       const framework = analysis.frameworks.find(f => f.installed)
-      if (framework?.name.toLowerCase().includes('react')) {
-        recommendations.push({
-          type: 'ui-library',
-          packages: ['@mui/material', '@chakra-ui/react', 'antd'],
-          reason: 'No UI library detected. These libraries work great with React.',
-          priority: 'medium'
-        })
+      let suggestedLibraries = ['@mui/material', 'antd', 'bootstrap']
+
+      if (framework?.name === 'React') {
+        suggestedLibraries = ['@mui/material', '@chakra-ui/react', 'antd']
+      } else if (framework?.name === 'Vue') {
+        suggestedLibraries = ['vuetify', 'element-plus', 'naive-ui']
       }
-    }
-    
-    // Check for icon libraries
-    const hasIconLibrary = analysis.iconLibraries.some(lib => lib.installed)
-    if (!hasIconLibrary) {
+
       recommendations.push({
-        type: 'icon-library',
-        packages: ['lucide-react', 'react-icons', '@heroicons/react'],
-        reason: 'No icon library detected. Icons are essential for modern UIs.',
+        type: 'ui-library',
+        packages: suggestedLibraries,
+        reason: 'No UI component library detected. Adding one can speed up development.',
         priority: 'medium'
       })
     }
-    
+
+    // Icon library recommendations
+    if (!analysis.iconLibraries.some(lib => lib.installed)) {
+      recommendations.push({
+        type: 'icon-library',
+        packages: ['lucide-react', 'react-icons', '@heroicons/react'],
+        reason: 'No icon library detected. Icons are essential for modern UI.',
+        priority: 'medium'
+      })
+    }
+
     // TypeScript recommendation
     if (!analysis.hasTypeScript) {
       recommendations.push({
         type: 'development',
-        packages: ['typescript', '@types/react', '@types/node'],
-        reason: 'TypeScript provides better type safety and developer experience.',
-        priority: 'high'
-      })
-    }
-    
-    // Tailwind recommendation
-    if (!analysis.hasTailwind) {
-      recommendations.push({
-        type: 'styling',
-        packages: ['tailwindcss', '@tailwindcss/forms', '@tailwindcss/typography'],
-        reason: 'Tailwind CSS enables rapid UI development with utility classes.',
+        packages: ['typescript'],
+        reason: 'TypeScript not detected. Consider adding for better type safety.',
         priority: 'medium'
       })
     }
-    
-    // Check for packages that need updates
-    const needsUpdate = [
-      ...analysis.frameworks,
-      ...analysis.uiLibraries,
-      ...analysis.iconLibraries
-    ].filter(pkg => pkg.needsUpdate)
-    
-    if (needsUpdate.length > 0) {
+
+    // Styling recommendation
+    if (!analysis.hasTailwind && !analysis.utilities.some(u => u.name.includes('styled-components'))) {
       recommendations.push({
-        type: 'updates',
-        packages: needsUpdate.map(pkg => pkg.name),
-        reason: `${needsUpdate.length} packages have newer versions available.`,
+        type: 'styling',
+        packages: ['tailwindcss', 'styled-components', '@emotion/react'],
+        reason: 'No modern CSS solution detected. Consider adding for better styling.',
+        priority: 'medium'
+      })
+    }
+
+    // Testing recommendation
+    if (analysis.testingFrameworks.length === 0) {
+      recommendations.push({
+        type: 'testing',
+        packages: ['vitest', 'jest', '@testing-library/react'],
+        reason: 'No testing framework detected. Tests ensure code quality.',
         priority: 'low'
       })
     }
-    
+
     return recommendations
   }
 }

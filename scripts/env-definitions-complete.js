@@ -634,6 +634,92 @@ const ENV_COMPLETE_DEFINITIONS = {
     }
   },
 
+  'r2-storage': {
+    title: 'Cloudflare R2 Storage',
+    description: 'Cloudflare R2 provides S3-compatible object storage with no egress fees. Used for storing component code, documentation, and assets.',
+    docs: 'https://developers.cloudflare.com/r2/',
+    vars: {
+      R2_ACCOUNT_ID: {
+        description: 'Cloudflare account ID for R2 storage',
+        example: '1234567890abcdef1234567890abcdef',
+        required: false,
+        setupUrl: 'https://dash.cloudflare.com/?to=/:account/r2',
+        setupSteps: [
+          '1. Sign up for Cloudflare (free)',
+          '2. Go to R2 in the dashboard',
+          '3. Enable R2 (free - no credit card required)',
+          '4. Find your Account ID in the right sidebar',
+          '5. Copy the 32-character Account ID'
+        ],
+        docs: 'https://developers.cloudflare.com/r2/get-started/',
+        recommended: 'Get from Cloudflare Dashboard > R2',
+        explanation: '32-character identifier for your Cloudflare account.'
+      },
+      R2_ACCESS_KEY_ID: {
+        description: 'R2 API access key ID',
+        example: '1234567890abcdef1234567890abcdef',
+        required: false,
+        setupUrl: 'https://dash.cloudflare.com/?to=/:account/r2/api-tokens',
+        setupSteps: [
+          '1. Go to R2 > Manage API Tokens',
+          '2. Click "Create API Token"',
+          '3. Name it "Revolutionary UI"',
+          '4. Set permissions to "Object Read & Write"',
+          '5. Copy the Access Key ID'
+        ],
+        docs: 'https://developers.cloudflare.com/r2/api/s3/tokens/',
+        recommended: 'Create new API token for this project',
+        explanation: 'Public part of your R2 API credentials.'
+      },
+      R2_SECRET_ACCESS_KEY: {
+        description: 'R2 API secret access key',
+        example: 'abcdef1234567890abcdef1234567890abcdef1234567890abcdef123456',
+        required: false,
+        setupUrl: 'https://dash.cloudflare.com/?to=/:account/r2/api-tokens',
+        setupSteps: [
+          '1. Created when you generate the API token',
+          '2. Shown only ONCE - copy immediately',
+          '3. Store securely - cannot be retrieved later',
+          '4. If lost, create a new API token'
+        ],
+        docs: 'https://developers.cloudflare.com/r2/api/s3/tokens/',
+        recommended: 'Save immediately when creating API token',
+        explanation: 'Secret part of your R2 API credentials. Keep this secure!'
+      },
+      R2_BUCKET_NAME: {
+        description: 'R2 bucket name for component storage',
+        example: 'revolutionary-ui-components',
+        required: false,
+        default: 'revolutionary-ui-components',
+        setupUrl: 'https://dash.cloudflare.com/?to=/:account/r2/new',
+        setupSteps: [
+          '1. Go to R2 > Create Bucket',
+          '2. Name: revolutionary-ui-components',
+          '3. Location: Automatic',
+          '4. Click "Create Bucket"'
+        ],
+        docs: 'https://developers.cloudflare.com/r2/buckets/create-buckets/',
+        recommended: 'revolutionary-ui-components',
+        explanation: 'Bucket names must be globally unique, lowercase, and 3-63 characters.'
+      },
+      R2_PUBLIC_URL: {
+        description: 'Public URL for R2 bucket (optional - for direct access)',
+        example: 'https://components.revolutionary-ui.com',
+        required: false,
+        setupUrl: 'https://dash.cloudflare.com/?to=/:account/r2/buckets',
+        setupSteps: [
+          '1. Go to your bucket settings',
+          '2. Enable "Public Access" if needed',
+          '3. Set up custom domain (optional)',
+          '4. Or use the R2.dev URL provided'
+        ],
+        docs: 'https://developers.cloudflare.com/r2/buckets/public-buckets/',
+        recommended: 'Use R2.dev URL or custom domain',
+        explanation: 'Allows direct public access to stored components. Optional but improves performance.'
+      }
+    }
+  },
+
   'payment': {
     title: 'Payment Processing',
     description: 'Payment gateway configuration for marketplace transactions.',

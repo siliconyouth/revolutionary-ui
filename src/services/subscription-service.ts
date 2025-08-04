@@ -10,7 +10,7 @@ import {
   FeatureAccess,
   LimitCheck
 } from '../types/subscription';
-import { TIER_FEATURES, tierHelpers } from '../../config/tier-features';
+import { ConfigDatabaseService } from './config-database-service';
 
 const prisma = new PrismaClient();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -18,6 +18,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export class SubscriptionService {
+  private static configService = ConfigDatabaseService.getInstance();
+
   /**
    * Check if a user has access to a specific feature
    */
@@ -36,7 +38,19 @@ export class SubscriptionService {
         };
       }
       
-      const hasAccess = tierHelpers.hasFeature(subscription.tier, feature);
+      // Get tier features from database
+      const tierFeatures = await this.configService.getTierFeatures();
+      const tierConfig = tierFeatures[subscription.tier];
+      
+      if (!tierConfig) {
+        return {
+          feature,
+          hasAccess: false,
+          reason: 'Invalid subscription tier'
+        };
+      }
+      
+      const hasAccess = tierConfig.features && tierConfig.features[feature] === true;
       
       // Track feature usage for analytics
       if (hasAccess) {
@@ -59,112 +73,153 @@ export class SubscriptionService {
   }
   
   /**
-   * Check if a user is within their usage limits
+   * Check if user is within usage limits
    */
-  static async checkLimit(
+  static async checkUsageLimit(
     userId: string,
-    limit: keyof TierLimits
+    limitType: keyof TierLimits
   ): Promise<LimitCheck> {
     try {
       const subscription = await this.getUserSubscription(userId);
       
       if (!subscription) {
         return {
-          limit,
+          limitType,
           current: 0,
-          max: 0,
-          isWithinLimit: false,
-          percentageUsed: 100
+          limit: 0,
+          hasCapacity: false,
+          reason: 'No active subscription'
         };
       }
       
-      const maxLimit = tierHelpers.getLimit(subscription.tier, limit);
-      const currentUsage = await this.getCurrentUsage(userId, limit);
+      // Get tier features from database
+      const tierFeatures = await this.configService.getTierFeatures();
+      const tierConfig = tierFeatures[subscription.tier];
       
-      const isWithinLimit = maxLimit === Infinity || currentUsage < maxLimit;
-      const percentageUsed = maxLimit === Infinity ? 0 : (currentUsage / maxLimit) * 100;
+      if (!tierConfig || !tierConfig.limits) {
+        return {
+          limitType,
+          current: 0,
+          limit: 0,
+          hasCapacity: false,
+          reason: 'Invalid tier configuration'
+        };
+      }
+      
+      const limit = tierConfig.limits[limitType] || 0;
+      const current = await this.getCurrentUsage(userId, limitType);
+      
+      // -1 means unlimited
+      const hasCapacity = limit === -1 || current < limit;
       
       return {
+        limitType,
+        current,
         limit,
-        current: currentUsage,
-        max: maxLimit === Infinity ? -1 : maxLimit,
-        isWithinLimit,
-        percentageUsed
+        hasCapacity,
+        remaining: limit === -1 ? -1 : Math.max(0, limit - current),
+        reason: hasCapacity ? undefined : 'Usage limit reached'
       };
     } catch (error) {
-      console.error('Error checking limit:', error);
-      throw error;
+      console.error('Error checking usage limit:', error);
+      return {
+        limitType,
+        current: 0,
+        limit: 0,
+        hasCapacity: false,
+        reason: 'Error checking usage limit'
+      };
     }
   }
   
   /**
-   * Increment usage for a specific metric
+   * Track feature usage for a user
    */
-  static async incrementUsage(
+  static async trackFeatureUsage(
+    userId: string, 
+    feature: FeatureFlag
+  ): Promise<void> {
+    try {
+      await prisma.featureUsage.create({
+        data: {
+          userId,
+          feature,
+          metadata: {
+            timestamp: new Date().toISOString()
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error tracking feature usage:', error);
+    }
+  }
+  
+  /**
+   * Track usage metrics
+   */
+  static async trackUsage(
     userId: string,
     metric: keyof TierLimits,
-    amount: number = 1
-  ): Promise<boolean> {
+    value: number = 1
+  ): Promise<void> {
     try {
-      // Check if within limits first
-      const limitCheck = await this.checkLimit(userId, metric);
+      const subscription = await this.getUserSubscription(userId);
+      if (!subscription) return;
       
-      if (!limitCheck.isWithinLimit) {
-        throw new Error(`Usage limit exceeded for ${metric}`);
-      }
-      
-      const period = this.getUsagePeriod(metric);
+      const period = this.getCurrentPeriod();
       
       await prisma.usageRecord.upsert({
         where: {
-          userId_metric_period: {
+          userId_subscriptionId_metric_period: {
             userId,
+            subscriptionId: subscription.id,
             metric,
             period
           }
         },
         update: {
           value: {
-            increment: amount
+            increment: value
           }
         },
         create: {
           userId,
-          subscriptionId: (await this.getUserSubscription(userId))!.id,
+          subscriptionId: subscription.id,
           metric,
-          value: amount,
-          period
+          period,
+          value
         }
       });
-      
-      return true;
     } catch (error) {
-      console.error('Error incrementing usage:', error);
-      throw error;
+      console.error('Error tracking usage:', error);
     }
   }
   
   /**
-   * Get current usage for a metric
+   * Get current usage for a specific metric
    */
   static async getCurrentUsage(
     userId: string,
     metric: keyof TierLimits
   ): Promise<number> {
     try {
-      const period = this.getUsagePeriod(metric);
+      const subscription = await this.getUserSubscription(userId);
+      if (!subscription) return 0;
       
-      const record = await prisma.usageRecord.findUnique({
+      const period = this.getCurrentPeriod();
+      
+      const usageRecord = await prisma.usageRecord.findUnique({
         where: {
-          userId_metric_period: {
+          userId_subscriptionId_metric_period: {
             userId,
+            subscriptionId: subscription.id,
             metric,
             period
           }
         }
       });
       
-      return record?.value || 0;
+      return usageRecord?.value || 0;
     } catch (error) {
       console.error('Error getting current usage:', error);
       return 0;
@@ -175,156 +230,167 @@ export class SubscriptionService {
    * Get user's current subscription
    */
   static async getUserSubscription(userId: string) {
-    return await prisma.subscription.findFirst({
-      where: {
-        userId,
-        status: 'active'
-      }
-    });
+    try {
+      return await prisma.subscription.findUnique({
+        where: { userId },
+        include: {
+          user: true
+        }
+      });
+    } catch (error) {
+      console.error('Error getting user subscription:', error);
+      return null;
+    }
   }
   
   /**
-   * Create or update subscription from Stripe webhook
+   * Create or update a subscription
    */
-  static async syncFromStripe(
-    stripeSubscription: Stripe.Subscription,
-    userId: string
+  static async createOrUpdateSubscription(
+    userId: string,
+    tier: SubscriptionTier,
+    stripeSubscriptionId?: string
   ) {
     try {
-      const productId = stripeSubscription.items.data[0].price.product as string;
-      const tier = tierHelpers.getTierByStripeProductId(productId);
+      const existingSubscription = await this.getUserSubscription(userId);
       
-      if (!tier) {
-        throw new Error(`Unknown product ID: ${productId}`);
+      if (existingSubscription) {
+        return await prisma.subscription.update({
+          where: { id: existingSubscription.id },
+          data: {
+            tier,
+            stripeSubscriptionId,
+            status: 'active',
+            updatedAt: new Date()
+          }
+        });
+      } else {
+        return await prisma.subscription.create({
+          data: {
+            userId,
+            tier,
+            stripeSubscriptionId,
+            status: 'active',
+            currentPeriodStart: new Date(),
+            currentPeriodEnd: this.getNextBillingDate()
+          }
+        });
       }
-      
-      const subscription = await prisma.subscription.upsert({
-        where: {
-          stripeSubscriptionId: stripeSubscription.id
-        },
-        update: {
-          status: stripeSubscription.status,
-          currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
-          currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
-          cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-          stripePriceId: stripeSubscription.items.data[0].price.id,
-          metadata: stripeSubscription.metadata
-        },
-        create: {
-          userId,
-          tier,
-          stripeSubscriptionId: stripeSubscription.id,
-          stripeCustomerId: stripeSubscription.customer as string,
-          stripePriceId: stripeSubscription.items.data[0].price.id,
-          status: stripeSubscription.status,
-          billingPeriod: stripeSubscription.items.data[0].price.recurring?.interval === 'year' ? 'yearly' : 'monthly',
-          currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
-          currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
-          cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-          trialStart: stripeSubscription.trial_start ? new Date(stripeSubscription.trial_start * 1000) : null,
-          trialEnd: stripeSubscription.trial_end ? new Date(stripeSubscription.trial_end * 1000) : null,
-          metadata: stripeSubscription.metadata
-        }
-      });
-      
-      return subscription;
     } catch (error) {
-      console.error('Error syncing subscription from Stripe:', error);
+      console.error('Error creating/updating subscription:', error);
       throw error;
     }
   }
   
   /**
-   * Get all features and limits for a user
+   * Cancel a subscription
    */
-  static async getUserAccessSummary(userId: string) {
+  static async cancelSubscription(userId: string) {
     try {
       const subscription = await this.getUserSubscription(userId);
-      
       if (!subscription) {
-        return {
-          tier: null,
-          features: {},
-          limits: {},
-          usage: {}
-        };
+        throw new Error('No subscription found');
       }
       
-      const features = tierHelpers.getAllFeatures(subscription.tier);
-      const limits = tierHelpers.getAllLimits(subscription.tier);
-      
-      // Get current usage for all metrics
-      const usage: Record<string, number> = {};
-      for (const metric of Object.keys(limits)) {
-        usage[metric] = await this.getCurrentUsage(userId, metric as keyof TierLimits);
+      // Cancel in Stripe if it exists
+      if (subscription.stripeSubscriptionId) {
+        await stripe.subscriptions.update(subscription.stripeSubscriptionId, {
+          cancel_at_period_end: true
+        });
       }
       
-      return {
-        tier: subscription.tier,
-        features,
-        limits,
-        usage
-      };
+      // Update in database
+      return await prisma.subscription.update({
+        where: { id: subscription.id },
+        data: {
+          cancelAtPeriodEnd: true,
+          updatedAt: new Date()
+        }
+      });
     } catch (error) {
-      console.error('Error getting user access summary:', error);
+      console.error('Error canceling subscription:', error);
       throw error;
     }
   }
   
   /**
-   * Check if user can perform team operations
+   * Get available features for a tier
    */
-  static async canManageTeam(userId: string, teamId: string): Promise<boolean> {
+  static async getTierFeatures(tier: SubscriptionTier) {
     try {
-      const hasTeamFeature = await this.hasFeatureAccess(userId, FeatureFlag.TEAM_COLLABORATION);
-      if (!hasTeamFeature.hasAccess) return false;
-      
-      const teamMember = await prisma.teamMember.findUnique({
-        where: {
-          teamId_userId: {
-            teamId,
-            userId
-          }
-        }
-      });
-      
-      return teamMember?.role === 'owner' || teamMember?.role === 'admin';
+      const tierFeatures = await this.configService.getTierFeatures();
+      return tierFeatures[tier] || null;
     } catch (error) {
-      console.error('Error checking team management access:', error);
-      return false;
+      console.error('Error getting tier features:', error);
+      return null;
     }
   }
   
   /**
-   * Track feature usage for analytics
+   * Get current billing period
    */
-  private static async trackFeatureUsage(userId: string, feature: FeatureFlag) {
-    try {
-      await prisma.featureUsage.create({
-        data: {
-          userId,
-          feature
-        }
-      });
-    } catch (error) {
-      // Don't throw, just log - this is for analytics only
-      console.error('Error tracking feature usage:', error);
-    }
-  }
-  
-  /**
-   * Get the period string for a metric
-   */
-  private static getUsagePeriod(metric: keyof TierLimits): string {
+  private static getCurrentPeriod(): string {
     const now = new Date();
-    
-    if (metric.includes('monthly')) {
-      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-    } else if (metric.includes('daily')) {
-      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-    } else {
-      // Default to monthly
-      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    return `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+  }
+  
+  /**
+   * Get next billing date (30 days from now)
+   */
+  private static getNextBillingDate(): Date {
+    const date = new Date();
+    date.setDate(date.getDate() + 30);
+    return date;
+  }
+  
+  /**
+   * Sync subscription with Stripe
+   */
+  static async syncWithStripe(stripeSubscriptionId: string) {
+    try {
+      const stripeSubscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+      
+      // Map Stripe status to our status
+      const status = this.mapStripeStatus(stripeSubscription.status);
+      
+      // Find and update the subscription
+      const subscription = await prisma.subscription.findUnique({
+        where: { stripeSubscriptionId }
+      });
+      
+      if (subscription) {
+        return await prisma.subscription.update({
+          where: { id: subscription.id },
+          data: {
+            status,
+            currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
+            currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
+            cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
+            updatedAt: new Date()
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error syncing with Stripe:', error);
+      throw error;
     }
+  }
+  
+  /**
+   * Map Stripe status to our status
+   */
+  private static mapStripeStatus(stripeStatus: string): string {
+    const statusMap: Record<string, string> = {
+      'active': 'active',
+      'past_due': 'past_due',
+      'unpaid': 'unpaid',
+      'canceled': 'canceled',
+      'incomplete': 'incomplete',
+      'incomplete_expired': 'expired',
+      'trialing': 'trialing',
+      'paused': 'paused'
+    };
+    
+    return statusMap[stripeStatus] || 'unknown';
   }
 }

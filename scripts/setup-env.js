@@ -237,6 +237,55 @@ const envConfig = {
       },
     ],
   },
+  r2storage: {
+    title: '☁️  Cloudflare R2 Storage (Optional)',
+    optional: true,
+    vars: [
+      {
+        key: 'R2_ACCOUNT_ID',
+        description: 'Cloudflare account ID',
+        help: 'Found in Cloudflare Dashboard > R2 > Account ID',
+        example: '1234567890abcdef1234567890abcdef',
+        required: false,
+        sensitive: true,
+        validate: (value) => value.length === 32,
+      },
+      {
+        key: 'R2_ACCESS_KEY_ID',
+        description: 'R2 API access key ID',
+        help: 'Create in Cloudflare Dashboard > R2 > Manage API Tokens',
+        example: '1234567890abcdef1234567890abcdef',
+        required: false,
+        validate: (value) => value.length === 32,
+      },
+      {
+        key: 'R2_SECRET_ACCESS_KEY',
+        description: 'R2 API secret access key',
+        help: 'Shown once when creating API token',
+        example: 'abcdef1234567890abcdef1234567890abcdef1234567890abcdef123456',
+        required: false,
+        sensitive: true,
+        validate: (value) => value.length > 40,
+      },
+      {
+        key: 'R2_BUCKET_NAME',
+        description: 'R2 bucket name',
+        help: 'The name of your R2 bucket (create in dashboard)',
+        example: 'revolutionary-ui-components',
+        default: 'revolutionary-ui-components',
+        required: false,
+        validate: (value) => /^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(value),
+      },
+      {
+        key: 'R2_PUBLIC_URL',
+        description: 'Public URL for R2 bucket (optional)',
+        help: 'Custom domain or R2.dev URL for public access',
+        example: 'https://components.revolutionary-ui.com',
+        required: false,
+        validate: (value) => value.startsWith('https://'),
+      },
+    ],
+  },
   features: {
     title: '⚡ Feature Flags',
     vars: [
@@ -474,6 +523,14 @@ async function main() {
   print.info('1. Run: npm install');
   print.info('2. Run: ./scripts/setup-database.sh');
   print.info('3. Run: cd marketplace-nextjs && npm run dev');
+  
+  // R2 specific instructions if configured
+  if (finalVars.R2_ACCOUNT_ID) {
+    print.info('\n📦 R2 Storage Configuration:');
+    print.info('1. Run: npm run check:r2 (check migration status)');
+    print.info('2. Run: npm run migrate:r2 (migrate resources to R2)');
+  }
+  
   print.info('\nHappy coding! 🚀');
 
   rl.close();

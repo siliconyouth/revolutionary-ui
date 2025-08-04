@@ -1,0 +1,244 @@
+{
+  "name": "revolutionary-ui",
+  "displayName": "Revolutionary UI - AI Component Library",
+  "description": "Browse, search, and insert UI components from Revolutionary UI directly in VS Code",
+  "version": "1.0.0",
+  "publisher": "revolutionary-ui",
+  "author": {
+    "name": "Vladimir Dukelic",
+    "email": "vladimir@dukelic.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/siliconyouth/revolutionary-ui"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other",
+    "Snippets",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "ui",
+    "components",
+    "react",
+    "vue",
+    "angular",
+    "ai",
+    "revolutionary-ui"
+  ],
+  "icon": "images/icon.png",
+  "activationEvents": [
+    "onCommand:revolutionaryUI.searchComponents",
+    "onCommand:revolutionaryUI.browseComponents",
+    "onCommand:revolutionaryUI.insertComponent",
+    "onCommand:revolutionaryUI.generateComponent",
+    "onCommand:revolutionaryUI.showPreview",
+    "onCommand:revolutionaryUI.openSettings",
+    "onView:revolutionaryUI.componentExplorer"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "revolutionaryUI.searchComponents",
+        "title": "Search Components",
+        "category": "Revolutionary UI",
+        "icon": "$(search)"
+      },
+      {
+        "command": "revolutionaryUI.browseComponents",
+        "title": "Browse Component Library",
+        "category": "Revolutionary UI",
+        "icon": "$(library)"
+      },
+      {
+        "command": "revolutionaryUI.insertComponent",
+        "title": "Insert Component at Cursor",
+        "category": "Revolutionary UI",
+        "icon": "$(add)"
+      },
+      {
+        "command": "revolutionaryUI.generateComponent",
+        "title": "Generate Component with AI",
+        "category": "Revolutionary UI",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "revolutionaryUI.showPreview",
+        "title": "Preview Component",
+        "category": "Revolutionary UI",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "revolutionaryUI.openSettings",
+        "title": "Open Settings",
+        "category": "Revolutionary UI",
+        "icon": "$(settings-gear)"
+      },
+      {
+        "command": "revolutionaryUI.refreshComponents",
+        "title": "Refresh Components",
+        "category": "Revolutionary UI",
+        "icon": "$(refresh)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "revolutionaryUI",
+          "title": "Revolutionary UI",
+          "icon": "images/icon-activity-bar.svg"
+        }
+      ]
+    },
+    "views": {
+      "revolutionaryUI": [
+        {
+          "id": "revolutionaryUI.componentExplorer",
+          "name": "Component Explorer",
+          "contextualTitle": "Revolutionary UI Components"
+        },
+        {
+          "id": "revolutionaryUI.favorites",
+          "name": "Favorite Components"
+        },
+        {
+          "id": "revolutionaryUI.recent",
+          "name": "Recently Used"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "revolutionaryUI.componentExplorer",
+        "contents": "Welcome to Revolutionary UI!\n\n[Search Components](command:revolutionaryUI.searchComponents)\n[Browse Library](command:revolutionaryUI.browseComponents)\n[Generate with AI](command:revolutionaryUI.generateComponent)\n\nTo get started, configure your API settings.\n[Open Settings](command:revolutionaryUI.openSettings)"
+      }
+    ],
+    "configuration": {
+      "title": "Revolutionary UI",
+      "properties": {
+        "revolutionaryUI.apiUrl": {
+          "type": "string",
+          "default": "https://revolutionary-ui.com/api",
+          "description": "API endpoint for Revolutionary UI"
+        },
+        "revolutionaryUI.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API key for authenticated requests"
+        },
+        "revolutionaryUI.defaultFramework": {
+          "type": "string",
+          "enum": ["react", "vue", "angular", "svelte", "vanilla"],
+          "default": "react",
+          "description": "Default framework for components"
+        },
+        "revolutionaryUI.insertMode": {
+          "type": "string",
+          "enum": ["inline", "newFile", "clipboard"],
+          "default": "inline",
+          "description": "How to insert components"
+        },
+        "revolutionaryUI.enableAI": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable AI-powered features"
+        },
+        "revolutionaryUI.openAIKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI API key for AI features"
+        },
+        "revolutionaryUI.cacheTimeout": {
+          "type": "number",
+          "default": 3600,
+          "description": "Cache timeout in seconds"
+        }
+      }
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "revolutionaryUI.insertComponent",
+          "group": "revolutionaryUI",
+          "when": "editorTextFocus"
+        },
+        {
+          "command": "revolutionaryUI.generateComponent",
+          "group": "revolutionaryUI",
+          "when": "editorTextFocus && editorHasSelection"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "revolutionaryUI.refreshComponents",
+          "when": "view == revolutionaryUI.componentExplorer",
+          "group": "navigation"
+        },
+        {
+          "command": "revolutionaryUI.searchComponents",
+          "when": "view == revolutionaryUI.componentExplorer",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "revolutionaryUI.searchComponents",
+          "when": "true"
+        },
+        {
+          "command": "revolutionaryUI.browseComponents",
+          "when": "true"
+        },
+        {
+          "command": "revolutionaryUI.generateComponent",
+          "when": "true"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "revolutionaryUI.searchComponents",
+        "key": "ctrl+shift+u",
+        "mac": "cmd+shift+u"
+      },
+      {
+        "command": "revolutionaryUI.insertComponent",
+        "key": "ctrl+shift+i",
+        "mac": "cmd+shift+i",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "@vscode/test-electron": "^2.2.0",
+    "eslint": "^8.28.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "node-cache": "^5.1.2"
+  }
+}

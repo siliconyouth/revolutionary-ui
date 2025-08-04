@@ -1,0 +1,67 @@
+// Vector Search Schema Extension for Revolutionary UI
+// This schema adds vector embedding support for AI-powered semantic search
+
+model ResourceEmbedding {
+  id         String   @id @default(cuid())
+  resourceId String   @unique
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  
+  // Vector embedding for semantic search (1536 dimensions for OpenAI ada-002)
+  embedding  Unsupported("vector(1536)")?
+  
+  // Metadata for embedding
+  model      String   @default("text-embedding-ada-002")
+  version    Int      @default(1)
+  
+  // Cached text used to generate embedding
+  contentHash String  // SHA256 of concatenated name, description, tags, code snippet
+  
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  @@index([embedding(ops: VectorIndexType)], type: Hnsw)
+}
+
+model ComponentSubmissionEmbedding {
+  id           String              @id @default(cuid())
+  submissionId String              @unique
+  submission   ComponentSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  
+  // Vector embedding
+  embedding    Unsupported("vector(1536)")?
+  
+  // Metadata
+  model        String              @default("text-embedding-ada-002")
+  version      Int                 @default(1)
+  contentHash  String
+  
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  
+  @@index([embedding(ops: VectorIndexType)], type: Hnsw)
+}
+
+model SearchQuery {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  
+  query     String
+  embedding Unsupported("vector(1536)")?
+  
+  // Search results tracking
+  resultCount     Int
+  clickedResults  Json?    // Array of clicked result IDs
+  searchDuration  Int      // milliseconds
+  
+  createdAt DateTime @default(now())
+  
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// Enum for vector index type
+enum VectorIndexType {
+  hnsw
+  ivfflat
+}

@@ -4,6 +4,102 @@ All notable changes to the Revolutionary UI Factory System will be documented in
 
 🌐 **Website**: [https://revolutionary-ui.com](https://revolutionary-ui.com) | 📦 **npm**: [@vladimirdukelic/revolutionary-ui-factory](https://www.npmjs.com/package/@vladimirdukelic/revolutionary-ui-factory)
 
+## [3.3.0] - 2025-08-04
+
+### 🚀 Major Update: AI-Powered Semantic Search, R2 Storage Integration & VS Code Extension
+
+This release introduces revolutionary AI-powered semantic search capabilities, complete Cloudflare R2 storage integration, and a fully-featured VS Code extension for seamless development workflows.
+
+#### 🎯 Key Highlights
+- **Vector Embeddings**: PostgreSQL pgvector with HNSW indexing for lightning-fast semantic search
+- **R2 Storage**: All component code stored in Cloudflare R2 with versioning and caching
+- **VS Code Extension**: AI-powered component search and generation directly in your editor
+- **Multi-Provider Embeddings**: Support for OpenAI, Together AI, Cohere, and local models
+- **183 Components Indexed**: Complete embedding coverage for all marketplace resources
+
+#### ✨ New Features
+
+##### 🔍 Semantic Search System
+- **Vector Database Setup**: PostgreSQL pgvector extension with 1536-dimensional embeddings
+- **HNSW Indexing**: Hierarchical Navigable Small World graphs for optimal search performance
+- **Multi-Provider Support**: Fallback through OpenAI → Together AI → Cohere → Local models
+- **Local Embeddings**: Transformers.js integration for offline embedding generation
+- **Search Analytics**: Track popular queries and search patterns
+
+##### ☁️ Cloudflare R2 Storage
+- **Complete Integration**: 115/116 resources migrated to R2 object storage
+- **Storage Service**: `R2StorageService` with upload, download, versioning, and deletion
+- **Enhanced Resource Service**: Automatic R2 integration for all resource operations
+- **Monitoring & Analytics**: Real-time storage metrics and usage tracking
+- **Backup System**: Automated backups with configurable retention
+- **Edge Caching**: CDN integration for global performance
+- **CORS Configuration**: Proper cross-origin support for web applications
+
+##### 🧩 VS Code Extension
+- **Semantic Component Search**: Find components using natural language queries
+- **AI-Powered Generation**: Generate components with GPT-4 directly in VS Code
+- **Multi-Framework Preview**: Live preview for React, Vue, Angular, and Svelte
+- **Component Library Integration**: Direct access to 10K+ cataloged components
+- **Hot Reload Support**: Instant preview updates as you code
+- **Marketplace Integration**: Browse and install components without leaving VS Code
+
+##### 📊 API Endpoints
+- **`/api/search/semantic`**: Natural language component search with filters
+- **`/api/resources/[id]/similar`**: Find similar components using vector similarity
+- **`/api/resources/[id]/download`**: Stream components directly from R2
+- **`/api/admin/r2-monitoring`**: Real-time R2 storage analytics
+- **`/api/admin/embeddings/generate`**: Batch embedding generation
+
+##### 🎨 Frontend Components
+- **`<SemanticSearch />`**: React component for AI-powered search
+- **`<SimilarComponents />`**: Display related components with similarity scores
+- **`useR2Resource`**: React hook for R2 resource management
+- **`useFeatureAccess`**: Hook for feature gating based on subscription
+
+#### 🔧 Technical Improvements
+
+##### 🗄️ Database Schema Updates
+- **ResourceEmbedding Table**: Store vector embeddings with metadata
+- **SearchQuery Table**: Track search queries for analytics
+- **StorageObject Updates**: Enhanced fields for R2 integration
+- **Provider Tracking**: Store embedding provider information
+
+##### 🚀 Performance Optimizations
+- **Batch Processing**: Process embeddings in batches of 10 for efficiency
+- **Connection Pooling**: Optimized database connections for vector operations
+- **Lazy Loading**: Load embedding models only when needed
+- **Caching Strategy**: Multi-layer caching for embeddings and search results
+
+##### 🛠️ Developer Experience
+- **TypeScript Improvements**: Full type safety for vector operations
+- **Error Handling**: Graceful fallbacks for embedding failures
+- **Logging**: Comprehensive logging for debugging vector search
+- **Testing**: New test suites for semantic search functionality
+
+#### 📦 New Dependencies
+- **@xenova/transformers**: v2.17.2 - Local transformer models
+- **@aws-sdk/client-s3**: Latest - S3-compatible R2 operations
+- **pgvector**: PostgreSQL vector extension support
+- Additional VS Code extension dependencies
+
+#### 🐛 Bug Fixes
+- Fixed embedding dimension normalization for different providers
+- Resolved decimal precision issues in vector storage
+- Fixed CORS issues for R2 resource downloads
+- Corrected table name mappings in Prisma queries
+
+#### 📚 Documentation Updates
+- Added comprehensive R2 setup guide
+- Created vector search implementation guide
+- Updated VS Code extension documentation
+- Added embedding provider comparison chart
+
+#### 🔄 Migration Notes
+- Run `npm run setup:vector-search` to initialize vector tables
+- Execute `npm run embeddings:generate:local` to generate embeddings
+- Configure R2 credentials in `.env.local`
+- Install VS Code extension from `vscode-extension/` directory
+
 ## [3.2.0] - 2025-08-04
 
 ### 🚀 Major Update: Unified CLI, Deprecation Fixes & Modern API Adoption

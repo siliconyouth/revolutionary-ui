@@ -1,14 +1,22 @@
- # Revolutionary UI v3.1 – Production-Ready Marketplace with Stripe Integration
+ # Revolutionary UI v3.3 – AI-Powered Semantic Search & R2 Storage Integration
 
  [![npm v](https://img.shields.io/npm/v/@vladimirdukelic/revolutionary-ui-factory.svg)](https://www.npmjs.com/package/@vladimirdukelic/revolutionary-ui-factory)
  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
  [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](https://www.typescriptlang.org/)
 
- > Generate ANY UI component for ANY framework with **60–95% code reduction**, **AI‑powered intelligence**, and access to a **catalog of 10,000+ components** across **50+ frameworks**.
+ > Generate ANY UI component for ANY framework with **60–95% code reduction**, **AI‑powered semantic search**, **Cloudflare R2 storage**, and a **fully-featured VS Code extension**.
+
+ ## 🆕 What's New in v3.3
+
+ - **🔍 AI-Powered Semantic Search**: Natural language component discovery with vector embeddings
+ - **☁️ Cloudflare R2 Integration**: All components stored in R2 with versioning and global CDN
+ - **🧩 VS Code Extension**: Search, generate, and preview components directly in your editor
+ - **🚀 Multi-Provider Embeddings**: OpenAI, Together AI, Cohere, and local model support
+ - **📊 183 Components Indexed**: Complete vector search coverage for all marketplace resources
 
  ## Overview
 
- Revolutionary UI v3.1 delivers a production-ready marketplace with complete Stripe integration, enhanced security, and comprehensive deployment tooling alongside a web‑based interactive hub, an AI‑powered CLI, a core component package, and a VSCode extension to supercharge your UI development.
+ Revolutionary UI v3.3 introduces groundbreaking semantic search capabilities, complete cloud storage integration, and a powerful VS Code extension alongside our production-ready marketplace, AI‑powered CLI, and comprehensive component catalog.
 
  - **Interactive Web Hub**: Browse components, use the visual builder, AI playground, and project analyzer at [revolutionary-ui.com](https://revolutionary-ui.com).
  - **AI‑Powered CLI**: `revolutionary-ui` with GPT‑4o Code Preview, streaming responses, and multi‑provider support.
