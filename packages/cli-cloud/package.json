@@ -1,0 +1,42 @@
+{
+  "name": "@revolutionary-ui/cli-cloud",
+  "version": "1.0.0",
+  "description": "Cloud sync capabilities for Revolutionary UI CLI",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@revolutionary-ui/cli-core": "workspace:*",
+    "axios": "^1.6.7",
+    "chalk": "^5.3.0",
+    "glob": "^10.3.10",
+    "inquirer": "^9.2.15",
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/ws": "^8.5.10",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

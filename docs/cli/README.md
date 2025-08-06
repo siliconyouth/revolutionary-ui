@@ -1,6 +1,6 @@
-# CLI Reference
+# Revolutionary UI CLI Documentation v3.3.1
 
-The Revolutionary UI Factory CLI provides powerful tools for analyzing projects, managing packages, and generating components.
+The Revolutionary UI CLI is a modern, feature-rich command-line interface that follows best practices from industry leaders like Vercel v0, Shadcn, and NX. It provides powerful tools for analyzing projects, managing packages, and generating components with real database integration and AI support.
 
 ## 🎯 Overview
 
@@ -102,26 +102,24 @@ Options:
 ```
 
 ### `revolutionary-ui list`
-List available packages by category.
+List or browse the component catalog with optional filters or an interactive prompt.
 
 ```bash
-revolutionary-ui list [category]
+revolutionary-ui list [options]
 
-Categories:
-  • frameworks    - JavaScript frameworks
-  • ui           - UI component libraries
-  • icons        - Icon libraries
-  • design       - Design tool integrations
-  • color        - Color manipulation tools
-  • fonts        - Professional fonts
-  • all          - Everything
+Options:
+  --search <query>        Filter by name or keywords
+  --framework <fw>        Filter by framework (React, Vue, etc.)
+  --category <cat>        Filter by component category
+  --stars <n>             Minimum GitHub stars
+  --limit <n>             Maximum number of results
 ```
 
-### `revolutionary-ui info`
-Display information about Revolutionary UI Factory.
+### `revolutionary-ui info <component-id>`
+Show detailed metadata for a specific catalog component or resource.
 
 ```bash
-revolutionary-ui info
+revolutionary-ui info <component-id>
 ```
 
 Shows:

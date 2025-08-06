@@ -1,7 +1,7 @@
 {
   "name": "revolutionary-ui",
-  "version": "3.3.0",
-  "description": "Revolutionary UI v3.3 - AI-Powered Component Search with R2 Storage, Vector Embeddings, and VS Code Extension",
+  "version": "3.3.1",
+  "description": "Revolutionary UI v3.3.1 - Modern CLI with Best Practices from v0, Shadcn, Real Database Integration, and Multi-Framework Support",
   "keywords": [
     "ui",
     "factory",
@@ -49,14 +49,14 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     },
     "./react": {
+      "types": "./dist/frameworks/react/ReactFactory.d.ts",
       "import": "./dist/frameworks/react/ReactFactory.js",
-      "require": "./dist/frameworks/react/ReactFactory.js",
-      "types": "./dist/frameworks/react/ReactFactory.d.ts"
+      "require": "./dist/frameworks/react/ReactFactory.js"
     },
     "./cli": "./bin/cli.js"
   },
@@ -71,10 +71,11 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "npm run build:lib && npm run build:cli && npm run build:visual-builder",
+    "build": "npm run build:lib && npm run build:cli && npm run build:visual-builder && npm run build:terminal-ui",
     "build:lib": "tsc -p tsconfig.build.json",
     "build:cli": "node build-cli.js",
     "build:visual-builder": "tsc -p tsconfig.build.visual-builder.json",
+    "build:terminal-ui": "tsc -p src/cli/ui/tsconfig.json",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
     "prepublishOnly": "npm run build",
@@ -84,6 +85,8 @@
     "cli": "tsx src/lib/factory/cli.ts",
     "cli:analyze": "tsx src/lib/factory/cli.ts analyze",
     "cli:setup": "tsx src/lib/factory/cli.ts setup",
+    "terminal-ui:demo": "node dist/cli/ui/demo.js",
+    "terminal-ui:dev": "tsx src/cli/ui/demo.ts",
     "test:ai": "tsx src/cli/test-ai-providers.ts",
     "test:firecrawl": "tsx test-firecrawl-api.ts",
     "test:e2e": "playwright test",

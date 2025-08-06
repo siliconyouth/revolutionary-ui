@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+
+// Revolutionary UI Terminal Mode Launcher
+// This wrapper suppresses terminal capability warnings
+
+const spawn = require('child_process').spawn;
+const path = require('path');
+
+console.log('🏭 Starting Revolutionary UI Terminal Mode...\n');
+
+// Spawn the actual CLI command
+const child = spawn('node', [
+  path.join(__dirname, 'dist/cli/index.js'),
+  'ai-interactive'
+], {
+  stdio: ['inherit', 'inherit', 'pipe'], // Pipe stderr to filter warnings
+  env: {
+    ...process.env,
+    NCURSES_NO_UTF8_ACS: '1',
+    TERM: 'xterm'
+  }
+});
+
+// Filter stderr output
+child.stderr.on('data', (data) => {
+  const str = data.toString();
+  // Only show stderr that's not terminal capability warnings
+  if (!str.includes('Error on xterm-256color') && 
+      !str.includes('Setulc') && 
+      !str.includes('stack = []') &&
+      !str.includes('v = params[') &&
+      !str.includes('out.push(')) {
+    process.stderr.write(data);
+  }
+});
+
+// Handle exit
+child.on('exit', (code) => {
+  process.exit(code);
+});

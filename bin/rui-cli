@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+/**
+ * Revolutionary UI CLI - Modern implementation with best practices
+ */
+
+// Use tsx in development, node in production
+const { existsSync } = require('fs');
+const { join } = require('path');
+const { spawn } = require('child_process');
+
+const isDev = existsSync(join(__dirname, '../packages/cli/src'));
+const cliPath = isDev
+  ? join(__dirname, '../packages/cli/src/bin/rui.ts')
+  : join(__dirname, '../packages/cli/dist/rui.js');
+
+if (!existsSync(cliPath)) {
+  console.error(`CLI not found at: ${cliPath}`);
+  console.error('Please run "pnpm build" to compile the CLI.');
+  process.exit(1);
+}
+
+// Set up the environment
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
+
+if (isDev) {
+  // Use tsx for TypeScript execution in development
+  const tsx = spawn('tsx', [cliPath, ...process.argv.slice(2)], {
+    stdio: 'inherit',
+    shell: true,
+  });
+
+  tsx.on('close', (code) => {
+    process.exit(code || 0);
+  });
+
+  tsx.on('error', (err) => {
+    console.error('Failed to start CLI:', err);
+    process.exit(1);
+  });
+} else {
+  // Production mode - run the compiled JavaScript
+  require(cliPath);
+}

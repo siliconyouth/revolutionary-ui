@@ -1,0 +1,43 @@
+{
+  "name": "revui",
+  "version": "1.0.0",
+  "description": "Revolutionary UI CLI - AI-powered component generation with beautiful terminal interface",
+  "type": "module",
+  "bin": {
+    "revui": "./dist/cli.js"
+  },
+  "scripts": {
+    "dev": "tsx watch src/cli.tsx",
+    "build": "tsc && chmod +x dist/cli.js",
+    "start": "node dist/cli.js",
+    "type-check": "tsc --noEmit",
+    "test:dashboard": "node test-dashboard.js"
+  },
+  "dependencies": {
+    "@inkjs/ui": "^2.0.0",
+    "asciichart": "^1.5.25",
+    "blessed-contrib": "^4.11.0",
+    "boxen": "^8.0.1",
+    "chalk": "^5.3.0",
+    "cli-progress": "^3.12.0",
+    "cli-spinners": "^3.2.0",
+    "figures": "^6.1.0",
+    "ink": "^5.0.1",
+    "ink-big-text": "^2.0.0",
+    "ink-gradient": "^3.0.0",
+    "ink-link": "^4.0.0",
+    "ink-select-input": "^6.0.0",
+    "ink-spinner": "^5.0.0",
+    "ink-table": "^3.1.0",
+    "ink-text-input": "^6.0.0",
+    "meow": "^13.2.0",
+    "picocolors": "^1.1.1",
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

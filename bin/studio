@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+// Revolutionary UI Studio CLI
+// Rich terminal interface with animations and visualizations
+
+// Load environment
+require('dotenv').config();
+
+// Check Node version
+const nodeVersion = process.version.match(/^v(\d+)\.(\d+)/);
+const major = parseInt(nodeVersion[1]);
+if (major < 18) {
+  console.error('Revolutionary UI Studio requires Node.js 18 or higher');
+  process.exit(1);
+}
+
+// Check if TypeScript is available
+try {
+  require('tsx');
+  // Run TypeScript version directly
+  require('tsx/cli').run(['src/cli/studio-cli-v2.ts', ...process.argv.slice(2)]);
+} catch (e) {
+  // Fallback to compiled version
+  try {
+    require('../dist/cli/studio-cli-v2.js');
+  } catch (err) {
+    console.error('Studio CLI not found. Please run "npm run build" first.');
+    process.exit(1);
+  }
+}

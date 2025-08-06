@@ -1,196 +1,66 @@
 #!/usr/bin/env node
 
 /**
- * Revolutionary UI v3.2.0 - Unified CLI Entry Point
- * Combines all CLI implementations with intelligent routing
+ * Revolutionary UI v3.3.0 - Main CLI Entry Point
+ * Modern CLI implementation with best practices from v0, Shadcn, etc.
  */
 
 const { existsSync } = require('fs');
 const { join } = require('path');
 const { spawn } = require('child_process');
 
-// Determine which CLI to use based on context and arguments
+// Determine which CLI implementation to use
 async function main() {
   const args = process.argv.slice(2);
-  const firstArg = args[0];
   
-  // Check if we're in a project directory
-  const hasPackageJson = existsSync(join(process.cwd(), 'package.json'));
-  const hasRevolutionaryConfig = existsSync(join(process.cwd(), '.revolutionary-ui.json'));
+  // Check if we're in development or production
+  const isDev = existsSync(join(__dirname, '../packages/cli/src'));
   
-  // Handle direct commands
-  if (firstArg && !firstArg.startsWith('-')) {
-    switch (firstArg) {
-      case 'create':
-      case 'new':
-        // Use create-app CLI
-        runCLI('create-app', args.slice(1));
-        return;
-        
-      case 'analyze':
-        // Use the factory CLI for analysis
-        runCLI('factory', args);
-        return;
-        
-      case 'generate':
-      case 'g':
-        // Use the main CLI for generation
-        runCLI('main', args);
-        return;
-        
-      case 'setup':
-      case 'init':
-        // Use full revolutionary CLI for complete setup experience
-        runCLI('revolutionary', []);
-        return;
-        
-      case 'auth':
-      case 'team':
-      case 'cloud':
-      case 'monitor':
-      case 'catalog':
-      case 'marketplace':
-        // Use the v3.0 CLI for advanced features
-        runCLI('main', args);
-        return;
-        
-      case 'help':
-      case '--help':
-      case '-h':
-        showHelp();
-        return;
-        
-      case 'version':
-      case '--version':
-      case '-v':
-        showVersion();
-        return;
-    }
-  }
+  // Use the new modular CLI implementation
+  const cliPath = isDev
+    ? join(__dirname, '../packages/cli/src/bin/rui.ts')
+    : join(__dirname, '../packages/cli/dist/rui.js');
   
-  // Default behavior: Use interactive wizard
-  if (!hasPackageJson) {
-    // No project - use full revolutionary CLI for complete experience
-    console.log('Welcome to Revolutionary UI! Starting interactive experience...\n');
-    runCLI('revolutionary', []);
-  } else if (hasRevolutionaryConfig) {
-    // Revolutionary UI project - use full interactive CLI
-    runCLI('revolutionary', []);
-  } else {
-    // Has package.json but no Revolutionary UI - use full CLI
-    console.log('Project detected. Starting Revolutionary UI interactive experience...\n');
-    runCLI('revolutionary', []);
-  }
-}
-
-function runCLI(type, args) {
-  let cliPath;
-  const isDev = existsSync(join(__dirname, '../src'));
-  
-  switch (type) {
-    case 'main':
-      cliPath = isDev 
-        ? join(__dirname, '../src/cli/index.ts')
-        : join(__dirname, '../dist/cli/index.js');
-      break;
-      
-    case 'revolutionary':
-      cliPath = isDev
-        ? join(__dirname, '../src/cli/revolutionary-cli.ts')
-        : join(__dirname, '../dist/cli/revolutionary-cli.js');
-      break;
-      
-    case 'factory':
-      cliPath = isDev
-        ? join(__dirname, '../src/lib/factory/cli.ts')
-        : join(__dirname, '../dist/lib/factory/cli.js');
-      break;
-      
-    case 'simple-wizard':
-      cliPath = isDev
-        ? join(__dirname, '../src/cli/simple-wizard.ts')
-        : join(__dirname, '../dist/cli/simple-wizard.js');
-      break;
-      
-    case 'create-app':
-      cliPath = isDev
-        ? join(__dirname, '../src/cli/create-app.ts')
-        : join(__dirname, '../dist/cli/create-app.js');
-      break;
-      
-    default:
-      console.error(`Unknown CLI type: ${type}`);
-      process.exit(1);
-  }
-  
-  // Check if the file exists
+  // Check if CLI exists
   if (!existsSync(cliPath)) {
-    console.error(`CLI not found at: ${cliPath}`);
-    console.error('Please run "npm run build" to compile the CLI.');
+    console.error('Revolutionary UI CLI not found.');
+    console.error('Please run "pnpm build" in the project root to build the CLI.');
     process.exit(1);
   }
   
-  // Store original argv
-  const originalArgv = process.argv;
-  process.argv = ['node', cliPath, ...args];
-  
   // Run the CLI
   if (isDev) {
-    // In development, use tsx
-    try {
-      require('tsx');
-      require(cliPath);
-    } catch (error) {
-      console.error('Error loading TypeScript CLI:', error.message);
-      console.error('Please ensure tsx is installed: npm install tsx');
+    // Development mode - use npx tsx for TypeScript
+    const tsx = spawn('npx', ['tsx', cliPath, ...args], {
+      stdio: 'inherit',
+      env: { ...process.env, NODE_ENV: 'development' }
+    });
+    
+    tsx.on('close', (code) => {
+      process.exit(code || 0);
+    });
+    
+    tsx.on('error', (err) => {
+      console.error('Failed to start CLI:', err.message);
+      console.error('Make sure tsx is installed: pnpm add -D tsx');
       process.exit(1);
-    }
+    });
   } else {
-    // In production, use compiled JavaScript
-    require(cliPath);
+    // Production mode - use Node.js directly
+    const node = spawn('node', [cliPath, ...args], {
+      stdio: 'inherit',
+      env: { ...process.env, NODE_ENV: 'production' }
+    });
+    
+    node.on('close', (code) => {
+      process.exit(code || 0);
+    });
+    
+    node.on('error', (err) => {
+      console.error('Failed to start CLI:', err.message);
+      process.exit(1);
+    });
   }
-}
-
-function showHelp() {
-  console.log(`
-Revolutionary UI Factory System v3.2.0
-Generate UI components with 60-95% less code
-
-Usage: revolutionary-ui [command] [options]
-
-Commands:
-  create, new [name]     Create a new Revolutionary UI project
-  generate, g [type]     Generate UI components
-  analyze [path]         Analyze project for optimization opportunities
-  setup, init            Setup Revolutionary UI in current project
-  auth [action]          Authentication (login, logout, register)
-  team [action]          Team collaboration features
-  cloud [action]         Cloud sync and storage
-  monitor [action]       Real-time monitoring and analytics
-  catalog [action]       Browse component catalog
-  marketplace [action]   Access the component marketplace
-  help                   Show this help message
-  version                Show version information
-
-Options:
-  -i, --interactive      Run in interactive mode (default)
-  -d, --direct           Run direct commands without wizard
-  --no-banner            Skip the banner display
-  
-Examples:
-  revolutionary-ui                    Start interactive wizard
-  revolutionary-ui create my-app      Create a new project
-  revolutionary-ui generate           Generate components interactively
-  revolutionary-ui analyze            Analyze current project
-  
-Documentation: https://revolutionary-ui.com/docs
-GitHub: https://github.com/siliconyouth/revolutionary-ui
-`);
-}
-
-function showVersion() {
-  const packageJson = require(join(__dirname, '../package.json'));
-  console.log(`Revolutionary UI v${packageJson.version}`);
 }
 
 // Run the main function

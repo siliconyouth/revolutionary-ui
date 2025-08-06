@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/cli",
+    "rootDir": "./src/cli",
+    "skipLibCheck": true,
+    "declaration": false
+  },
+  "include": [
+    "src/cli/**/*",
+    "src/ai/claude-session-client.ts",
+    "src/ai/generation/types.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts"
+  ]
+}

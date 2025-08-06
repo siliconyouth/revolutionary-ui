@@ -4,6 +4,95 @@ All notable changes to the Revolutionary UI Factory System will be documented in
 
 🌐 **Website**: [https://revolutionary-ui.com](https://revolutionary-ui.com) | 📦 **npm**: [@vladimirdukelic/revolutionary-ui-factory](https://www.npmjs.com/package/@vladimirdukelic/revolutionary-ui-factory)
 
+## [3.3.1] - 2025-08-06
+
+### 🎯 Modern CLI Implementation with Industry Best Practices
+
+This release delivers a completely rebuilt CLI system following best practices from Vercel v0, Shadcn, NX, and other industry leaders, with real database integration and multi-framework support.
+
+#### 🚀 Key Highlights
+- **Modular Architecture**: Clean separation with `cli-core`, `cli-ai`, `cli-marketplace`, `cli-cloud` packages
+- **Real Database Integration**: Connected to PostgreSQL via Prisma for actual marketplace components
+- **AI Provider Support**: OpenAI, Anthropic, Google Gemini, and local Ollama integration
+- **Multi-Framework**: Support for React, Vue, Angular, Svelte, Solid with multiple styling options
+- **Interactive Mode**: Rich terminal UI with menus, progress bars, and wizards
+
+#### ✨ New CLI Features
+
+##### 📦 Package Structure
+- **cli-core**: Core framework, utilities, command registration, and registry client
+- **cli-ai**: AI providers, prompt builders, and generation workflows
+- **cli-marketplace**: Marketplace browsing, publishing, and installation
+- **cli-cloud**: Cloud sync, push/pull capabilities, and team management
+- **cli**: Main entry point with all command implementations
+
+##### 🔨 Working Commands
+- **`rui new <project>`**: Create new projects with framework/styling selection wizard
+- **`rui generate [component]`**: Generate components with factory patterns
+- **`rui add [components...]`**: Install components from real marketplace database
+- **`rui ai "prompt"`**: Natural language component generation with multiple AI providers
+- **`rui browse`**: Interactive marketplace browser with categories and search
+- **`rui optimize <file>`**: AI-powered component optimization
+- **`rui workflow [id]`**: Run complex AI workflows for development tasks
+- **`rui auth`**: Authentication and account management
+- **`rui config`**: Configuration management with cosmiconfig
+- **`rui doctor`**: Diagnose and fix common issues
+
+##### 🏗️ Project Scaffolding
+- **Framework Support**: React, Next.js, Vue, Angular, Svelte, Solid
+- **Styling Options**: Tailwind CSS, CSS Modules, Styled Components, Emotion, Vanilla CSS
+- **Features**: TypeScript, ESLint, Prettier, Testing, Authentication, Database, AI Integration
+- **Package Managers**: npm, yarn, pnpm, bun with auto-detection
+- **Git Integration**: Automatic repository initialization with initial commit
+
+##### 🤖 AI Integration
+- **Multiple Providers**: OpenAI GPT-4o, Anthropic Claude 3, Google Gemini, Ollama local models
+- **Streaming Support**: Real-time generation feedback
+- **Prompt Builder**: Optimized prompts for component generation
+- **Workflow Engine**: Complex multi-step AI operations
+- **Factory Patterns**: AI-powered factory generation for forms, tables, dashboards
+
+##### 🗄️ Real Registry Connection
+- **Database Integration**: Direct connection to PostgreSQL marketplace database
+- **Component Registry**: Access to 150+ real components with metadata
+- **Download Tracking**: Analytics for component usage
+- **Category Support**: Organized component browsing
+- **Dependency Resolution**: Automatic dependency installation
+
+#### 🛠️ Technical Improvements
+- **ESM-Only Build**: Modern Node.js module system
+- **External Dependencies**: Proper dependency handling without bundling issues
+- **TypeScript Support**: Full TypeScript with tsx for development
+- **Error Handling**: Comprehensive error messages with helpful suggestions
+- **Progress Indicators**: Ora spinners and progress bars for long operations
+
+#### 📊 Comparison with Industry Standards
+
+| Feature | v0 | Shadcn | NX | Our CLI |
+|---------|-----|--------|-----|---------|
+| Interactive Mode | ✅ | ❌ | ❌ | ✅ |
+| AI Generation | ✅ | ❌ | ❌ | ✅ |
+| Component Add | ❌ | ✅ | ❌ | ✅ |
+| Project Scaffolding | ✅ | ❌ | ✅ | ✅ |
+| Real Registry | ✅ | ✅ | ❌ | ✅ |
+| Cloud Sync | ✅ | ❌ | ❌ | ✅ |
+| Multi-Framework | ❌ | ❌ | ✅ | ✅ |
+| Workspace Support | ❌ | ✅ | ✅ | ✅ |
+
+#### 🐛 Bug Fixes
+- Fixed ESM/CJS bundling issues in cli-core
+- Resolved dynamic require errors in production builds
+- Fixed interactive mode hanging on exit
+- Corrected version display in CLI help
+- Fixed TypeScript declaration generation issues
+
+#### 📚 Documentation
+- Created comprehensive CLI architecture documentation
+- Added CLI best practices comparison document
+- Updated all package README files
+- Created working demo scripts
+- Added detailed command examples
+
 ## [3.3.0] - 2025-08-04
 
 ### 🚀 Major Update: AI-Powered Semantic Search, R2 Storage Integration & VS Code Extension

@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "jsx": "react",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "outDir": "../../dist/terminal-cli",
+    "rootDir": ".",
+    "types": ["node", "react", "blessed"]
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "types/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

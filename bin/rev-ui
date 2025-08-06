@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+
+// Use Ink for modern React-based terminal UI
+import('../src/cli/rev-ui/app.mjs');

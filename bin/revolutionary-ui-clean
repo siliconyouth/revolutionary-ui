@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+
+/**
+ * Revolutionary UI - Clean Binary Entry Point
+ * Launches Terminal UI by default
+ */
+
+const { spawn } = require('child_process');
+const path = require('path');
+
+// Get command line arguments
+const args = process.argv.slice(2);
+
+// If no arguments, launch Terminal UI
+if (args.length === 0) {
+  // Launch Terminal UI directly
+  const terminalUIPath = path.join(__dirname, '../terminal-ui-app.js');
+  
+  const child = spawn('node', [terminalUIPath], {
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      TERM: process.env.TERM || 'xterm',
+      NCURSES_NO_UTF8_ACS: '1'
+    }
+  });
+
+  child.on('exit', (code) => {
+    process.exit(code || 0);
+  });
+
+  child.on('error', (err) => {
+    console.error('Failed to launch Terminal UI:', err.message);
+    process.exit(1);
+  });
+} else {
+  // Handle other commands by passing to the main CLI
+  const cliPath = path.join(__dirname, '../src/cli/index.ts');
+  
+  // Use tsx if available, otherwise fall back to node
+  try {
+    require('tsx');
+    require(cliPath);
+  } catch (error) {
+    // Try to spawn tsx as a separate process
+    const child = spawn('npx', ['tsx', cliPath, ...args], {
+      stdio: 'inherit',
+      env: process.env
+    });
+
+    child.on('exit', (code) => {
+      process.exit(code || 0);
+    });
+
+    child.on('error', (err) => {
+      console.error('Failed to launch CLI:', err.message);
+      process.exit(1);
+    });
+  }
+}

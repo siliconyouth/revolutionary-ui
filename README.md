@@ -1,18 +1,18 @@
- # Revolutionary UI v3.3 – AI-Powered Semantic Search & R2 Storage Integration
+ # Revolutionary UI v3.3.1 – Modern CLI with Industry Best Practices
 
  [![npm v](https://img.shields.io/npm/v/@vladimirdukelic/revolutionary-ui-factory.svg)](https://www.npmjs.com/package/@vladimirdukelic/revolutionary-ui-factory)
  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
  [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](https://www.typescriptlang.org/)
 
- > Generate ANY UI component for ANY framework with **60–95% code reduction**, **AI‑powered semantic search**, **Cloudflare R2 storage**, and a **fully-featured VS Code extension**.
+ > Generate ANY UI component for ANY framework with **60–95% code reduction**, **modern CLI** following best practices from Vercel v0 & Shadcn, **real database integration**, and **multi-framework support**.
 
- ## 🆕 What's New in v3.3
+ ## 🆕 What's New in v3.3.1
 
- - **🔍 AI-Powered Semantic Search**: Natural language component discovery with vector embeddings
- - **☁️ Cloudflare R2 Integration**: All components stored in R2 with versioning and global CDN
- - **🧩 VS Code Extension**: Search, generate, and preview components directly in your editor
- - **🚀 Multi-Provider Embeddings**: OpenAI, Together AI, Cohere, and local model support
- - **📊 183 Components Indexed**: Complete vector search coverage for all marketplace resources
+ - **🎯 Modern CLI Architecture**: Modular packages following best practices from v0, Shadcn, NX
+ - **🗄️ Real Database Integration**: Connected to PostgreSQL via Prisma for marketplace components
+ - **🤖 Multi-Provider AI**: OpenAI GPT-4o, Anthropic Claude 3, Google Gemini, Ollama local models
+ - **🏗️ Project Scaffolding**: Support for React, Vue, Angular, Svelte, Solid with multiple styling options
+ - **📦 Working Commands**: All CLI commands fully functional with real data and services
 
  ## Overview
 
